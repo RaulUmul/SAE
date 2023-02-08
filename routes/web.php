@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\DenunciaController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::view('/sae','index')->name('sae.inicio');
+Route::resource('/sae/denuncia', DenunciaController::class)->parameters(['denuncia'=>'item']);

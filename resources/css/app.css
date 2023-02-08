@@ -1,0 +1,134 @@
+/* Vamos a definir los colores de la aplicacion */
+
+:root{
+  --main-color: #00599f;
+  --secundary-color: #23b9f5;
+  --cards-primary-color: #5f748e;
+  --cards-secundary-color: #8aabb3;
+  /* Fuentes  */
+}
+
+
+html {
+  background: linear-gradient(to right, var(--secundary-color),var(--main-color));
+}
+
+#particles-js{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 25% 25%;
+  z-index: -100;
+}
+
+/**************** Componentes ***************/
+
+/* Navbar */
+
+.navbar_grid_Parent {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  background-color: transparent;
+}
+  
+.navbar_sub_grid1 { grid-area: 2 / 1 / 4 / 5; 
+  background-color: white;
+  border-radius: 4px 4px 0px 0px;
+  text-align: center;
+  position: relative;
+  z-index: -10;
+}
+
+.navbar_sub_grid2 {
+  grid-area: 1 / 2 / 3 / 4; 
+}
+
+.lema{
+  position: absolute;
+  top: 35%;
+  width: 100%;
+}
+
+.navbar_list{
+  background-color: white;
+  border-radius: 0 0 4px 4px;
+  height: 50vh;
+  overflow-y: scroll;
+}
+
+
+/* Boton Hamburguesa Sidenav*/
+/* #button_open-menu-sidenav{
+
+} */
+
+/* .collapsible-body{
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}  */
+
+
+/* Container_content-global */
+.container_content-global{
+  margin-top: 2.5rem;
+}
+
+/* Titulo Card de cada Container*/
+.card-title.card-title_mod{
+  margin-top:-3rem;
+  background:linear-gradient(60deg,var(--cards-primary-color),var(--cards-secundary-color));
+  font-weight: 300;
+  font-size: 1.25rem;
+  padding: 1rem;
+  border-radius: 2.5px;
+}
+
+
+
+
+/* ***********Media Querys************** */
+/* Se aplica cuando la resolucion es menor a 992px */
+ @media only screen and (max-width : 992px) {
+  main {
+    padding-left: 0px;
+  }
+
+  .sidenav{
+    margin-left: 0rem;
+    margin-top: 2.5rem;
+    max-width: 40%;
+    background-color: transparent;
+  }
+  
+}
+
+/* Se aplica cuando la resolucion es mayor a 992px */
+@media only screen and (min-width: 992px){
+  #button_open-menu-sidenav{
+    display: none;
+
+  }
+  .sidenav{
+    margin-left: 2rem;
+    margin-top: 2.5rem;
+    max-width: 20%;
+    background-color: transparent;
+  }
+  .container_content-global{
+    margin-top: 5rem;
+  }
+}
+
+
+
+
+
+
+
+
+

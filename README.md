@@ -64,3 +64,34 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+### Estilos.
+
+  Los estilos fueron compilados por Vite, en la carpeta de resources.
+  Librerias externas fueron instanciados directamente.
+  En desarrollo: instalar dependencias de npm -> npm install
+                 Instanciar vite en plantilla -> @vite(['resources/css/app.css','resources/js/app.js'])
+                 Correr servidor para desarrollo -> npm run dev
+                 Compilar ficheros -> npm run build
+
+
+
+### Estandares para nombramientoo de identificadores, selectores, variables.
+
+CSS: 
+
+
+HTML:
+  selectores: componente_referenciaFamilia.
+  identificadores: componente_accion.
+
+
+
+
+### Errores que solventar
+
+***Navbar, ajustar el margin cuando se abre desde el menu hamburguesa.
+           Alinear el texto de nombre del sistema.
+
+
+

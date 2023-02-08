@@ -1,0 +1,42 @@
+/* Texto del container. */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 28px;
+}
+
+.select2-container .select2-selection--single .select2-selection__rendered {
+    display: block;
+    padding-left: 8px;
+    padding-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* El mero contenedor xd */
+.select2-container--default .select2-selection--single {
+    background-color: transparent;
+    /* border: 1px solid black; */
+    border: none;
+    border-radius: 0px;
+    margin-left: 2.5rem;
+    border-right: 10rem;
+    margin-top: 0.5em;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid gray;
+
+}
+/*  DROPDOWN */
+
+.select2-dropdown {
+    background-color: white;
+    border: none;
+    border-radius: 2px;
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    left: -100000px;
+    width: 100px;
+    z-index: 1051;
+    box-shadow:  0 0 2px gray;
+}
