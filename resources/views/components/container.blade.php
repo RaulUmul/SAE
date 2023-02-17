@@ -1,5 +1,5 @@
 <div class="row container_content-global" >
-  <div class="col s12" z-depth-4 >
+  <div class="col s12 " z-depth-4 >
     <div class="card grey lighten-5">
       <div class="card-content  white-text">
         {{-- Card Titulo --}}
@@ -9,7 +9,7 @@
         {{-- Fin Card Titulo --}}
         <div class="divider"></div>
         {{-- Card Contenido --}}
-        <div class="card-content" style="padding: 0px">
+        <div class="card-content card-contenido black-text">
           @yield('contenido_card')
         </div>
         <div class="divider"></div>

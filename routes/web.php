@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\DenunciaController;
+use App\Http\Controllers\FallbackController;
+use App\Http\Controllers\ProcesosController;
+use App\Http\Controllers\WS_RenapController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -17,4 +20,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::view('/sae','index')->name('sae.inicio');
+Route::get('denuncia_form_arma', [DenunciaController::class, 'form_arma'])->name('form_arma');
 Route::resource('/sae/denuncia', DenunciaController::class)->parameters(['denuncia'=>'item']);
+
+Route::controller(ProcesosController::class)->group(function(){
+  Route::get('/sae/proceso/Agregar_Arma','agregarArma')->name('agregarArma');
+});
+
+Route::controller(WS_RenapController::class)->group(function(){
+  Route::get('/sae/consulta_renap','renap')->name('consulta_renap');
+});

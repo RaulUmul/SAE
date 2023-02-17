@@ -78,7 +78,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ### Estandares para nombramientoo de identificadores, selectores, variables.
 
-CSS: 
+
 
 
 HTML:

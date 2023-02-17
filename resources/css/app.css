@@ -6,7 +6,9 @@
   --cards-primary-color: #5f748e;
   --cards-secundary-color: #8aabb3;
   /* Fuentes  */
+  --color-etiquetas: rgba(0,0,0,0.8);
 }
+
 
 
 html {
@@ -57,10 +59,21 @@ html {
 .navbar_list{
   background-color: white;
   border-radius: 0 0 4px 4px;
-  height: 50vh;
-  overflow-y: scroll;
+  height: 50%;
+  overflow-y: auto;
+}
+/* Estilos para los label de materialize y Select2 */
+.input-field>label{
+  color: var(--color-etiquetas);
 }
 
+.select2-container--default .select2-selection--single .select2-selection__placeholder{
+  color: var(--color-etiquetas);
+}
+
+.input-field .prefix {
+  color: var(--color-etiquetas);
+}
 
 /* Boton Hamburguesa Sidenav*/
 /* #button_open-menu-sidenav{
@@ -72,10 +85,58 @@ html {
   padding-bottom: 1rem;
 }  */
 
+/* Estilo para Boton borrar arma */
+.deleteCollapse{
+  display: flex;
+  justify-content: space-between;
+}
 
-/* Container_content-global */
+
+/* ****************BOTONES********************* */
+
+/* Boton cancelar Form */
+.form-button_cancelar{
+  padding-left: 8rem;
+  display: flex;
+  position: absolute;
+  bottom: 5vh;
+  max-width: fit-content;
+}
+
+.form-button_cancelar>div{
+  text-align: center;
+}
+#index-button_cancel{
+  padding-left: 2rem;  
+  padding-right: 2rem;
+}
+
+/* Boton siguiente para cada tab */
+.container-button_siguiente{
+  display: flex;
+  justify-content: end;
+}
+
+.button_siguiente{
+  position: fixed;
+  bottom: 4rem;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(10px);
+}
+
+
+/* Container_content-global (Viene desde la plantilla) */
 .container_content-global{
   margin-top: 2.5rem;
+}
+
+/* Card generado en el componente container */
+.card-contenido{
+  min-height: 69vh;
+
 }
 
 /* Titulo Card de cada Container*/
@@ -88,6 +149,65 @@ html {
   border-radius: 2.5px;
 }
 
+/* Ocultar los encabezados de los tabs */
+.tabs.main{
+  display: none;
+}
+
+
+.btn-verificar{
+  padding: 10px 0 10px 0  ;
+  max-height: 16px;
+  max-width: 6rem ;
+  position: relative;
+  left: 93%;
+  bottom: 3.8rem;
+}
+.btn-verificar>i{
+  position: relative;
+  top: -18px;
+}
+
+
+/* Tab de Agregar Arma */
+.tabs.main_arma{
+  background-color: transparent;
+  /* border-bottom: 1px solid #5f748e;    */
+}
+
+.tabs .tab{
+  text-transform: none;
+}
+
+.tabs.main_arma .indicator {
+  display: none;
+  /* background-color:#000 ; */
+  /* border: 1px solid black; */
+
+}
+
+
+/* Aqui vamos a agregar o quitar esta clase */
+.tabs .tab.active-tab{
+  border-left: 1px  solid #5f748e;
+  border-right: 1px  solid #5f748e;
+  border-top: 1px  solid #5f748e;
+  /* border-bottom: 1px solid #5f748e; */
+  
+}
+.tabs .tab.deactive-tab{
+  border-bottom: 1px solid #5f748e;
+}
+
+#divtab_arma_plus{
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2rem;
+}
+
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+  background-color: rgba(178, 205, 246, 0.2);
+  outline: none;
+}
 
 
 
@@ -123,12 +243,3 @@ html {
     margin-top: 5rem;
   }
 }
-
-
-
-
-
-
-
-
-

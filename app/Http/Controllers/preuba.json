@@ -1,0 +1,32 @@
+[
+  {
+    "tipo_arma": "Tipo de arma",
+    "value_tipo_arma": null,
+    "marca_arma": "Tipo de arma",
+    "value_marca_arma": null,
+    "modelo_arma": null,
+    "tenencia_arma": null,
+    "licencia_arma": null,
+    "registro_arma": "03",
+    "pais_fabricacion": "Pais fabricaci\u00f3n",
+    "value_pais_fabricacion": null,
+    "cantidad_tolvas": null,
+    "cantidad_municion": null,
+    "propietario": null
+  },
+  {
+    "tipo_arma": "Tipo de arma",
+    "value_tipo_arma": null,
+    "marca_arma": "Tipo de arma",
+    "value_marca_arma": null,
+    "modelo_arma": null,
+    "tenencia_arma": "B1",
+    "licencia_arma": "A1",
+    "registro_arma": "02",
+    "pais_fabricacion": "Pais fabricaci\u00f3n",
+    "value_pais_fabricacion": null,
+    "cantidad_tolvas": null,
+    "cantidad_municion": null,
+    "propietario": "Denunciante"
+  }
+]

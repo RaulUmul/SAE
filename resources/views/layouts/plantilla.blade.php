@@ -32,7 +32,7 @@
     </header>
 
     {{-- Contenido --}}
-    <main class="col s12 m12 l9">
+    <main class="col s12 m12 l9 container ">
       {{-- Boton del menu hamburguesa --}}
       <a id="button_open-menu-sidenav" href="#" data-target="slide-out" class="sidenav-trigger white-text"><i class="material-icons">menu</i></a>
       {{-- Contenido --}}
@@ -56,6 +56,7 @@
 <script src="{{ asset('js/particles.min.js') }}"></script>
 <script src="{{ asset('js/particles.inc.js') }}"></script>
 {{-- Scripts de cada Modulo --}}
+{{-- <script src="{{asset('js/app.js')}}"></script> --}}
 @stack('scripts')
 
 
