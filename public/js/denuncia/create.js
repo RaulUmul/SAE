@@ -338,3 +338,67 @@ function borrarInput(){
   $('#cantidad_municion').val("");
   $('#propietario').val("");
 }
+
+// Rellena los datos en el form de datos personales.
+function inputsPersonaLlenos(request){
+  $('#primer_nombre').val(request.primer_nombre);
+  $('#primer_nombre').attr('disabled','disabled');
+
+  $('#segundo_nombre').val(request.segundo_nombre);
+  $('#segundo_nombre').attr('disabled','disabled');
+
+  $('#tercer_nombre').val(request.tercer_nombre);
+  $('#tercer_nombre').attr('disabled','disabled');
+
+  $('#primer_apellido').val(request.primer_apellido);
+  $('#primer_apellido').attr('disabled','disabled');
+
+  $('#segundo_apellido').val(request.segundo_apellido);
+  $('#segundo_apellido').attr('disabled','disabled');
+
+  $('#apellido_casada').val(request.apellido_casada);
+  $('#apellido_casada').attr('disabled','disabled');
+
+  if(request.genero == 'M'){
+    // Setear el valor a Masculino
+    $('#genero_persona').val('Masculino');
+  }else if(request.genero == 'F'){
+    // Setear el valor a 
+    $('#genero_persona').val('Femenino');
+  }else{
+    // Setear valor nulo
+  }
+
+  let d = new Date(request.fecha_nacimiento);
+  d = d.toJSON().slice(0,10);
+  $('#fecha_nacimiento').val(d);
+  $('#fecha_nacimiento').attr('disabled','disabled');
+
+  M.updateTextFields();
+  $('#modal_renap').modal('close');
+
+}
+
+function inputsPersonaLimpio(){
+  $('#primer_nombre').val("");
+  $('#primer_nombre').removeAttr('disabled');
+
+  $('#segundo_nombre').val("");
+  $('#segundo_nombre').removeAttr('disabled');
+
+  $('#tercer_nombre').val("");
+  $('#tercer_nombre').removeAttr('disabled');
+
+  $('#primer_apellido').val("");
+  $('#primer_apellido').removeAttr('disabled');
+
+  $('#segundo_apellido').val("");
+  $('#segundo_apellido').removeAttr('disabled');
+
+  $('#apellido_casada').val("");
+  $('#apellido_casada').removeAttr('disabled');
+
+  $('#fecha_nacimiento').val("");
+  M.updateTextFields();
+
+}

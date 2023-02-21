@@ -93,5 +93,5 @@ HTML:
 ***Navbar, ajustar el margin cuando se abre desde el menu hamburguesa.
            Alinear el texto de nombre del sistema.
 
-
-
+***Cuando se regenera el form, el Div de advice se regenera aunque esta deshabilitado, por lo que no deja enviar 
+el form, aunque si exista un arma registrada.

@@ -6,11 +6,11 @@
   @component('components.container')
     @section('titulo_card','CREAR DENUNCIA')
     @section('contenido_card')
-      <div class="col s12">
-        <a class="waves-effect waves-light btn modal-trigger" href="#modal_renap">Modal</a>
-      </div>
 
-      <form >
+      <form action="{{route("denuncia.store")}}" method="post">
+     
+        @csrf
+        @method("post")
 
         {{-- TABS --}}
         <div class="row">
@@ -79,17 +79,17 @@
             <div class="row">
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="primer_nombre" name="primer_nombre" class="validate" value="{{old('primer_nombre')}}">
+                <input type="text" id="primer_nombre" name="primer_nombre" class="validate active" value="{{old('primer_nombre')}}">
                 <label for="primer_nombre" >Primer Nombre</label>
               </div>
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="segundo_nombre" name="segundo_nombre" class="validate" value="{{old('segundo_nombre')}}">
+                <input type="text" id="segundo_nombre" name="segundo_nombre" class="validate active" value="{{old('segundo_nombre')}}">
                 <label for="segundo_nombre" >Segundo Nombre</label>
               </div>
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="tercer_nombre" name="tercer_nombre" class="validate" value="{{old('tercer_nombre')}}">
+                <input type="text" id="tercer_nombre" name="tercer_nombre" class="validate active" value="{{old('tercer_nombre')}}">
                 <label for="tercer_nombre" >Tercer Nombre</label>
               </div>
             </div>
@@ -105,10 +105,10 @@
                 <input type="text" id="segundo_apellido" name="segundo_apellido" class="validate" value="{{old('segundo_apellido')}}">
                 <label for="segundo_apellido" >Segundo Apellido</label>
               </div>
-              <div  class="input-field col s12 m6 l4" id="tercer_apellido">
+              <div  class="input-field col s12 m6 l4" id="apellido_casada">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="tercer_apellido" name="tercer_apellido" class="validate" value="{{old('tercer_apellido')}}">
-                <label for="tercer_apellido" >Tercer Apellido</label>
+                <input type="text" id="apellido_casada" name="apellido_casada" class="validate" value="{{old('apellido_casada')}}">
+                <label for="apellido_casada" >Apellido de casada</label>
               </div>
             </div>
 
@@ -118,7 +118,7 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <select name="genero_persona" id="genero_persona">
                   <option value="{{null}}" selected>Genero</option>
-                  {{-- @foreach ($generos as $key => $value)
+                  {{-- @foreach ($fs as $key => $value)
                   <option value="{{}}" >{{}}</option>
                   @endforeach --}}
                 </select>
@@ -241,7 +241,7 @@
 
                   <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <select name="tipo_arma" id="tipo_arma">
+                    <select  id="tipo_arma">
                       <option value="{{null}}" selected>Tipo de arma</option>
                       {{-- @foreach ($generos as $key => $value)
                       <option value="{{}}" >{{}}</option>
@@ -250,7 +250,7 @@
                   </div>
                   <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <select name="marca_arma" id="marca_arma">
+                    <select  id="marca_arma">
                       <option value="{{null}}" selected>Tipo de arma</option>
                       {{-- @foreach ($generos as $key => $value)
                       <option value="{{}}" >{{}}</option>
@@ -259,28 +259,28 @@
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="modelo_arma" name="modelo_arma" class="validate" value="">
+                    <input type="text" id="modelo_arma"  class="validate" value="">
                     <label for="modelo_arma">Modelo </label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="tenencia_arma" name="tenencia_arma" class="validate" value="">
+                    <input type="text" id="tenencia_arma"  class="validate" value="">
                     <label for="tenencia_arma">Numero tenencia</label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="licencia_arma" name="licencia_arma" class="validate" value="">
+                    <input type="text" id="licencia_arma" class="validate" value="">
                     <label for="licencia_arma">Numero licencia</label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="registro_arma" name="registro_arma" class="validate" value="">
+                    <input type="text" id="registro_arma" class="validate" value="">
                     <label for="registro_arma">Numero Registro / Serie</label>
                   </div>
 
                   <div class="input-field col s12 m6 l4 ">
                     <i class="material-icons prefix">chevron_right</i>
-                    <select name="calibre_arma" id="calibre_arma">
+                    <select  id="calibre_arma">
                       <option value="{{null}}" selected>Calibre</option>
                       {{-- @foreach ($generos as $key => $value)
                       <option value="{{}}" >{{}}</option>
@@ -290,7 +290,7 @@
 
                   <div class="input-field col s12 m6 l4 ">
                     <i class="material-icons prefix">chevron_right</i>
-                    <select name="pais_fabricacion" id="pais_fabricacion">
+                    <select  id="pais_fabricacion">
                       <option value="{{null}}" selected>Pais fabricación</option>
                       {{-- @foreach ($generos as $key => $value)
                       <option value="{{}}" >{{}}</option>
@@ -299,19 +299,19 @@
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="number" id="cantidad_tolvas" name="cantidad_tolvas" class="validate" value="">
+                    <input type="number" id="cantidad_tolvas" class="validate" value="">
                     <label for="cantidad_tolvas">Cantidad de tolvas</label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="number" id="cantidad_municion" name="cantidad_municion" class="validate" value="">
+                    <input type="number" id="cantidad_municion" class="validate" value="">
                     <label for="cantidad_municion">Cantidad de municion</label>
                   </div>
 
                   {{-- El bloque sig. Oculta o agrega el Input donde Se ingresa el propietario del arma --}}
                   <div class="input-field col s12 l4 " id="div_propietario">
                     <i class="material-icons prefix">chevron_right</i>
-                    <select name="propietario" id="propietario" onchange="selectChangePropietario(value)">
+                    <select id="propietario" onchange="selectChangePropietario(value)">
                       <option value=""  selected>Seleccione propietarios</option>
                       <option value="Denunciante">Denunciante</option>
                       <option value="Otro"  >Otro</option>
@@ -515,7 +515,7 @@
 
                     <div class="input-field col s12 m6 l4 ">
                       <i class="material-icons prefix">chevron_right</i>
-                      <select name="nacionalidad_sindicado" id="nacionalidad_sindicado">
+                      <select  id="nacionalidad_sindicado">
                         <option value="0" disabled selected>Nacionalidad</option>
                         <option value="Guatemalteca">Guatemalteca</option>
                         <option value="Extranjero"  >Extranjero</option>
@@ -524,32 +524,32 @@
       
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="number" id="cui_sindicado" name="cui_sindicado" class="validate" value="">
+                      <input type="number" id="cui_sindicado"  class="validate" value="">
                       <label for="cui_sindicado" class="active">No. DPI / CUI</label>
                     </div>
 
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="pasaporte_sindicado" name="pasaporte_sindicado" class="validate" value="">
+                      <input type="text" id="pasaporte_sindicado"  class="validate" value="">
                       <label for="pasaporte_sindicado" class="active">Pasaporte</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="nombres_sindicado" name="nombres_sindicado" class="validate" value="">
+                      <input type="text" id="nombres_sindicado"  class="validate" value="">
                       <label for="nombres_sindicado" class="active">Nombres</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="apellidos_sindicado" name="apellidos_sindicado" class="validate" value="">
+                      <input type="text" id="apellidos_sindicado"  class="validate" value="">
                       <label for="apellidos_sindicado" class="active">Apellidos</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4 ">
                       <i class="material-icons prefix">chevron_right</i>
-                      <select name="genero_sindicado" id="genero_sindicado">
+                      <select  id="genero_sindicado">
                         <option value="{{null}}" selected>Genero</option>
                         {{-- @foreach ($generos as $key => $value)
                         <option value="{{}}" >{{}}</option>
@@ -561,38 +561,38 @@
                   <div class="row">
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="number" id="edad_sindicado" name="edad_sindicado" class="validate" value="">
+                      <input type="number" id="edad_sindicado"  class="validate" value="">
                       <label for="edad_sindicado" class="active">Edad</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="caracteristicas_fisicas" name="caracteristicas_fisicas" class="validate" value="">
+                      <input type="text" id="caracteristicas_fisicas"  class="validate" value="">
                       <label for="caracteristicas_fisicas" class="active">Caracteristicas fisicas</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="vestimenta" name="vestimenta" class="validate" value="">
+                      <input type="text" id="vestimenta"  class="validate" value="">
                       <label for="vestimenta" class="active">Vestimenta</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="organizacion_criminal" name="organizacion_criminal" class="validate" value="">
+                      <input type="text" id="organizacion_criminal"  class="validate" value="">
                       <label for="organizacion_criminal" class="active">Organización criminal</label>
                     </div>
 
                     {{-- Movilizacion? --}}
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="movilizacion" name="movilizacion" class="validate" value="">
+                      <input type="text" id="movilizacion"  class="validate" value="">
                       <label for="movilizacion" class="active">Movilización</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="telefono_sindicado" name="telefono_sindicado" class="validate" value="">
+                      <input type="text"  class="validate" value="">
                       <label for="telefono_sindicado" class="active">Telefono / Celular</label>
                     </div>
                     
@@ -645,20 +645,14 @@
 
 
       <div id="modal_renap" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" id="content_modal_renap">
           <h4>Cargando...</h4>
         </div>
         <div class="modal-footer">
           <div class="row">
             <div class="col s12" style="display: flex; justify-content: space-around ">
               <div class="" style="display:flex; align-self: flex-end;">
-                <a  class=" modal-close waves-light red btn" style="padding-left: 2rem;padding-right: 2rem;">
-                  Cancelar
-                  <i class="large material-icons right">cancel</i>
-                </a>
-              </div>
-              <div class="" style="display:flex; align-self: flex-end;">
-                <a onclick="insertar_datos()"  class="waves-light btn" style="padding-left: 2rem;padding-right: 2rem;">
+                <a onclick="insertar_datos()"  class="waves-light btn modal-close" style="padding-left: 2rem;padding-right: 2rem;">
                   Aceptar
                   <i class="large material-icons right">check</i>
                 </a>
@@ -695,16 +689,17 @@
             datosLocalStorage
           },
           dataType: 'text',
-          // beforeSend: mostrarImagenCargando,
+          // beforeSend: alert('Amm cargando?'),
 
           success: function (rspnse){
             $('#container_collapsible_son').append(
               rspnse
             )
             $('.collapsible').collapsible(); 
+            $('#advice1').hide();
           },
           error : function(xhr, status) {
-          console.log('Disculpe, existió un problema');
+          console.log('Disculpe, existió un problema-Ready');
           },
           complete : function(xhr, status) {
           console.log('Petición realizada');
@@ -712,28 +707,13 @@
 
         })
 
-
-        
-        // Agregar el input del propietario?
-        $('.collapsible').collapsible(); 
-        $('.dropdown-trigger').dropdown();
-        $('#advice1').remove();
+        // $('.dropdown-trigger').dropdown();
         
       } //Fin del if principal.
     }); //Fin ReadyDocument
 
     // 1. Formulario Datos Personales.
 
-    // Verificamos que hayan ingresado 13 digitos en el CUI
-    // $('#cui').on('change', function(event) {
-    //   console.log(event.target.value);
-    //   if (event.target.value.length == 13) {
-    //     window.alert('You have reached the maximum input length.');
-    //   }
-    // });
-
-    function insertar_datos(){
-    };
 
     //  VERIFICAR CUI 
     function verificarCUI() {
@@ -741,104 +721,42 @@
 
       let cui = $('#cui').val();
       let statsCUI = checkCampos(cui);
-      // var elems = document.querySelectorAll('.modal');
-      // M.Modal.init(elems);
-      // var instance = M.Modal.getInstance(elems);
-      $('#modal_renap').html(`
-        <div class="modal-content">
-          <h4>Cargando...</h4>
-        </div>
-      `);
 
       if(statsCUI){
-        // Si no viene vacio
-        $('input#cui').removeClass('invalid');
-        $('#modal_renap').modal('open');
 
         $.ajax({
           url: "{{route('consulta_renap')}}",
           type: "GET",
-          data: {
-            cui,
-          },
+          data: {cui},
           dataType: "json",
-        success : function(rspnse) {
+          success : function(rspnse) {
+            // No hay errores
+            if(rspnse.consulta.error == 0){
+              $('#modal_renap').html(rspnse.content);
+              $('#datos_aceptados').click(function(){
+                  inputsPersonaLlenos(rspnse.consulta);
+              });
+            }else{
+              // Si hay errores.
+              $('#modal_renap').html(rspnse.content);
+              inputsPersonaLimpio();
+            }
 
+            $('#modal_renap').modal('open');
 
-          if(rspnse.error != "" ){
-            $('#modal_renap').html(`
-            <div class="modal-content">
-              <h4>Error</h4>
-              <div>
-                <span>Se ha encontrado un error: </span><br>
-                <span>${rspnse.descripcion}</span><br>
-              </div>
-            </div>
-            `)
-            
-          }else{
-            console.log(rspnse);
-            $('#modal_renap').html(`
-            <div class="modal-content">
-              <h4>Datos encontrados</h4>
-              <div>
-                <span>DPI: ${rspnse.dpi}</span><br>
-                <span>Nombre: ${rspnse.primer_nombre} ${rspnse.segundo_nombre} ${rspnse.tercer_nombre}</span><br>
-                <span>Nombre: ${rspnse.primer_apellido} ${rspnse.segundo_apellido}</span><br>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <div class="row">
-                <div class="col s12" style="display: flex; justify-content: space-around ">
-                  <div class="" style="display:flex; align-self: flex-end;">
-                    <a  class=" waves-light red btn" style="padding-left: 2rem;padding-right: 2rem;">
-                      Cancelar
-                      <i class="large material-icons right">cancel</i>
-                    </a>
-                  </div>
-                  <div class="" style="display:flex; align-self: flex-end;">
-                    <a  class=" waves-light btn" style="padding-left: 2rem;padding-right: 2rem;">
-                      Aceptar
-                      <i class="large material-icons right">check</i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            `)
-
+          },
+          error : function(xhr, status) {
+            console.log('Disculpe, existió un problema-verificarCUI');
+          },
+            complete : function(xhr, status) {
+            console.log('Petición realizada');
           }
-
-
-
-        },
-        error : function(xhr, status) {
-          console.log('Disculpe, existió un problema');
-        },
-          complete : function(xhr, status) {
-          console.log('Petición realizada');
-        }
-
         });
 
       }else{
       // Si viene vacio.
         $('input#cui').addClass('invalid');
-
-
       }
-
-      // $.ajax({
-      //   url: "{{route('consulta_renap')}}",
-      //   type: "GET",
-      //   data: {
-      //     // Enviamos el valor del dpi
-      //     // _token: '{{ csrf_token() }}'
-      //   },
-
-      //   // El dataType es el formato de lo que recibo
-      //   dataType: "json",
-      // })
     };
 
 
@@ -860,13 +778,7 @@
         $('#linkAgregar').removeClass('active');
         $('#linkAsociada').addClass('active');
         $('.tabs').tabs();
-        // Para borrar la cache.
-        if(reload == true){
-          setTimeout(() => {
-            reload = false;
-            console.log(reload);
-          }, 5000);
-        }
+        
       }else{ //Si no han ingresado el numero de registro, lanzamos el focus.
         $('input#registro_arma').addClass('invalid');
         $('input#registro_arma').focus();
@@ -876,107 +788,38 @@
 
 
     // Funcion que ejecuta el boton para eliminar un arma en la lista de asociadas.
-    function restarArma(obj) { 
-      $(`#collapsible_${obj}`).remove();
-      let indexReal = obj;
-      // console.log('indexdata:',indexReal);
+    function restarArma(objIndex) { 
+      $(`#collapsible_${objIndex}`).remove();
       let datosLocalStorage = JSON.parse(localStorage.getItem("data"));
-
-      datosLocalStorage.splice(indexReal,1)
-      // console.log(datosLocalStorage);
+      datosLocalStorage.splice(objIndex,1)
       localStorage.setItem('data',JSON.stringify(datosLocalStorage));
       // Y volvemos a pintar pa que coincida el index del collapsible con el index del local.
-      let acomulacion = "";
+      $.ajax({
+          url: "{{route('form_arma')}}",
+          type: 'get',
+          data: {
+            datosLocalStorage
+          },
+          dataType: 'text',
+          // beforeSend: mostrarImagenCargando,
 
-      datosLocalStorage.map((elemento,index)=>{
-          
+          success: function (rspnse){
+            $('#container_collapsible_son').html(
+              rspnse
+            )
+            $('.collapsible').collapsible(); 
+          },
+          error : function(xhr, status) {
+          console.log('Disculpe, existió un problema');
+          },
+          complete : function(xhr, status) {
+          console.log('Petición realizada');
+          }
 
-          acomulacion += `<ul class="collapsible" id="collapsible_${index}">
-            <li>
-              <div class="collapsible-header deleteCollapse">
-                ${index+1}. ${elemento.tipo_arma} 
-                  <div>
-                    <a  onclick="restarArma(${index})"><i class="material-icons right">delete</i></a>
-                  </div>
-              </div>
-              <div class="collapsible-body">
-                ${((elemento.value_tipo_arma) == "" ) ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[tipo_arma]" id="tipo_arma_plus_${index}" value="${elemento.tipo_arma}">
-                  <label>Tipo de Arma: ${elemento.tipo_arma}</label> 
-                </div>  <br>`} 
-                        
-                ${((elemento.value_marca_arma) == "") ?
-                `` : 
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[marca_arma]" id="marca_arma_plus_${index}" value="${elemento.marca_arma}">
-                  <label>Marca: ${elemento.marca_arma}</label>
-                </div> <br>`}
-                        
-                ${((elemento.modelo_arma) == "") ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[modelo_arma]" id="modelo_arma_plus_${index}" value="${elemento.modelo_arma}">
-                  <label>Modelo: ${elemento.modelo_arma}</label>
-                </div>  <br>`}
-                        
-                ${((elemento.tenencia_arma) == "") ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[tenencia_arma]" id="tenencia_arma_plus_${index}" value="${elemento.tenencia_arma}">
-                  <label>Tenencia: ${elemento.tenencia_arma}</label>
-                </div>  <br>`}
-                        
-                ${((elemento.licencia_arma) == "") ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[licencia_arma]" id="licencia_arma_plus_${index}" value="${elemento.licencia_arma}">
-                  <label>Licencia: ${elemento.licencia_arma}</label>
-                </div>  <br>`}
-                        
+        })
 
-                <div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[registro_arma]" class="localizador" id="registro_arma_plus_${index}" value="${elemento.registro_arma}">
-                  <label>Numero de registro: ${elemento.registro_arma}</label>
-                </div>  <br>
-                        
-                ${((elemento.value_pais_fabricacion) <= 0) ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[pais_fabricacion]" id="pais_fabricacion_plus_${index}" value="${elemento.pais_fabricacion}">
-                  <label>Pais de fabricacion: ${elemento.pais_fabricacion}</label>
-                </div>  <br>`}
-                        
-                ${((elemento.cantidad_tolvas) == "") ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[cantidad_tolvas]" id="cantidad_tolvas_plus_${index}" value="${elemento.cantidad_tolvas}">
-                  <label>Cantidad de tolvas: ${elemento.cantidad_tolvas}</label>
-                </div> <br>`}
-
-                ${((elemento.cantidad_municion) == "") ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[cantidad_municion]" id="cantidad_tolvas_plus_${index}" value="${elemento.cantidad_municion}">
-                  <label>Cantidad de municion: ${elemento.cantidad_municion}</label>
-                </div> <br>`}
-                ${((elemento.propietario) == "") ?
-                `` :
-                `<div class="input-field ">
-                  <input type="hidden" name="arma_plus_${index}[propietario]" id="cantidad_tolvas_plus_${index}" value="${elemento.propietario}">
-                  <label>Propietario: ${elemento.propietario}</label>
-                </div> <br>`}
-              </div>
-            </li>
-          </ul>`;
-      })
-          
-      $('#container_collapsible_son').html(acomulacion);
-
-      // Agregar el input del propietario?
-      $('.collapsible').collapsible(); 
-      $('.dropdown-trigger').dropdown();
+      // $('.collapsible').collapsible(); 
+      // $('.dropdown-trigger').dropdown();
       $('#advice1').remove();
       // Verificamos si existe un elemento, si no existe volvemos a poner el anuncio.
       // console.log($('#container_collapsible_son'));
@@ -1001,6 +844,9 @@
       cantidad_tolvas = $('#cantidad_tolvas').val(),
       cantidad_municion = $('#cantidad_municion').val(),
       propietario = $('#propietario').val();
+
+      let formularioSerial = $('#divtab_arma_plus').serialize();
+      console.log('formularioSerial: ', formularioSerial);
       
         
       $.ajax({
@@ -1075,99 +921,31 @@
                 localStorage.setItem('data',JSON.stringify([{...valoresIN},...actualizadoLocalStorage]));
             }
 
-            let masActualizado = JSON.parse(localStorage.getItem("data"));
+            let datosLocalStorage = JSON.parse(localStorage.getItem("data"));
                 
-            masActualizado.map((elemento,index)=>{
-              // Ahora en lugar de pintar directamente, pintaremos con el local storage.
+            $.ajax({
+              url: "{{route('form_arma')}}",
+              type: 'get',
+              data: {
+                datosLocalStorage
+              },
+              dataType: 'text',
+              // beforeSend: mostrarImagenCargando,
 
+              success: function (rspnse){
+                $('#container_collapsible_son').html(
+                  rspnse
+                )
+                $('.collapsible').collapsible(); 
+              },
+              error : function(xhr, status) {
+              console.log('Disculpe, existió un problema');
+              },
+              complete : function(xhr, status) {
+              console.log('Petición realizada');
+              }
 
-              $(`#collapsible_${index}`).remove();
-
-              $('#container_collapsible_son').append(`
-                <ul class="collapsible" id="collapsible_${index}">
-                  <li>
-                    <div class="collapsible-header deleteCollapse">
-                      ${index+1}. ${elemento.tipo_arma} 
-                      <div>
-                      <a  onclick="restarArma(${index})"><i class="material-icons right">delete</i></a>
-                      </div>
-                    </div>
-
-                    <div class="collapsible-body">
-                      ${((elemento.value_tipo_arma) == "" ) ?
-                      `` : `
-                      <div class="input-field ">
-                         <input type="hidden" name="arma_plus_${index}[tipo_arma]" id="tipo_arma_plus_${index}" value="${elemento.tipo_arma}">
-                          <label>Tipo de Arma: ${elemento.tipo_arma}</label> 
-                      </div>  <br>`} 
-                        
-                          ${((elemento.value_marca_arma) == "") ?
-                          `` : 
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[marca_arma]" id="marca_arma_plus_${index}" value="${elemento.marca_arma}">
-                            <label>Marca: ${elemento.marca_arma}</label>
-                          </div> <br>`}
-                        
-                          ${((elemento.modelo_arma) == "") ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[modelo_arma]" id="modelo_arma_plus_${index}" value="${elemento.modelo_arma}">
-                            <label>Modelo: ${elemento.modelo_arma}</label>
-                          </div>  <br>`}
-                        
-                          ${((elemento.tenencia_arma) == "") ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[tenencia_arma]" id="tenencia_arma_plus_${index}" value="${elemento.tenencia_arma}">
-                            <label>Tenencia: ${elemento.tenencia_arma}</label>
-                          </div>  <br>`}
-                        
-                          ${((elemento.licencia_arma) == "") ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[licencia_arma]" id="licencia_arma_plus_${index}" value="${elemento.licencia_arma}">
-                            <label>Licencia: ${elemento.licencia_arma}</label>
-                          </div>  <br>`}
-                        
-
-                          <div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[registro_arma]" class="localizador" id="registro_arma_plus_${index}" value="${elemento.registro_arma}">
-                            <label>Numero de registro: ${elemento.registro_arma}</label>
-                          </div>  <br>
-                        
-                          ${((elemento.value_pais_fabricacion) <= 0) ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[pais_fabricacion]" id="pais_fabricacion_plus_${index}" value="${elemento.pais_fabricacion}">
-                            <label>Pais de fabricacion: ${elemento.pais_fabricacion}</label>
-                          </div>  <br>`}
-                        
-                          ${((elemento.cantidad_tolvas) == "") ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[cantidad_tolvas]" id="cantidad_tolvas_plus_${index}" value="${elemento.cantidad_tolvas}">
-                            <label>Cantidad de tolvas: ${elemento.cantidad_tolvas}</label>
-                          </div> <br>`}
-
-                          ${((elemento.cantidad_municion) == "") ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[cantidad_municion]" id="cantidad_tolvas_plus_${index}" value="${elemento.cantidad_municion}">
-                            <label>Cantidad de municion: ${elemento.cantidad_municion}</label>
-                          </div> <br>`}
-                          ${((elemento.propietario) == "") ?
-                          `` :
-                          `<div class="input-field ">
-                            <input type="hidden" name="arma_plus_${index}[propietario]" id="cantidad_tolvas_plus_${index}" value="${elemento.propietario}">
-                            <label>Propietario: ${elemento.propietario}</label>
-                          </div> <br>`}
-
-                        
-                        </div>
-                      </li>
-                    </ul>`);
-            })
-
+            });
 
             // Agregar el input del propietario?
             $('.collapsible').collapsible(); 
@@ -1213,12 +991,19 @@
          M.toast({html: 'Ingrese alguna caracteristica.'})            
       }else{
         // Agregamos sindicado.
-        agregarSindicado();
+        agregarSindicado(reload);
+        // Para borrar la cache.
+        if(reload == true){
+          setTimeout(() => {
+            reload = false;
+            console.log(reload);
+          }, 5000);
+        }
       }
 
     });
 
-    function agregarSindicado(){
+    function agregarSindicado(statusReload){
       // Hay alguna otra forma de atrapar estos datos, para no manchar mucho nuestro codigo?
       let nacionalidad_sindicado = $('#nacionalidad_sindicado').val(),
       cui_sindicado = $('#cui_sindicado').val(),
@@ -1232,6 +1017,38 @@
       organizacion_criminal = $('#organizacion_criminal').val(),
       telefono_sindicado = $('#telefono_sindicado').val();
 
+      $.ajax({
+        url: "{{route('form_sindicado')}}",
+        type: 'get',
+        data: {
+            statusReload,
+            cui_sindicado,
+            pasaporte_sindicado,
+            nombres_sindicado,
+            apellidos_sindicado,
+            genero_sindicado,
+            edad_sindicado,
+            caracteristicas_fisicas,
+            vestimenta,
+            organizacion_criminal,
+            telefono_sindicado
+          
+        },
+        dataType: 'text',
+        // beforeSend: mostrarImagenCargando,
+        success: function (rspnse){
+          $('#container_collapsible_sospechoso').append(rspnse);
+          $('.collapsible').collapsible(); 
+          console.log(rspnse);
+        },
+        error : function(xhr, status) {
+        console.log('Disculpe, existió un problema-EnagregarSindicado');
+        },
+        complete : function(xhr, status) {
+        console.log('Petición realizada');
+        }
+
+      });
       
 
     }

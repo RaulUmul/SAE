@@ -21,10 +21,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/sae','index')->name('sae.inicio');
 Route::get('denuncia_form_arma', [DenunciaController::class, 'form_arma'])->name('form_arma');
+Route::get('denuncia_form_sindicado',[DenunciaController::class, 'form_sindicado'])->name('form_sindicado');
+
 Route::resource('/sae/denuncia', DenunciaController::class)->parameters(['denuncia'=>'item']);
 
 Route::controller(ProcesosController::class)->group(function(){
-  Route::get('/sae/proceso/Agregar_Arma','agregarArma')->name('agregarArma');
+  // Verifica si existe ya en la DB un arma con el respectivo registro.
+  Route::get('/sae/proceso/agregar_arma','agregarArma')->name('agregarArma');
 });
 
 Route::controller(WS_RenapController::class)->group(function(){

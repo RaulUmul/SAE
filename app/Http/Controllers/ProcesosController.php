@@ -24,7 +24,6 @@ class ProcesosController extends Controller
         // Se incrementara o decrementara.
         // Cache::increment('peticion', 1);
 
-        
         // $tipo_arma = TipoArma::where('id_tipo_arma',$request->tipo_arma)->get();
         // return response()->json($request->tipo_arma);
 
@@ -41,5 +40,6 @@ class ProcesosController extends Controller
         
         return  response()->json($data);
     }
+
 
 }
