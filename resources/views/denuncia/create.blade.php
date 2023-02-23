@@ -118,9 +118,9 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <select name="genero_persona" id="genero_persona">
                   <option value="{{null}}" selected>Genero</option>
-                  {{-- @foreach ($fs as $key => $value)
-                  <option value="{{}}" >{{}}</option>
-                  @endforeach --}}
+                  @foreach ($genero as $key => $value)
+                  <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                  @endforeach
                 </select>
               </div>
               <div  class="input-field col s12 m6 l4">
@@ -142,11 +142,11 @@
               {{-- Aqui veremos lo de categoria item x ahora solo lo dejamo listo --}}
               <div class="input-field col s12 m6 l4 ">
                 <i class="material-icons prefix">chevron_right</i>
-                <select name="departamento_residencia" id="departamento_residencia">
+                <select name="departamento_residencia" id="departamento_residencia" onchange="selectMunicipio(value,{{$municipio}},'municipio_residencia')">
                   <option value="{{null}}" selected>Departamento</option>
-                  {{-- @foreach ($generos as $key => $value)
-                  <option value="{{}}" >{{}}</option>
-                  @endforeach --}}
+                  @foreach ($departamento as $key => $value)
+                  <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>
+                  @endforeach
                 </select>
               </div>
 
@@ -154,9 +154,6 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <select name="municipio_residencia" id="municipio_residencia">
                   <option value="{{null}}" selected>Municipio</option>
-                  {{-- @foreach ($generos as $key => $value)
-                  <option value="{{}}" >{{}}</option>
-                  @endforeach --}}
                 </select>
               </div>
               <div  class="input-field col s12 m6 l4">
@@ -243,18 +240,18 @@
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="tipo_arma">
                       <option value="{{null}}" selected>Tipo de arma</option>
-                      {{-- @foreach ($generos as $key => $value)
-                      <option value="{{}}" >{{}}</option>
-                      @endforeach --}}
+                      @foreach ($tipo_arma as $key => $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                      @endforeach
                     </select>
                   </div>
                   <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="marca_arma">
                       <option value="{{null}}" selected>Tipo de arma</option>
-                      {{-- @foreach ($generos as $key => $value)
-                      <option value="{{}}" >{{}}</option>
-                      @endforeach --}}
+                      @foreach ($marca_arma as $key => $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                      @endforeach
                     </select>
                   </div>
                   <div  class="input-field col s12 m6 l4">
@@ -282,9 +279,9 @@
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="calibre_arma">
                       <option value="{{null}}" selected>Calibre</option>
-                      {{-- @foreach ($generos as $key => $value)
-                      <option value="{{}}" >{{}}</option>
-                      @endforeach --}}
+                      @foreach ($calibre_arma as $key => $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                      @endforeach
                     </select>
                   </div>
 
@@ -292,9 +289,9 @@
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="pais_fabricacion">
                       <option value="{{null}}" selected>Pais fabricación</option>
-                      {{-- @foreach ($generos as $key => $value)
-                      <option value="{{}}" >{{}}</option>
-                      @endforeach --}}
+                      @foreach ($pais_fabricacion as $key => $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                      @endforeach
                     </select>
                   </div>
                   <div  class="input-field col s12 m6 l4">
@@ -391,9 +388,9 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <select name="tipo_hecho" id="tipo_hecho">
                   <option value="{{null}}" selected>Tipo de hecho</option>
-                  {{-- @foreach ($generos as $key => $value)
-                  <option value="{{}}" >{{}}</option>
-                  @endforeach --}}
+                  @foreach ($tipo_denuncia as $key => $value)
+                  <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                  @endforeach
                 </select>
               </div>
 
@@ -411,11 +408,11 @@
 
               <div class="input-field col s12 m6 l4 ">
                 <i class="material-icons prefix">chevron_right</i>
-                <select name="departamento_hecho" id="departamento_hecho">
+                <select name="departamento_hecho" id="departamento_hecho" onchange="selectMunicipio(value,{{$municipio}},'municipio_hecho')">
                   <option value="{{null}}" selected>Departamento</option>
-                  {{-- @foreach ($generos as $key => $value)
-                  <option value="{{}}" >{{}}</option>
-                  @endforeach --}}
+                  @foreach ($departamento as $key => $value)
+                  <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>
+                  @endforeach
                 </select>
               </div>
 
@@ -423,9 +420,6 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <select name="municipio_hecho" id="municipio_hecho">
                   <option value="{{null}}" selected>Municipio</option>
-                  {{-- @foreach ($generos as $key => $value)
-                  <option value="{{}}" >{{}}</option>
-                  @endforeach --}}
                 </select>
               </div>
             </div>
@@ -551,9 +545,9 @@
                       <i class="material-icons prefix">chevron_right</i>
                       <select  id="genero_sindicado">
                         <option value="{{null}}" selected>Genero</option>
-                        {{-- @foreach ($generos as $key => $value)
-                        <option value="{{}}" >{{}}</option>
-                        @endforeach --}}
+                        @foreach ($genero as $key => $value)
+                        <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                        @endforeach
                       </select>
                     </div>
 

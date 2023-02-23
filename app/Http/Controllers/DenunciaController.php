@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departamento;
+use App\Models\Item;
+use App\Models\Municipio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
@@ -14,7 +17,26 @@ class DenunciaController extends Controller
     }
 
     public function create(){
-        return view('denuncia.create');
+        $departamento = Departamento::all();
+        $municipio = Municipio::all(); 
+        $genero = Item::where('id_categoria',2)->get();
+        $tipo_arma = Item::where('id_categoria',3)->get(); 
+        $tipo_denuncia = Item::where('id_categoria',5)->get();
+        $marca_arma = Item::where('id_categoria',4)->get();
+        $calibre_arma = Item::where('id_categoria',7)->get();
+        $pais_fabricacion = Item::where('id_categoria',8)->get();
+
+
+        return view('denuncia.create',compact(
+            'departamento',
+            'municipio',
+            'tipo_denuncia',
+            'tipo_arma',
+            'marca_arma',
+            'calibre_arma',
+            'genero',
+            'pais_fabricacion'
+        ));
     }
 
     public function store(Request $request){

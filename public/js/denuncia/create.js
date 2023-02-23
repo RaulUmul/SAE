@@ -231,6 +231,19 @@ function validar_longitud(){
 }
 
 
+// ************* Crea el Input Municipio dependiente de Departamento.
+function selectMunicipio(departamento,municipios,root){
+  let selectmunicipio = document.getElementById(root);
+  let allMuni="";
+  municipios.map(({municipio,id_departamento,id_municipio})=>{
+      if(departamento == id_departamento){
+          allMuni += `<option value="${id_municipio}" >${municipio}</option>`;
+      }
+  });
+  selectmunicipio.innerHTML= `${allMuni}`;
+}
+
+
 
 // ************SECCION DE TABS  *******************
 // Efecto para los tabs.  Armas

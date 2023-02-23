@@ -95,3 +95,27 @@ HTML:
 
 ***Cuando se regenera el form, el Div de advice se regenera aunque esta deshabilitado, por lo que no deja enviar 
 el form, aunque si exista un arma registrada.
+
+
+### Validaciones pendientes
+Validaciones para cada Form.
+
+Datos Personales.
+
+General: Exigir respuesta si posee documento.
+
+1. Si posee documento, exigir el DPI antes de continuar.
+
+2. Si no posee, llenar al menos los campos de nombres y Telefono.
+
+3. Residencia, exigir el Departamento, Municipio, zona. 
+
+	  o en su defecto la direccion exacta.
+
+Datos del hecho 
+
+1. El numero de diligencia es obligatorio.
+
+2. Asi como el tipo de hecho es obligatorio.
+
+3. Al menos una referencia.
