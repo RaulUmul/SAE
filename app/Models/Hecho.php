@@ -19,4 +19,8 @@ class Hecho extends Model
     public function denuncias(){
         return $this->hasMany('App\Models\Denuncia','id_hecho');
     }
+
+    public function direccion(){
+        return $thi->belongsTo('App\Models\Direccion','','id_hecho');
+    }
 }

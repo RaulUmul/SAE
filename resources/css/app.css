@@ -208,8 +208,10 @@ html {
   background-color: rgba(178, 205, 246, 0.2);
   outline: none;
 }
-
-
+#form_login{
+position: absolute;
+top: 25vh;
+}
 
 /* ***********Media Querys************** */
 /* Se aplica cuando la resolucion es menor a 992px */
@@ -225,6 +227,27 @@ html {
     background-color: transparent;
   }
   
+
+}
+/* Se aplica entre el rango de 546 a 992  */
+ @media only screen and (min-width:546px) and (max-width : 992px) {
+  /* main {
+    padding-left: 0px;
+  }
+
+  .sidenav{
+    margin-left: 0rem;
+    margin-top: 2.5rem;
+    max-width: 40%;
+    background-color: transparent;
+  } */
+  #form_login{
+    position: absolute;
+    left: 20vw;
+    right: 20vw;
+  }
+  
+
 }
 
 /* Se aplica cuando la resolucion es mayor a 992px */
@@ -241,5 +264,19 @@ html {
   }
   .container_content-global{
     margin-top: 5rem;
+  }
+
+  #form_login{
+    position: absolute;
+    left:35vw;
+    right: 35vw;
+  }
+}
+
+@media only screen and (min-width: 1500px){
+  #form_login{
+    position: absolute;
+    left:40vw;
+    right: 40vw;
   }
 }

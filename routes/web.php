@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\ProcesosController;
@@ -18,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Route::view('','login.login');
+Route::post('',[AuthController::class,'login'])->name('login');
 Route::view('/sae','index')->name('sae.inicio');
 Route::get('denuncia_form_arma', [DenunciaController::class, 'form_arma'])->name('form_arma');
 Route::get('denuncia_form_sindicado',[DenunciaController::class, 'form_sindicado'])->name('form_sindicado');

@@ -20,4 +20,8 @@ class Denunciante extends Model
         return $this->hasMany('App\Models\Denuncia','id_denunciante'); 
     }
 
+    public function direccion(){
+        return $this->belongsTo('App\Models\Direccion','','id_denunciante');
+    }
+
 }

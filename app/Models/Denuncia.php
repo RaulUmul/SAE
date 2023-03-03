@@ -16,4 +16,17 @@ class Denuncia extends Model
 
     public $guarded = [];
 
+    public function denunciante(){
+        return $this->belongsTo('App\Models\Denunciante','id_denunciante',);
+    }
+    public function arma(){
+        return $this->belongsTo('App\Models\Arma','id_arma',);
+    }
+    public function hecho(){
+        return $this->belongsTo('App\Models\Hecho','id_hecho',);
+    }
+    public function sindicado(){
+        return $this->belongsTo('App\Models\Sindicado','id_sindicado',);
+    }
+
 }

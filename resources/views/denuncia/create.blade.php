@@ -316,7 +316,7 @@
                   </div>
 
                   {{-- Div contenedor del Input Propietario --}}
-                  <div id="div_denunciante" class="input-field col s12 l8">
+                  <div id="div_denunciante" class="input-field col s12">
                   </div>
 
                   {{-- Boton Guardar Arma --}}
@@ -664,6 +664,8 @@
 @push('scripts')
   <script src="{{asset('js/denuncia/create.js')}}"></script>
   <script>
+
+
     // Document Ready
     // Carga lo que existe en el local storage
     $(document).ready(function(){
@@ -690,7 +692,7 @@
               rspnse
             )
             $('.collapsible').collapsible(); 
-            $('#advice1').hide();
+            $('#advice1').remove();
           },
           error : function(xhr, status) {
           console.log('Disculpe, existió un problema-Ready');
@@ -802,9 +804,10 @@
               rspnse
             )
             $('.collapsible').collapsible(); 
+            // console.log($('#container_collapsible_son').find('ul').length);
           },
           error : function(xhr, status) {
-          console.log('Disculpe, existió un problema');
+          console.log('Disculpe, existió un problema-restarArma');
           },
           complete : function(xhr, status) {
           console.log('Petición realizada');
@@ -812,13 +815,14 @@
 
         })
 
-      // $('.collapsible').collapsible(); 
-      // $('.dropdown-trigger').dropdown();
       $('#advice1').remove();
       // Verificamos si existe un elemento, si no existe volvemos a poner el anuncio.
-      // console.log($('#container_collapsible_son'));
-      if($('#container_collapsible_son').length == 0){
+      if($('#container_collapsible_son').find('ul').length == 0){
         console.log('0elementos');
+        $('#container_collapsible').append(`
+        <div id="advice1" class=" col s12  " style="display: flex; justify-content: center; padding: 2rem; ">
+          <p id="text-advice" class="red-text">Agruegue un arma...</p>
+        </div>`);
       }
     };
 
@@ -1058,10 +1062,7 @@
 
       }else{
         e.preventDefault();
-        console.log('Agruegue arma');
-        $('html, body').animate({
-        scrollTop: $("#referencia_residencia").offset().top
-        }, 500);
+        M.toast({html: 'Agruegue un arma a la denuncia!'});
       }
 
     }); 

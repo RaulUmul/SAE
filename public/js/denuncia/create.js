@@ -5,28 +5,53 @@ $('#nacionalidad_persona').select2({
   width:'100%',
   placeholder: 'Nacionalidad ',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 });
 
 $('#tipo_documento').select2({
   width: '100%',
   placeholder: 'Tipo de documento ',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 $('#genero_persona').select2({
   width: '100%',
   placeholder: 'Género ',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 
 $('#departamento_residencia').select2({
   width: '100%',
   placeholder: 'Departamento',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 $('#municipio_residencia').select2({
   width: '100%',
   placeholder: 'Municipio',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 
 // Selects arma
@@ -34,26 +59,41 @@ $('#tipo_arma').select2({
   width: '100%',
   placeholder: 'Tipo de arma',
   allowClear: true,
-}); 
+});
+
 $('#marca_arma').select2({
   width: '100%',
   placeholder: 'Marca',
   allowClear: true,
-}); 
+  tags: true,
+});
+
 $('#calibre_arma').select2({
   width: '100%',
   placeholder: 'Calibre',
   allowClear: true,
-}); 
+  tags: true,
+});
 $('#pais_fabricacion').select2({
   width: '100%',
   placeholder: 'Pais de fabricación',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
+
 $('#propietario').select2({
   width: '100%',
   placeholder: 'Propietario',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 
 // Selects Hecho
@@ -61,16 +101,31 @@ $('#tipo_hecho').select2({
   width: '100%',
   placeholder: 'Tipo de hecho',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 $('#departamento_hecho').select2({
   width: '100%',
   placeholder: 'Departamento',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 $('#municipio_hecho').select2({
   width: '100%',
   placeholder: 'Municipio',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 
 // Selects Sospechosos
@@ -79,12 +134,22 @@ $('#nacionalidad_sindicado').select2({
   width: '100%',
   placeholder: 'Nacionalidad',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 
 $('#genero_sindicado').select2({
   width: '100%',
   placeholder: 'Género',
   allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
 }); 
 
 

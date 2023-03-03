@@ -8,6 +8,7 @@ use App\Models\Municipio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Facades\DB;
 
 class DenunciaController extends Controller
 {
@@ -41,6 +42,16 @@ class DenunciaController extends Controller
 
     public function store(Request $request){
         return $request;
+
+
+        try {
+            DB::begingTransaction();
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
     }
 
 

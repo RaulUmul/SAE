@@ -15,9 +15,10 @@ class Direccion extends Model
     public $incrementing = false;
 
     public $guarded = [];
-
+  
     public function denunciantes(){
         return $this->hasMany('App\Models\denunciante','','id_denunciante');
     }
+
 
 }
