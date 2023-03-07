@@ -37,8 +37,8 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <select  class="nacionalidad_persona" name="nacionalidad_persona" id="nacionalidad_persona" onchange="verificar_check()">
                   <option value="{{null}}" disabled selected>Nacionalidad</option>
-                  <option value="Guatemalteca">Guatemalteca</option>
-                  <option value="Extranjero"  >Extranjero</option>
+                  <option value="1">Guatemalteca</option>
+                  <option value="2">Extranjero</option>
                 </select>
               </div>
 
@@ -47,11 +47,11 @@
                 <span >¿Poseé documento de identificación?</span>
                 <div style="display:flex; justify-content: center"> 
                     <label>
-                      <input name="group1" type="radio" id="si_check" value="{{1}}"/>
+                      <input name="poseeDocumento" type="radio" id="si_check" value="{{1}}"/>
                       <span>Si</span>
                     </label>
                     <label>
-                      <input name="group1" type="radio"  id="no_check" value="{{0}}"/>
+                      <input name="poseeDocumento" type="radio"  id="no_check" value="{{0}}"/>
                       <span>No</span>
                     </label>
                 </div>
@@ -239,7 +239,7 @@
                   <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="tipo_arma">
-                      <option value="{{null}}" selected>Tipo de arma</option>
+                      <option value="{{null}}" selected>N/I</option>
                       @foreach ($tipo_arma as $key => $value)
                       <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
                       @endforeach
@@ -248,7 +248,7 @@
                   <div class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="marca_arma">
-                      <option value="{{null}}" selected>Tipo de arma</option>
+                      <option value="{{null}}" selected></option>
                       @foreach ($marca_arma as $key => $value)
                       <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
                       @endforeach
@@ -256,17 +256,17 @@
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="modelo_arma"  class="validate" value="">
+                    <input type="text" id="modelo_arma"  class="validate" value="{{null}}">
                     <label for="modelo_arma">Modelo </label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="tenencia_arma"  class="validate" value="">
+                    <input type="text" id="tenencia_arma"  class="validate" value="{{null}}">
                     <label for="tenencia_arma">Numero tenencia</label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
                     <i class="material-icons prefix">chevron_right</i>
-                    <input type="text" id="licencia_arma" class="validate" value="">
+                    <input type="text" id="licencia_arma" class="validate" value="{{null}}">
                     <label for="licencia_arma">Numero licencia</label>
                   </div>
                   <div  class="input-field col s12 m6 l4">
@@ -288,7 +288,7 @@
                   <div class="input-field col s12 m6 l4 ">
                     <i class="material-icons prefix">chevron_right</i>
                     <select  id="pais_fabricacion">
-                      <option value="{{null}}" selected>Pais fabricación</option>
+                      <option value="{{null}}" selected></option>
                       @foreach ($pais_fabricacion as $key => $value)
                       <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
                       @endforeach
@@ -439,6 +439,11 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <input type="text" id="avenida_hecho" name="avenida_hecho" class="validate" value="{{old('avenida_hecho')}}">
                 <label for="avenida_hecho" >Avenida</label>
+              </div>
+              <div  class="input-field col s12 m6 l4">
+                <i class="material-icons prefix">chevron_right</i>
+                <input type="text" id="numero_casa_hecho" name="numero_casa_hecho" class="validate" value="{{old('numero_casa_hecho')}}">
+                <label for="numero_casa_hecho" >Numero de casa</label>
               </div>
             </div>
 
@@ -768,7 +773,6 @@
       if(check){
         $('input#registro_arma').removeClass('invalid'); //Quitamos la clase invalid
         agregarArma(reload); //Mandamos el ajax.
-        M.toast({html: 'Arma agregada!'}) //Notificamos que ya se agrego el arma
         borrarInput();  //Borramos los campos ya enviados.
         $('#arma_asociada').trigger('click');
         $('#linkAgregar').removeClass('active');
@@ -837,6 +841,7 @@
       tenencia_arma = $('#tenencia_arma').val(),
       licencia_arma = $('#licencia_arma').val(),
       registro_arma = $('#registro_arma').val(),
+      calibre_arma = $('#calibre_arma').val(),
       pais_fabricacion = $('#pais_fabricacion option:selected').text(),
       value_pais_fabricacion = $('#pais_fabricacion').val(),
       cantidad_tolvas = $('#cantidad_tolvas').val(),
@@ -898,6 +903,7 @@
               tenencia_arma,
               licencia_arma,
               registro_arma,
+              calibre_arma,
               pais_fabricacion,
               value_pais_fabricacion,
               cantidad_tolvas,
@@ -949,11 +955,11 @@
             $('.collapsible').collapsible(); 
             $('.dropdown-trigger').dropdown();
             $('#advice1').remove();
+            M.toast({html: 'Arma agregada!'}) //Notificamos que ya se agrego el arma
 
-          }else{
+          }else if((rspnse.registro_arma.length > 0)){
             // Alertamos que el arma ya se encuentra con denuncia en la DB.
-            console.log('El arma ya esta en la DB, ya no se puede mi compa xD');  
-            M.toast({html: 'No se puede agregar, ya existe denuncia para el respectivo registro.'})            
+            M.toast({html: 'No se puede asociar, el arma ya cuenta con denuncia asociada.'})            
 
           }
 
@@ -1060,6 +1066,9 @@
 
         console.log('Puede proceder');
 
+
+        // Al finalizar borramos el localStorage
+        localStorage.removeItem('data');
       }else{
         e.preventDefault();
         M.toast({html: 'Agruegue un arma a la denuncia!'});

@@ -10,14 +10,14 @@
     <div class="collapsible-body">
       @isset($tipo_arma)
         <div class="input-field">
-          <input type="hidden" name="arma_plus_{{$index}}[tipo_arma]" id="tipo_arma_plus_{{$index}}" value="{{$tipo_arma}}">
+          <input type="hidden" name="arma_plus_{{$index}}[tipo_arma]" id="tipo_arma_plus_{{$index}}" value="{{$value_tipo_arma}}">
           <label>Tipo de Arma: {{$tipo_arma}}</label> 
         </div>  <br>
       @endisset
 
       @isset($marca_arma)
       <div class="input-field ">
-        <input type="hidden" name="arma_plus_{{$index}}[marca_arma]" id="marca_arma_plus_{{$index}}" value="{{$marca_arma}}">
+        <input type="hidden" name="arma_plus_{{$index}}[marca_arma]" id="marca_arma_plus_{{$index}}" value="{{$value_marca_arma}}">
         <label>Marca: {{$marca_arma}}</label>
       </div> <br>
       @endisset
@@ -51,9 +51,16 @@
         </div>  <br>
       @endisset
 
+      @isset($calibre_arma)
+      <div class="input-field ">
+        <input type="hidden" name="arma_plus_{{$index}}[calibre_arma]"  id="registro_arma_plus_{{$index}}" value="{{$calibre_arma}}">
+        <label>Calibre: {{$calibre_arma}}</label>
+      </div>  <br>
+      @endisset
+
       @isset($pais_fabricacion)
       <div class="input-field ">
-        <input type="hidden" name="arma_plus_{{$index}}[pais_fabricacion]" id="pais_fabricacion_plus_{{$index}}" value="{{$pais_fabricacion}}">
+        <input type="hidden" name="arma_plus_{{$index}}[pais_fabricacion]" id="pais_fabricacion_plus_{{$index}}" value="{{$value_pais_fabricacion}}">
         <label>Pais de fabricacion: {{$pais_fabricacion}}</label>
       </div>  <br>
       @endisset

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Arma;
 use Illuminate\Http\Request;
 
 class ProcesosController extends Controller
@@ -27,15 +28,12 @@ class ProcesosController extends Controller
         // $tipo_arma = TipoArma::where('id_tipo_arma',$request->tipo_arma)->get();
         // return response()->json($request->tipo_arma);
 
-        // $registro_arma =  Arma::select('no_registro')->where('no_registro',$request->registroArma)->get();
+        $registro_arma = Arma::select('registro')->where('registro',$request->registroArma)->get();
 
 
         $data = [
             'statusReload' => $request->statusReload,
-            // 'tipo_arma'=>$tipo_arma ,
-            // 'value'=>$value,
-            // 'registro_arma'=>$registro_arma
-            'registro_arma'=>[]
+            'registro_arma'=>$registro_arma
         ];
         
         return  response()->json($data);

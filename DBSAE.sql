@@ -832,6 +832,25 @@ VALUES
 ;
 
 -- ===============================================
+-- Tabla Direccion
+-- ===============================================
+
+CREATE TABLE  sae.direccion(
+  id_direccion SERIAL PRIMARY KEY,
+  id_departamento INT, --FK (sae.departamento)
+  id_municipio INT, --FK (sae.municipio)
+  zona INT,
+  calle VARCHAR,
+  avenida VARCHAR,
+  numero_casa VARCHAR,
+  direccion_exacta VARCHAR,
+  referencia VARCHAR,
+  id_tipo_direccion INT, --FK (sae.item)
+  FOREIGN KEY (id_tipo_direccion) REFERENCES sae.item(id_item)
+);
+
+
+-- ===============================================
 -- Tabla Persona Denunciante
 -- ===============================================
 CREATE TABLE sae.denunciante(
@@ -848,8 +867,10 @@ CREATE TABLE sae.denunciante(
   fecha_nacimiento DATE,
   id_genero INT, --FK (sae.item)
   id_nacionalidad INT, --FK (sae.item)
+  id_direccion INT,
   FOREIGN KEY (id_genero) REFERENCES sae.item(id_item),
-  FOREIGN KEY (id_nacionalidad) REFERENCES sae.item(id_item)
+  FOREIGN KEY (id_nacionalidad) REFERENCES sae.item(id_item),
+  FOREIGN KEY (id_direccion) REFERENCES sae.direccion(id_direccion)
 );
 
 
@@ -868,7 +889,7 @@ CREATE TABLE sae.arma(
   registro VARCHAR,
   licencia VARCHAR,
   tenencia VARCHAR,
-  calibre INT, --FK (sae.item)
+  id_calibre INT, --FK (sae.item)
   cantidad_tolvas INT,
   cantidad_municion INT,
   propietario VARCHAR,
@@ -877,7 +898,7 @@ CREATE TABLE sae.arma(
   FOREIGN KEY (id_tipo_arma) REFERENCES sae.item(id_item),
   FOREIGN KEY (id_marca_arma) REFERENCES sae.item(id_item),
   FOREIGN KEY (id_pais_fabricante) REFERENCES sae.item(id_item),
-  FOREIGN KEY (calibre) REFERENCES sae.item(id_item),
+  FOREIGN KEY (id_calibre) REFERENCES sae.item(id_item),
   FOREIGN KEY (id_tipo_propietario) REFERENCES sae.item(id_item)
 );
 
@@ -893,8 +914,10 @@ CREATE TABLE sae.hecho(
   hora_hecho TIME,
   narracion VARCHAR,
   id_demarcacion INT, --FK (sae.item)
+  id_direccion INT,
   FOREIGN KEY (id_tipo_hecho) REFERENCES sae.item(id_item),
-  FOREIGN KEY (id_demarcacion) REFERENCES sae.item(id_item)
+  FOREIGN KEY (id_demarcacion) REFERENCES sae.item(id_item),
+  FOREIGN KEY (id_direccion) REFERENCES sae.direccion(id_direccion)
 );
 
 -- ===============================================
@@ -913,31 +936,13 @@ CREATE TABLE sae.sindicado(
   organizacion_criminal VARCHAR,
   movilizacion VARCHAR,
   telefono NUMERIC,
+  id_direccion INT,
   FOREIGN KEY (nacionalidad) REFERENCES sae.item(id_item),
-  FOREIGN KEY (genero) REFERENCES sae.item(id_item)
+  FOREIGN KEY (genero) REFERENCES sae.item(id_item),
+  FOREIGN KEY (id_direccion) REFERENCES sae.direccion(id_direccion)
 );
 
--- ===============================================
--- Tabla Direccion
--- ===============================================
 
-CREATE TABLE  sae.direccion(
-  id_direccion SERIAL PRIMARY KEY,
-  id_departamento INT, --FK (sae.departamento)
-  id_municipio INT, --FK (sae.municipio)
-  zona INT,
-  calle VARCHAR,
-  avenida VARCHAR,
-  numero_casa VARCHAR,
-  direccion_exacta VARCHAR,
-  referencia VARCHAR,
-  id_tipo_direccion INT, --FK (sae.item)
-  id_denunciante INT, --FK (sae.persona_denunciante)
-  id_hecho INT, --FK (sae.hecho)
-  FOREIGN KEY (id_tipo_direccion) REFERENCES sae.item(id_item),
-  FOREIGN KEY (id_denunciante) REFERENCES sae.denunciante(id_denunciante),
-  FOREIGN KEY (id_hecho) REFERENCES sae.hecho(id_hecho)
-);
 
 -- ===============================================
 -- Tabla Denuncia

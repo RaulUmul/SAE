@@ -190,7 +190,7 @@ function verificar_check(){
 
   $("#tipo_documento").val('').trigger('change')
 
-  let val_radiobutton = $('input:radio[name=group1]:checked').val();
+  let val_radiobutton = $('input:radio[name=poseeDocumento]:checked').val();
   let val_nacionalidad = $('#nacionalidad_persona option:selected').text();
 
   // console.log('val_radiobutton: ', val_radiobutton);
@@ -239,8 +239,8 @@ function verificar_check(){
 }
 
 
-// Volvemos a decirle que 
-$('input:radio[name=group1]').click(function () {
+// Volvemos a decirle que actualice
+$('input:radio[name=poseeDocumento]').click(function () {
   verificar_check();
 });
 
