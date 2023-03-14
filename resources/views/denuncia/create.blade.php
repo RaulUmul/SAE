@@ -158,7 +158,7 @@
               </div>
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="zona_residencia" name="zona_residencia" class="validate" value="{{old('zona_residencia')}}">
+                <input type="number" id="zona_residencia" name="zona_residencia" class="validate" value="{{old('zona_residencia')}}">
                 <label for="zona_residencia">Zona</label>
               </div>
               <div  class="input-field col s12 m6 l4">
@@ -168,7 +168,7 @@
               </div>
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="avenida_residencia" name="avenida_residencia" class="validate" value="{{old('avenida_residencia')}}">
+                <input type="number" id="avenida_residencia" name="avenida_residencia" class="validate" value="{{old('avenida_residencia')}}">
                 <label for="avenida_residencia" >Avenida</label>
               </div>
               <div  class="input-field col s12 m6 l4">
@@ -427,7 +427,7 @@
             <div class="row">
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="zona_hecho" name="zona_hecho" class="validate" value="{{old('zona_hecho')}}">
+                <input type="number" id="zona_hecho" name="zona_hecho" class="validate" value="{{old('zona_hecho')}}">
                 <label for="zona_hecho" >Zona</label>
               </div>
               <div  class="input-field col s12 m6 l4">
@@ -437,7 +437,7 @@
               </div>
               <div  class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" id="avenida_hecho" name="avenida_hecho" class="validate" value="{{old('avenida_hecho')}}">
+                <input type="number" id="avenida_hecho" name="avenida_hecho" class="validate" value="{{old('avenida_hecho')}}">
                 <label for="avenida_hecho" >Avenida</label>
               </div>
               <div  class="input-field col s12 m6 l4">
@@ -515,8 +515,8 @@
                     <div class="input-field col s12 m6 l4 ">
                       <i class="material-icons prefix">chevron_right</i>
                       <select  id="nacionalidad_sindicado">
-                        <option value="0" disabled selected>Nacionalidad</option>
-                        <option value="Guatemalteca">Guatemalteca</option>
+                        <option value="{{null}}" disabled selected></option>
+                        <option value="1">Guatemalteca</option>
                         <option value="Extranjero"  >Extranjero</option>
                       </select>
                     </div>
@@ -555,13 +555,74 @@
                         @endforeach
                       </select>
                     </div>
-
                   </div>
                   <div class="row">
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
                       <input type="number" id="edad_sindicado"  class="validate" value="">
                       <label for="edad_sindicado" class="active">Edad</label>
+                    </div>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col s12">
+                      <span><b>Direccion de residencia</b></span>
+                    </div>
+
+                    <div class="input-field col s12 m6 l4 ">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <select  id="departamento_sindicado" onchange="selectMunicipio(value,{{$municipio}},'municipio_sindicado')">
+                        <option value="{{null}}" selected>Departamento</option>
+                        @foreach ($departamento as $key => $value)
+                        <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+      
+                    <div class="input-field col s12 m6 l4 ">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <select  id="municipio_sindicado">
+                        <option value="{{null}}" selected>Municipio</option>
+                      </select>
+                    </div>
+                    <div  class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="number" id="zona_sindicado" class="validate" value="{{old('zona_sindicado')}}">
+                      <label for="zona_sindicado">Zona</label>
+                    </div>
+                    <div  class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="calle_sindicado"  class="validate" value="{{old('calle_sindicado')}}">
+                      <label for="calle_sindicado" >Calle</label>
+                    </div>
+                    <div  class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="number" id="avenida_sindicado"  class="validate" value="{{old('avenida_sindicado')}}">
+                      <label for="avenida_sindicado" >Avenida</label>
+                    </div>
+                    <div  class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="numero_casa_sindicado"  class="validate" value="{{old('numero_casa_sindicado')}}">
+                      <label for="numero_casa_sindicado" >Numero de casa </label>
+                    </div>
+                    <div  class="input-field col s12 m6">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="direccion_residencia_sindicado"  class="validate" value="{{old('direccion_residencia_sindicado')}}">
+                      <label for="direccion_residencia_sindicado" >Dirección exacta </label>
+                    </div>
+                    <div  class="input-field col s12 m6">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="referencia_residencia_sindicado"  class="validate" value="{{old('referencia_residencia_sindicado')}}">
+                      <label for="referencia_residencia_sindicado" >Referencia </label>
+                    </div>
+                    
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col s12">
+                      <span><b>Otros datos</b></span>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
@@ -674,6 +735,13 @@
     // Document Ready
     // Carga lo que existe en el local storage
     $(document).ready(function(){
+      
+      $("form").keypress(function(e) {
+            if (e.which == 13) {
+                return false;
+            }
+      });
+
       $('.tabs').tabs();
       if(window.location.reload){
           reload = true;
@@ -1016,6 +1084,14 @@
       apellidos_sindicado = $('#apellidos_sindicado').val(),
       genero_sindicado = $('#genero_sindicado').val(),
       edad_sindicado = $('#edad_sindicado').val(),
+      departamento_sindicado = $('#departamento_sindicado').val(),
+      municipio_sindicado = $('#municipio_sindicado').val(),
+      zona_sindicado = $('#zona_sindicado').val(),
+      calle_sindicado = $('#calle_sindicado').val(),
+      avenida_sindicado = $('#avenida_sindicado').val(),
+      numero_casa_sindicado = $('#numero_casa_sindicado').val(),
+      direccion_residencia_sindicado = $('#direccion_residencia_sindicado').val(),
+      referencia_residencia_sindicado = $('#referencia_residencia_sindicado').val(),
       caracteristicas_fisicas = $('#caracteristicas_fisicas').val(),
       vestimenta = $('#vestimenta').val(),
       organizacion_criminal = $('#organizacion_criminal').val(),
@@ -1032,6 +1108,14 @@
             apellidos_sindicado,
             genero_sindicado,
             edad_sindicado,
+            departamento_sindicado,
+            municipio_sindicado,
+            zona_sindicado,
+            calle_sindicado,
+            avenida_sindicado,
+            numero_casa_sindicado,
+            direccion_residencia_sindicado,
+            referencia_residencia_sindicado,
             caracteristicas_fisicas,
             vestimenta,
             organizacion_criminal,
@@ -1058,7 +1142,6 @@
     }
 
 
-    // Ahora hay que validar que al menos exista un arma antes de enviar. 
     $('#Enviar').click(function(e){
       let text_advice = $('#text-advice');
 

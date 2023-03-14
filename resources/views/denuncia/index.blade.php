@@ -7,36 +7,30 @@
     @section('titulo_card','DENUNCIAS DE ARMA DE FUEGO');
     @section('contenido_card')
 
-
+      {{--Mensaje para registro guardado exitosamente--}}
       @if (session('success'))
-        {{--Mensaje para registro guardado exitosamente o que esta bien--}}
-
-          <div id="modalGuardadoArma" class="modal">
-            <div class="modal-content">
-              <h4>{{ session('success') }}</h4>
-            </div>
-            <div class="modal-footer">
-              <div class="row">
-                <div class="col s12" style="display: flex; justify-content: space-around ">
-                  <div  style="display:flex; align-self: flex-end;">
-                    <a  class="waves-light btn modal-close" style="padding-left: 2rem;padding-right: 2rem;">
-                      Aceptar
-                      <i class="large material-icons right">check</i>
-                    </a>
-                  </div>
-                </div>
-              </div>
+        <div id="modal_success" class="modal">
+          <div class="modal-content center">
+            <h4>{{ session('success') }}</h4>
+          </div>
+          <div class="modal-footer">
+            <div class="col s12" style="display: flex; justify-content: space-around;">
+                <a  class="waves-light btn modal-close">
+                  Aceptar
+                  <i class="large material-icons right">check</i>
+                </a>
             </div>
           </div>
-
+        </div>
         @push('scripts')
-        <script>
-          $('.modal').modal();
-          $('#modalGuardadoArma').modal('open');
-        </script>
+          <script>
+            $('.modal').modal();
+            $('#modal_success').modal('open');
+          </script>
         @endpush
       @endif
-
+      {{--Mensaje de errores, no guardado.--}}
+      
 
       <div class="row">
         <div class="col s12">

@@ -108,6 +108,8 @@ General: Exigir respuesta si posee documento.
 
 3. Residencia, exigir el Departamento, Municipio, zona. 
 
+4. Si no posee documento, exigir que seleccione no.
+
 	  o en su defecto la direccion exacta.
 
 Datos del hecho 

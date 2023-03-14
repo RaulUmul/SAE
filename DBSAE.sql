@@ -1,10 +1,10 @@
 -- Active: 1677186833542@@127.0.0.1@5432@didae@sae
 DROP TABLE IF EXISTS sae.denuncia;
-DROP TABLE IF EXISTS sae.direccion;
 DROP TABLE IF EXISTS sae.sindicado;
 DROP TABLE IF EXISTS sae.hecho;
 DROP TABLE IF EXISTS sae.arma;
 DROP TABLE IF EXISTS sae.denunciante;
+DROP TABLE IF EXISTS sae.direccion;
 DROP TABLE IF EXISTS sae.municipio;
 DROP TABLE IF EXISTS sae.departamento;
 DROP TABLE IF EXISTS sae.item;
@@ -447,7 +447,12 @@ VALUES
   (394,'Comisaria 71 Quiché',12),
   (395,'Comisaria  72 Sololá',12),
   (396,'Comisaria 73 Chimaltenango',12),
-  (397,'Comisaria 74 Sacatepéquez',12)
+  (397,'Comisaria 74 Sacatepéquez',12),
+  (398,'Robada',9),
+  (399,'Extraviada',9),
+  (400,'Hurtada',9),
+  (401,'Solvente',9),
+  (402,'Sindicado',10)
 ;
 
 -- ===============================================
@@ -927,19 +932,20 @@ CREATE TABLE sae.hecho(
 CREATE TABLE sae.sindicado(
   id_sindicado SERIAL PRIMARY KEY,
   nombres VARCHAR,
+  apellidos VARCHAR,
   cui NUMERIC,
-  nacionalidad INT, --FK (sae.item)
-  genero INT, --FK (sae.item)
+  id_nacionalidad INT, --FK (sae.item)
+  id_genero INT, --FK (sae.item)
   edad INT, 
   caracteristicas_fisicas VARCHAR,
   vestimenta VARCHAR,
   organizacion_criminal VARCHAR,
   movilizacion VARCHAR,
   telefono NUMERIC,
-  id_direccion INT,
-  FOREIGN KEY (nacionalidad) REFERENCES sae.item(id_item),
-  FOREIGN KEY (genero) REFERENCES sae.item(id_item),
-  FOREIGN KEY (id_direccion) REFERENCES sae.direccion(id_direccion)
+  id_direccion JSONB,
+  FOREIGN KEY (id_nacionalidad) REFERENCES sae.item(id_item),
+  FOREIGN KEY (id_genero) REFERENCES sae.item(id_item)
+  -- FOREIGN KEY (id_direccion) REFERENCES sae.direccion(id_direccion)
 );
 
 
@@ -955,10 +961,11 @@ CREATE TABLE sae.denuncia(
   id_arma INT, --FK (sae.arma)
   id_tipo_denuncia INT, --FK (sae.item)
   id_hecho INT, --FK (sae.hecho)
-  id_sindicado INT, --FK (sae.sindicado)
+  --id_sindicados INT, --FK (sae.sindicado)
+  id_sindicados JSONB, --FK (sae.sindicado)
   FOREIGN KEY (id_denunciante) REFERENCES sae.denunciante(id_denunciante),
   FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma),
   FOREIGN KEY (id_tipo_denuncia) REFERENCES sae.item(id_item),
-  FOREIGN KEY (id_hecho) REFERENCES sae.hecho(id_hecho),
-  FOREIGN KEY (id_sindicado) REFERENCES sae.sindicado(id_sindicado) 
+  FOREIGN KEY (id_hecho) REFERENCES sae.hecho(id_hecho)
+  -- FOREIGN KEY (id_sindicado) REFERENCES sae.sindicado(id_sindicado) 
 );

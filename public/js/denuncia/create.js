@@ -153,6 +153,29 @@ $('#genero_sindicado').select2({
 }); 
 
 
+//Selects residencia sospechoso
+
+$('#departamento_sindicado').select2({
+  width: '100%',
+  placeholder: 'Departamento',
+  allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
+}); 
+$('#municipio_sindicado').select2({
+  width: '100%',
+  placeholder: 'Municipio',
+  allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
+}); 
+
 
 // Agrega la opcion de ingresar el propietario diferente al de denucniante.
 function selectChangePropietario (valor){
