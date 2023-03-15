@@ -426,7 +426,7 @@ function checkCampos(obj){
       return true;
     };
 };
-function borrarInput(){
+function borrarInputArma(){
   // $('#tipo_arma').val(""); // Posterior implementaremos un check que mantendra el select si el usuario  lo solicita. 
   // $('#marca_arma').val("");
   $('#modelo_arma').val("");
@@ -438,6 +438,28 @@ function borrarInput(){
   $('#cantidad_tolvas').val("");
   $('#cantidad_municion').val("");
   $('#propietario').val("");
+}
+
+function borrarInputSindicado(){
+// $('#nacionalidad_sindicado').val()
+$('#cui_sindicado').val("");
+$('#pasaporte_sindicado').val("");
+$('#nombres_sindicado').val("");
+$('#apellidos_sindicado').val("");
+$('#genero_sindicado').val("");
+$('#edad_sindicado').val("");
+$('#departamento_sindicado').val("");
+$('#municipio_sindicado').val("");
+$('#zona_sindicado').val("");
+$('#calle_sindicado').val("");
+$('#avenida_sindicado').val("");
+$('#numero_casa_sindicado').val("");
+$('#direccion_residencia_sindicado').val("");
+$('#referencia_residencia_sindicado').val("");
+$('#caracteristicas_fisicas').val("");
+$('#vestimenta').val("");
+$('#organizacion_criminal').val("");
+$('#telefono_sindicado').val("");
 }
 
 // Rellena los datos en el form de datos personales.

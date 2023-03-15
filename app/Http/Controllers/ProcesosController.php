@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class ProcesosController extends Controller
 {
-    
     public function agregarArma(Request $request){
 
         // Verifica si se recargo la pagina.

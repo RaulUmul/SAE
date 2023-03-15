@@ -841,7 +841,7 @@
       if(check){
         $('input#registro_arma').removeClass('invalid'); //Quitamos la clase invalid
         agregarArma(reload); //Mandamos el ajax.
-        borrarInput();  //Borramos los campos ya enviados.
+        borrarInputArma();  //Borramos los campos ya enviados.
         $('#arma_asociada').trigger('click');
         $('#linkAgregar').removeClass('active');
         $('#linkAsociada').addClass('active');
@@ -916,7 +916,7 @@
       cantidad_municion = $('#cantidad_municion').val(),
       propietario = $('#propietario').val();
 
-      let formularioSerial = $('#divtab_arma_plus').serialize();
+      let formularioSerial = $('form').serialize();
       console.log('formularioSerial: ', formularioSerial);
       
         
@@ -1071,9 +1071,19 @@
             console.log(reload);
           }, 5000);
         }
+        borrarInputSindicado();  //Borramos los campos ya enviados.
+        $('#sospechoso_asociado').trigger('click');
+        $('#linkAgregarSospechoso').removeClass('active');
+        $('#linkSospechosoAsociado').addClass('active');
+        $('.tabs').tabs();
       }
 
     });
+
+    //Accion del boton de eliminar registro de sindicado.
+    function restarSindicado(objIndex){
+      $(`#collapsible_sindicado_${objIndex}`).remove();
+    }
 
     function agregarSindicado(statusReload){
       // Hay alguna otra forma de atrapar estos datos, para no manchar mucho nuestro codigo?
@@ -1127,7 +1137,8 @@
         success: function (rspnse){
           $('#container_collapsible_sospechoso').append(rspnse);
           $('.collapsible').collapsible(); 
-          console.log(rspnse);
+          // console.log(rspnse);
+          $('#advice2').remove();
         },
         error : function(xhr, status) {
         console.log('Disculpe, existió un problema-EnagregarSindicado');

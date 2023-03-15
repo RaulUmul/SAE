@@ -490,7 +490,7 @@ class DenunciaController extends Controller
            $denuncia->id_hecho = ($hecho->latest('id_hecho')->first('id_hecho'))->id_hecho;
           //  $denuncia->id_sindicados = $id_sindicados;
           
-          echo implode($id_sindicados);
+          // echo implode($id_sindicados);
           foreach($id_sindicados as $value){
             // return $value;
             $denuncia->id_sindicados = $value;
