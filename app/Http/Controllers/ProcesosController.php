@@ -28,6 +28,10 @@ class ProcesosController extends Controller
         // return response()->json($request->tipo_arma);
 
         $registro_arma = Arma::select('registro')->where('registro',$request->registroArma)->get();
+                                                // ->where('estado_arma','$item_robada')
+                                                // ->where('estado_arma',$item_hurtada)
+                                                // ->where('estado_arma',$item_extraviada)
+                                                // ->get();
 
 
         $data = [

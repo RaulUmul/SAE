@@ -2,8 +2,8 @@
   <li>
     <div class="collapsible-header deleteCollapse">
      <p> Sindicado: 
-    @isset($nombres_sindicado)
-          - Nombres: <b>{{$nombres_sindicado}} </b>
+    @isset($primer_nombre_sindicado)
+          - Nombres: <b>{{$primer_nombre_sindicado}} {{$segundo_nombre_sindicado}} @isset($tercer_nombre_sindicado){{$tercer_nombre_sindicado}}@endisset </b>
     @endisset
     @isset($cui_sindicado)
           - DPI: <b>{{$cui_sindicado}}</b>
@@ -27,18 +27,56 @@
       </div> <br>
       @endisset
 
-      @isset($nombres_sindicado)
-      <div class="input-field">
-        <input type="hidden" name="sindicado_plus_{{$index}}[nombres_sindicado]" id="nombres_sindicado_plus_{{$index}}" value="{{$nombres_sindicado}}">
-        <label>Nombres: {{$nombres_sindicado}}</label>
+      @isset($primer_nombre_sindicado)
+      <div class="input-field" style="visibility:hidden">
+        <input type="hidden" name="sindicado_plus_{{$index}}[primer_nombre_sindicado]" id="primer_nombre_sindicado_plus_{{$index}}" value="{{$primer_nombre_sindicado}}">
+        {{-- <label>Nombres: {{$primer_nombre_sindicado}}</label> --}}
+      </div>  <br>
+      @endisset
+
+      @isset($segundo_nombre_sindicado)
+      <div class="input-field" style="visibility:hidden">
+        <input type="hidden" name="sindicado_plus_{{$index}}[segundo_nombre_sindicado]" id="segundo_nombre_sindicado_plus_{{$index}}" value="{{$segundo_nombre_sindicado}}">
+        {{-- <label>Nombres: {{$segundo_nombre_sindicado}}</label> --}}
+      </div>  <br>
+      @endisset
+
+      @isset($tercer_nombre_sindicado )
+      <div class="input-field" style="visibility:hidden">
+        <input type="hidden" name="sindicado_plus_{{$index}}[tercer_nombre_sindicado]" id="tercer_nombre_sindicado_plus_{{$index}}" value="{{$tercer_nombre_sindicado}}">
+        {{-- <label>Nombres: {{$tercer_nombre_sindicado}}</label> --}}
       </div>  <br>
       @endisset
       
       
-      @isset($apellidos_sindicado)
+      @isset($primer_apellido_sindicado)
+      <div class="input-field" style="visibility:hidden">
+        <input type="hidden" name="sindicado_plus_{{$index}}[primer_apellido_sindicado]" id="primer_apellido_sindicado_plus_{{$index}}" value="{{$primer_apellido_sindicado}}">
+        {{-- <label>Apellidos: {{$apellidos_sindicado}}</label> --}}
+      </div>  <br>
+      @endisset
+      
+      @isset($segundo_apellido_sindicado)
+      <div class="input-field" style="visibility:hidden">
+        <input type="hidden" name="sindicado_plus_{{$index}}[segundo_apellido_sindicado]" id="segundo_apellido_sindicado_plus_{{$index}}" value="{{$segundo_apellido_sindicado}}">
+        {{-- <label>Apellidos: {{$apellidos_sindicado}}</label> --}}
+      </div>  <br>
+      @endisset
+
+      {{-- <label>
+        Apellidos:
+        @isset($primer_apellido_sindicado)
+          {{$primer_apellido_sindicado}} 
+        @endisset 
+        @isset($segundo_apellido_sindicado)
+          {{$segundo_apellido_sindicado}}
+        @endisset 
+      </label> --}}
+
+      @isset($fecha_nacimiento_sindicado)
       <div class="input-field">
-        <input type="hidden" name="sindicado_plus_{{$index}}[apellidos_sindicado]" id="apellidos_sindicado_plus_{{$index}}" value="{{$apellidos_sindicado}}">
-        <label>Apellidos: {{$apellidos_sindicado}}</label>
+        <input type="hidden" name="sindicado_plus_{{$index}}[fecha_nacimiento_sindicado]" id="fecha_nacimiento_sindicado_plus_{{$index}}" value="{{$fecha_nacimiento_sindicado}}">
+        <label>Fecha de nacimiento: {{$fecha_nacimiento_sindicado}}</label>
       </div>  <br>
       @endisset
 
@@ -47,13 +85,6 @@
         <input type="hidden" name="sindicado_plus_{{$index}}[genero_sindicado]" id="genero_sindicado_plus_{{$index}}" value="{{$genero_sindicado}}">
         <label>Genero: {{$genero_sindicado}}</label>
       </div>  <br>
-      @endisset
-      
-      @isset($edad_sindicado)
-        <div class="input-field ">
-          <input type="hidden" name="sindicado_plus_{{$index}}[edad_sindicado]"  id="edad_sindicado_plus_{{$index}}" value="{{$edad_sindicado}}">
-          <label>Edad: {{$edad_sindicado}}</label>
-        </div>  <br>
       @endisset
 
       @isset($departamento_sindicado)

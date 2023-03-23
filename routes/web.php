@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DenunciaController;
+use App\Http\Controllers\DenunciaControllerVJsonB;
 use App\Http\Controllers\FallbackController;
 use App\Http\Controllers\ProcesosController;
 use App\Http\Controllers\WS_RenapController;
@@ -23,9 +24,10 @@ Route::view('','login.login');
 Route::post('',[AuthController::class,'login'])->name('login');
 Route::view('/sae','index')->name('sae.inicio');
 Route::get('denuncia_form_arma', [DenunciaController::class, 'form_arma'])->name('form_arma');
-Route::get('denuncia_form_sindicado',[DenunciaController::class, 'form_sindicado'])->name('form_sindicado');
+// Route::get('denuncia_form_sindicado',[DenunciaController::class, 'form_sindicado'])->name('form_sindicado');
+Route::get('denuncia_form_sindicado',[DenunciaControllerVJsonB::class, 'form_sindicado'])->name('form_sindicado');
 
-Route::resource('/sae/denuncia', DenunciaController::class)->parameters(['denuncia'=>'item']);
+Route::resource('/sae/denuncia', DenunciaControllerVJsonB::class)->parameters(['denuncia'=>'item']);
 
 Route::controller(ProcesosController::class)->group(function(){
   // Verifica si existe ya en la DB un arma con el respectivo registro.

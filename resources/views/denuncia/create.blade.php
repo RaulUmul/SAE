@@ -523,27 +523,61 @@
       
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="number" id="cui_sindicado"  class="validate" value="">
-                      <label for="cui_sindicado" class="active">No. DPI / CUI</label>
+                      <input type="number" id="cui_sindicado" class="" value="" oninput="validar_longitud_sindicado()" data-length="13">
+                      <label for="cui_sindicado">No. DPI / CUI</label>
+                      <span class="helper-text" data-error="DPI debe ser de 13 digitos" data-success="">DPI debe ser de 13 digitos</span>
+                      <a class="btn btn-verificar-sindicado" onclick="verificarCUIsindicado()" disabled><i class="material-icons">check</i></a>
                     </div>
-
-
+                    
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
                       <input type="text" id="pasaporte_sindicado"  class="validate" value="">
                       <label for="pasaporte_sindicado" class="active">Pasaporte</label>
                     </div>
+                  </div>
+
+                  <div class="row">
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="nombres_sindicado"  class="validate" value="">
-                      <label for="nombres_sindicado" class="active">Nombres</label>
+                      <input type="text" id="primer_nombre_sindicado"  class="validate" value="">
+                      <label for="primer_nombre_sindicado" class="active">Primer nombre</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text" id="apellidos_sindicado"  class="validate" value="">
-                      <label for="apellidos_sindicado" class="active">Apellidos</label>
+                      <input type="text" id="segundo_nombre_sindicado"  class="validate" value="">
+                      <label for="segundo_nombre_sindicado" class="active">Segundo nombre</label>
+                    </div>
+
+                    <div class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="tercer_nombre_sindicado"  class="validate" value="">
+                      <label for="tercer_nombre_sindicado" class="active">Tercer nombre</label>
+                    </div>
+
+                    <div class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="primer_apellido_sindicado"  class="validate" value="">
+                      <label for="primer_apellido_sindicado" class="active">Primer apellido</label>
+                    </div>
+
+                    <div class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="segundo_apellido_sindicado"  class="validate" value="">
+                      <label for="segundo_apellido_sindicado" class="active">Segundo apellido</label>
+                    </div>
+
+                    <div class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="text" id="apellido_casada_sindicado"  class="validate" value="">
+                      <label for="apellido_casada_sindicado" class="active">Apellido casada</label>
+                    </div>
+
+                    <div  class="input-field col s12 m6 l4">
+                      <i class="material-icons prefix">chevron_right</i>
+                      <input type="date" id="fecha_nacimiento_sindicado" class="validate" value="{{old('fecha_nacimiento_sindicado')}}">
+                      <label for="fecha_nacimiento_sindicado" >Fecha nacimiento</label>
                     </div>
 
                     <div class="input-field col s12 m6 l4 ">
@@ -652,7 +686,7 @@
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="text"  class="validate" value="">
+                      <input type="text" id="telefono_sindicado" class="validate" value="">
                       <label for="telefono_sindicado" class="active">Telefono / Celular</label>
                     </div>
                     
@@ -1043,6 +1077,49 @@
 
     // 3. Formulario Sindicado.
 
+    function verificarCUIsindicado() {
+      // Primero vamos a consultar.
+
+      let cuiSindicado = $('#cui_sindicado').val();
+      let statsCUI = checkCampos(cuiSindicado);
+
+      if(statsCUI){
+
+        $.ajax({
+          url: "{{route('consulta_renap')}}",
+          type: "GET",
+          data: {cuiSindicado},
+          dataType: "json",
+          success : function(rspnse) {
+            // No hay errores
+            if(rspnse.consulta.error == 0){
+              $('#modal_renap').html(rspnse.content);
+              $('#datos_aceptados').click(function(){
+                  inputsSindicadoLlenos(rspnse.consulta);
+              });
+            }else{
+              // Si hay errores.
+              $('#modal_renap').html(rspnse.content);
+              inputsSindicadoLimpio();
+            }
+
+            $('#modal_renap').modal('open');
+
+          },
+          error : function(xhr, status) {
+            console.log('Disculpe, existió un problema-verificarCUI');
+          },
+            complete : function(xhr, status) {
+            console.log('Petición realizada');
+          }
+        });
+
+      }else{
+      // Si viene vacio.
+        $('input#cui').addClass('invalid');
+      }
+    };
+
     // Añadimos la persona.
     $('#addSindicado').click(function(e){
       e.preventDefault();
@@ -1050,8 +1127,8 @@
        let  statsNacionalidad = checkCampos($('#nacionalidad_sindicado').val()),
             statsCUI  = checkCampos($('#cui_sindicado').val()), //Nice
             statsPasaporte  = checkCampos($('#pasaporte_sindicado').val()),
-            statsNombres  = checkCampos($('#nombres_sindicado').val()),
-            statsApellidos  = checkCampos($('#apellidos_sindicado').val()),
+            // statsNombres  = checkCampos($('#nombres_sindicado').val()),
+            // statsApellidos  = checkCampos($('#apellidos_sindicado').val()),
             statsGenero  = checkCampos($('#genero_sindicado').val()),
             statsEdad  = checkCampos($('#edad_sindicado').val()),
             statsFisicas  = checkCampos($('#caracteristicas_fisicas').val()),
@@ -1059,7 +1136,7 @@
             statsOrganizacion  = checkCampos($('#organizacion_criminal').val()),
             statsTelefono  = checkCampos($('#telefono_sindicado').val());
 
-      if(!statsNacionalidad && !statsCUI && !statsPasaporte && !statsNombres && !statsApellidos && !statsGenero && !statsEdad && !statsFisicas && !statsVestimenta && !statsOrganizacion  && !statsTelefono){
+      if(!statsNacionalidad && !statsCUI && !statsPasaporte && !statsGenero && !statsEdad && !statsFisicas && !statsVestimenta && !statsOrganizacion  && !statsTelefono){
          M.toast({html: 'Ingrese alguna caracteristica.'})            
       }else{
         // Agregamos sindicado.
@@ -1090,8 +1167,13 @@
       let nacionalidad_sindicado = $('#nacionalidad_sindicado').val(),
       cui_sindicado = $('#cui_sindicado').val(),
       pasaporte_sindicado = $('#pasaporte_sindicado').val(),
-      nombres_sindicado = $('#nombres_sindicado').val(),
-      apellidos_sindicado = $('#apellidos_sindicado').val(),
+      primer_nombre_sindicado = $('#primer_nombre_sindicado').val(),
+      segundo_nombre_sindicado = $('#segundo_nombre_sindicado').val(),
+      tercer_nombre_sindicado = $('#tercer_nombre_sindicado').val(),
+      primer_apellido_sindicado = $('#primer_apellido_sindicado').val(),
+      segundo_apellido_sindicado = $('#segundo_apellido_sindicado').val(),
+      apellido_casada_sindicado = $('#apellido_casada_sindicado').val(),
+      fecha_nacimiento_sindicado = $('#fecha_nacimiento_sindicado').val(),
       genero_sindicado = $('#genero_sindicado').val(),
       edad_sindicado = $('#edad_sindicado').val(),
       departamento_sindicado = $('#departamento_sindicado').val(),
@@ -1114,8 +1196,13 @@
             statusReload,
             cui_sindicado,
             pasaporte_sindicado,
-            nombres_sindicado,
-            apellidos_sindicado,
+            primer_nombre_sindicado,
+            segundo_nombre_sindicado,
+            tercer_nombre_sindicado,
+            primer_apellido_sindicado,
+            segundo_apellido_sindicado,
+            apellido_casada_sindicado,
+            fecha_nacimiento_sindicado,
             genero_sindicado,
             edad_sindicado,
             departamento_sindicado,

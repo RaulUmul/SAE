@@ -167,6 +167,18 @@ html {
   position: relative;
   top: -18px;
 }
+.btn-verificar-sindicado{
+  padding: 10px 0 10px 0  ;
+  max-height: 16px;
+  max-width: 6rem ;
+  position: relative;
+  left: 93%;
+  bottom: 3.8rem;
+}
+.btn-verificar-sindicado>i{
+  position: relative;
+  top: -18px;
+}
 
 
 /* Tab de Agregar Arma */

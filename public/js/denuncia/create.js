@@ -65,14 +65,14 @@ $('#marca_arma').select2({
   width: '100%',
   placeholder: 'Marca',
   allowClear: true,
-  tags: true,
+  // tags: true,
 });
 
 $('#calibre_arma').select2({
   width: '100%',
   placeholder: 'Calibre',
   allowClear: true,
-  tags: true,
+  // tags: true,
 });
 $('#pais_fabricacion').select2({
   width: '100%',
@@ -300,7 +300,7 @@ function selectTipoDocumento (valor){
 }
 
 // Boton de Verificar
-// Valida que el DPI tenga 13 digitos.
+// Valida que el DPI del denunciante tenga 13 digitos.
 function validar_longitud(){
   let actual_cui = $('#cui').val();
 
@@ -312,6 +312,24 @@ function validar_longitud(){
 
     default:
       $('.btn-verificar').attr('disabled','disabled');
+      break;
+  } 
+
+
+}
+
+// Valida que el DPI del sindicado tenga 13 digitos.
+function validar_longitud_sindicado(){
+  let actual_cui = $('#cui_sindicado').val();
+
+  switch (actual_cui.length){
+      
+    case 13:
+      $('.btn-verificar-sindicado').removeAttr('disabled')
+      break;
+
+    default:
+      $('.btn-verificar-sindicado').attr('disabled','disabled');
       break;
   } 
 
@@ -522,6 +540,69 @@ function inputsPersonaLimpio(){
   $('#apellido_casada').removeAttr('disabled');
 
   $('#fecha_nacimiento').val("");
+  M.updateTextFields();
+
+}
+
+function inputsSindicadoLlenos(request){
+  $('#primer_nombre_sindicado').val(request.primer_nombre);
+  $('#primer_nombre_sindicado').attr('disabled','disabled');
+
+  $('#segundo_nombre_sindicado').val(request.segundo_nombre);
+  $('#segundo_nombre_sindicado').attr('disabled','disabled');
+
+  $('#tercer_nombre_sindicado').val(request.tercer_nombre);
+  $('#tercer_nombre_sindicado').attr('disabled','disabled');
+
+  $('#primer_apellido_sindicado').val(request.primer_apellido);
+  $('#primer_apellido_sindicado').attr('disabled','disabled');
+
+  $('#segundo_apellido_sindicado').val(request.segundo_apellido);
+  $('#segundo_apellido_sindicado').attr('disabled','disabled');
+
+  $('#apellido_casada_sindicado').val(request.apellido_casada);
+  $('#apellido_casada_sindicado').attr('disabled','disabled');
+
+  if(request.genero == 'M'){
+    // Setear el valor a Masculino
+    $('#genero_sindicado').val('Masculino');
+  }else if(request.genero == 'F'){
+    // Setear el valor a 
+    $('#genero_sindicado').val('Femenino');
+  }else{
+    // Setear valor nulo
+  }
+
+  let d = new Date(request.fecha_nacimiento);
+  d = d.toJSON().slice(0,10);
+  $('#fecha_nacimiento_sindicado').val(d);
+  $('#fecha_nacimiento_sindicado').attr('disabled','disabled');
+
+  M.updateTextFields();
+  $('#modal_renap').modal('close');
+
+}
+
+function inputsSindicadoLimpio(){
+  $('#primer_nombre_sindicado').val("");
+  $('#primer_nombre_sindicado').removeAttr('disabled');
+
+  $('#segundo_nombre_sindicado').val("");
+  $('#segundo_nombre_sindicado').removeAttr('disabled');
+
+  $('#tercer_nombre_sindicado').val("");
+  $('#tercer_nombre_sindicado').removeAttr('disabled');
+
+  $('#primer_apellido_sindicado').val("");
+  $('#primer_apellido_sindicado').removeAttr('disabled');
+
+  $('#segundo_apellido_sindicado').val("");
+  $('#segundo_apellido_sindicado').removeAttr('disabled');
+
+  $('#apellido_casada_sindicado').val("");
+  $('#apellido_casada_sindicado').removeAttr('disabled');
+
+  $('#fecha_nacimiento_sindicado').val("");
   M.updateTextFields();
 
 }
