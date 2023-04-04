@@ -21,6 +21,6 @@ class Hecho extends Model
     }
 
     public function direccion(){
-        return $thi->belongsTo('App\Models\Direccion','','id_hecho');
+        return $this->belongsTo('App\Models\Direccion','id_direccion');
     }
 }

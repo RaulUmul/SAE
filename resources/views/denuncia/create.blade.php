@@ -815,6 +815,58 @@
       } //Fin del if principal.
     }); //Fin ReadyDocument
 
+
+    function agregarMarca(){
+      let marcaArma = $('input.select2-search__field').val().trim();
+      let marcaArmaSelect = $('#marca_arma');
+      $('#addMarca').addClass('disabled', 'disabled');
+      $.ajax({
+          url: '{{route("agregarMarca")}}',
+          type: "GET",
+          data: {marcaArma},
+          dataType: "json",
+          success : function(rspnse) {
+            let {id_item,descripcion}=rspnse
+            let option = new Option(descripcion, id_item, true, true);
+            marcaArmaSelect.append(option).trigger('change');
+            $('.select2-search__field').val('');
+          },
+          error : function(xhr, status) {
+            console.log('Disculpe, existió un problema-agregarMarca');
+          },
+            complete : function(xhr, status) {
+            console.log('Petición realizada');
+          }
+      });
+    }
+
+    function agregarCalibre(){
+      let calibreArma = $('input.select2-search__field').val().trim();
+      let calibreArmaSelect = $('#calibre_arma');
+      $('#addCalibre').addClass('disabled', 'disabled');
+      $.ajax({
+          url: '{{route("agregarCalibre")}}',
+          type: "GET",
+          data: {calibreArma},
+          dataType: "json",
+          success : function(rspnse) {
+            let {id_item,descripcion}=rspnse
+            let option = new Option(descripcion, id_item, true, true);
+            calibreArmaSelect.append(option).trigger('change');
+            $('.select2-search__field').val('');
+          },
+          error : function(xhr, status) {
+            console.log('Disculpe, existió un problema-agregarCalibre');
+          },
+            complete : function(xhr, status) {
+            console.log('Petición realizada');
+          }
+      });
+    }
+
+
+
+
     // 1. Formulario Datos Personales.
 
 

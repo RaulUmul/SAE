@@ -3,10 +3,8 @@
         <div class="navbar_grid_Parent">
             <div class="navbar_sub_grid1"> 
                 <div class="lema">
-                    <div >
+                    <div class="textLema">
                         <b>PNC-DIDAE</b><br>
-                    </div>
-                    <div>
                         <b>SISTEMA ARMAS Y EXPLOSIVOS</b>
                     </div>
                 </div>
@@ -21,7 +19,7 @@
             <a href="{{route('sae.inicio')}}"><i class="material-icons">home</i>Inicio</a>
         </li>
         <li>
-            <a href="#"><i class="material-icons"> search</i> Consultas</a>
+            <a href="{{route('consulta.index')}}"><i class="material-icons"> search</i> Consultas</a>
         </li>
         <li>
             <a href="{{route('denuncia.index')}}"> <i class="material-icons">create</i> Denuncias</a>

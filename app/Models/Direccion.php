@@ -16,8 +16,12 @@ class Direccion extends Model
 
     public $guarded = [];
   
-    public function denunciantes(){
-        return $this->hasMany('App\Models\denunciante','','id_denunciante');
+    // public function denunciantes(){
+    //     return $this->hasMany('App\Models\denunciante','','id_denunciante');
+    // }
+
+    public function hechos(){
+       return $this->hasMany('App\Models\Hecho','id_hecho');
     }
 
 

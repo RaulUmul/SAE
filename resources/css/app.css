@@ -14,6 +14,9 @@
 html {
   background: linear-gradient(to right, var(--secundary-color),var(--main-color));
 }
+h3{
+  font-size: 2rem;
+}
 
 #particles-js{
   position: fixed;
@@ -52,8 +55,11 @@ html {
 
 .lema{
   position: absolute;
-  top: 35%;
+  top: 50%;
   width: 100%;
+}
+.textLema{
+  line-height : 25px;
 }
 
 .navbar_list{
@@ -224,6 +230,46 @@ html {
 position: absolute;
 top: 25vh;
 }
+
+/* ******************Modulo Consultas****************************************** */
+
+.opos{
+  overflow: auto;
+}
+
+
+/* table caption {
+  font-size: 10.3em;
+} */
+/* 
+table thead {
+  position: absolute;
+}
+
+table th {
+  display: block;
+}
+
+table td {
+  display: block;
+}
+
+table td {
+  text-align: right;
+} */
+
+/* table td:last-child {
+  border-bottom: 0;
+}
+table th:last-child {
+  border-bottom: 0;
+} */
+
+.divs-datos-resultado>div{
+  margin: 10px;
+}
+
+
 
 /* ***********Media Querys************** */
 /* Se aplica cuando la resolucion es menor a 992px */

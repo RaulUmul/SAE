@@ -10,6 +10,7 @@ use App\Models\Hecho;
 use App\Models\Item;
 use App\Models\Municipio;
 use App\Models\Persona;
+use App\Models\Persona_Denuncia;
 use App\Models\Sindicado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -53,6 +54,7 @@ class DenunciaControllerVJsonB extends Controller
     $datosArmas=NULL;
     $datosSindicados = NULL;
     $id_armas=[];
+    $id_denunciante = NULL;
     $id_sindicados = [];
 
     
@@ -150,7 +152,19 @@ class DenunciaControllerVJsonB extends Controller
         break;
       }
     };
-    
+
+    // Recuperamos el id_tipo_persona;
+    $item_tipo_persona = Item::where('id_categoria',13)->get();
+    foreach($item_tipo_persona as $value){
+      switch($value->descripcion){
+        case('Denunciante'):
+          $item_tipoPersonaDenunciante = $value->id_item;
+        break;
+        case('Sindicado'):
+          $item_tipoPersonaSindicado = $value->id_item;
+        break;
+      }
+    }
 
 
 
@@ -237,7 +251,7 @@ class DenunciaControllerVJsonB extends Controller
           }
 
         $denunciante->save();
-
+          $id_denunciante = ($denunciante->latest('id_persona')->first('id_persona'))->id_persona;
           // return $denunciante_db->count();
       }else if($denunciante_db->count() && !$direccion_db_residencia->count()){
         
@@ -259,7 +273,7 @@ class DenunciaControllerVJsonB extends Controller
          ));
 
          $denunciante_update->save();
-
+         $id_denunciante = ($denunciante_db->first())->id_persona;
       }
 
       // 2.2 Tipo Sindicado.
@@ -403,15 +417,23 @@ class DenunciaControllerVJsonB extends Controller
                 
                  $sindicado->save();
 
+                //  $id_sindicados = Arr::prepend($id_sindicados,$sindicado->latest('id_persona')->first('id_persona'));
+                $id_sindicados = Arr::prepend($id_sindicados,($sindicado->latest('id_persona')->first('id_persona'))->id_persona);
+
+
 
                 }else if($direccion_db_sindicado->count()){
                   // se le asigna el existente.
                   $sindicado->id_direccion = json_encode(($direccion_db_sindicado->first('id_direccion'))->id_direccion);
                   $sindicado->save();
+                  // $id_sindicados = Arr::prepend($id_sindicados,$sindicado->latest('id_persona')->first('id_persona'));
+                  $id_sindicados = Arr::prepend($id_sindicados,($sindicado->latest('id_persona')->first('id_persona'))->id_persona);
+
                 }
               }else{
                 // Solo se guarda al sindicado.
                 $sindicado->save();
+                $id_sindicados = Arr::prepend($id_sindicados,($sindicado->latest('id_persona')->first('id_persona'))->id_persona);
               }
             }else if($sindicado_db->count()){
               // NOSQUEDAMOS HASTA ACA T.T
@@ -472,7 +494,7 @@ class DenunciaControllerVJsonB extends Controller
                   $direccion_db_sindicado_update->save();
                 }
               }
-              
+              $id_sindicados = Arr::prepend($id_sindicados,($sindicado_db->first('id_persona')->id_persona)); //Verificar que aca funciona.
 
             }
 
@@ -500,6 +522,7 @@ class DenunciaControllerVJsonB extends Controller
               }
             $sindicado_ni->save();
 
+            $id_sindicados = Arr::prepend($id_sindicados,($sindicado_ni->latest('id_persona')->first('id_persona'))->id_persona);
           }
 
         }; //FinForeachDatosSindicado
@@ -628,11 +651,44 @@ class DenunciaControllerVJsonB extends Controller
         }
 
         // return $hecho->latest('id_hecho')->first('id_hecho');
-        $denuncia->id_hecho = ($hecho->latest('id_hecho')->first('id_hecho'))->id_direccion;
+        $denuncia->id_hecho = ($hecho->latest('id_hecho')->first('id_hecho'))->id_hecho;
       $denuncia->save();
 
       // 6. Ingreso de Persona_Denuncia.
-      
+      // 6.1 Denunciante.
+      // El ingreso para el denunciante va a ser normal, no se preguntara si ya existe, porque se tomara la instancia creada.
+      $persona_denuncia = new Persona_Denuncia();
+        $persona_denuncia->id_persona = $id_denunciante;
+        $persona_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
+        $persona_denuncia->id_tipo_persona = $item_tipoPersonaDenunciante;
+      $persona_denuncia->save();
+      // 6.2 Sindicado
+      if($datosSindicados!=NULL){
+        // 1. Empezaremos capturando todos los id de los sindicados, y guardarlo en un array.
+
+        // 2. Cuando esten capturados id_sindicados:[{id:1}{id:2}] <- ejemplo.
+        // 3. Lo recorremos y a cada uno le asignamos el id de la denuncia generada.
+
+        // id: 1 ----- denuncias relacionas {1}
+        // id: 2 ----- denuncias relacionas {1}
+
+
+        // Ahora supongamos que para el sindicado 1 se le asigna en un distinto hecho una nueva denuncia.
+        // id_sindicados:[{id:1}{id:3}]
+
+        // id: 1 ----- denuncias relacionada {}
+
+
+        foreach($id_sindicados as $value){
+          $persona_denuncia = new Persona_Denuncia();
+            $persona_denuncia->id_persona = $value;
+            $persona_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
+            $persona_denuncia->id_tipo_persona = $item_tipoPersonaSindicado;
+          // El asunto es recuperar aunquesea el mismo para asignarle la denuncia que acaba de ser creada.
+            $persona_denuncia->id_denuncias_relacionadas = json_encode(($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia);
+          $persona_denuncia->save();
+        }
+      }
       
       DB::commit();
 
@@ -658,12 +714,16 @@ class DenunciaControllerVJsonB extends Controller
       $vista = view("denuncia\_form_arma",[
         'index'=>$key,
         'tipo_arma'=>$value['tipo_arma'],
+        'value_tipo_arma'=>$value['value_tipo_arma'],
         'registro_arma'=>$value['registro_arma'],
         'marca_arma'=>$value['marca_arma'],
+        'value_marca_arma'=>$value['value_marca_arma'],
         'modelo_arma'=>$value['modelo_arma'],
+        'calibre_arma'=>$value['calibre_arma'],
         'tenencia_arma'=>$value['tenencia_arma'],
         'licencia_arma'=>$value['licencia_arma'],
         'pais_fabricacion'=>$value['pais_fabricacion'],
+        'value_pais_fabricacion'=>$value['value_pais_fabricacion'],
         'cantidad_tolvas'=>$value['cantidad_tolvas'],
         'cantidad_municion'=>$value['cantidad_municion'],
         'propietario'=>$value['propietario'],

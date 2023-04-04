@@ -20,4 +20,12 @@ class Persona_Denuncia extends Model
     //     return $this->hasMany('App\Models\Denuncia','id_sindicado');
     // }
 
+    public function persona(){
+        return $this->belongsTo('App\Models\Persona','id_persona');
+    }
+
+    public function denuncia(){
+        return $this->belongsTo('App\Models\Denuncia','id_denuncia');
+    }
+
 }

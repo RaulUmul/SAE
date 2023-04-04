@@ -13,6 +13,7 @@ class Item extends Model
     public $timestamps = false;
     public $autoincrement = false;
     public $incrementing = false;
+    public $guarded = [];
 
 
     public function categoria(){

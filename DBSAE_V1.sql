@@ -35,19 +35,25 @@
     (9,'Estado arma'),
     (10,'Tipo direccion'),
     (11,'Tipo entidad propietario'),
-    (12,'Demarcacion')
+    (12,'Demarcacion'),
+    (13,'Tipo persona')
   ;
 
 
   -- ===============================================
   -- Items / (Primer Modulo denuncia)
   -- ===============================================
+
+  -- CREATE SEQUENCE sae.item_id_seq START WITH 500;
   CREATE TABLE sae.item(
     id_item SERIAL PRIMARY KEY,
+    -- id_item integer NOT NULL DEFAULT 'nextval('sae.item_id_item_seq')',
     descripcion VARCHAR(128),
     id_categoria INT,
     FOREIGN KEY (id_categoria) REFERENCES sae.categoria(id_categoria) 
   );
+
+  -- ALTER TABLE sae.item ALTER COLUMN id_item SET DEFAULT nextval('sae.item_id_seq');
 
 
   INSERT INTO sae.item(id_item,descripcion,id_categoria)
@@ -453,7 +459,9 @@
     (399,'Extraviada',9),
     (400,'Hurtada',9),
     (401,'Solvente',9),
-    (402,'Sindicado',10)
+    (402,'Sindicado',10),
+    (403,'Denunciante',13),
+    (404,'Sindicado',13)
   ;
 
   -- ===============================================

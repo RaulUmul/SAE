@@ -66,6 +66,14 @@ $('#marca_arma').select2({
   placeholder: 'Marca',
   allowClear: true,
   // tags: true,
+  language: {
+    noResults: function() {
+      return "<div style='display:flex; justify-content:space-between;'><div>No existe la categoria.</div><div><a class='btn' id='addMarca' onclick='agregarMarca()'>Agregar</a></div></div>";
+   },
+  },
+  escapeMarkup: function (markup) {
+    return markup;
+  }
 });
 
 $('#calibre_arma').select2({
@@ -73,6 +81,14 @@ $('#calibre_arma').select2({
   placeholder: 'Calibre',
   allowClear: true,
   // tags: true,
+  language: {
+    noResults: function() {
+      return "<div style='display:flex; justify-content:space-between;'><div>No existe la categoria.</div><div><a class='btn' id='addCalibre' onclick='agregarCalibre()'>Agregar</a></div></div>";
+   },
+  },
+  escapeMarkup: function (markup) {
+    return markup;
+  }
 });
 $('#pais_fabricacion').select2({
   width: '100%',

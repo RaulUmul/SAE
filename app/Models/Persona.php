@@ -21,4 +21,8 @@ class Persona extends Model
         // return $this->hasMany('App\Models\Denuncia','id_sindicado');
     // }
 
+    public function personas_denuncias(){
+        return $this->hasMany('App\Models\Persona_Denuncia','id_persona');
+    }
+
 }

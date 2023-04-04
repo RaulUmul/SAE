@@ -38,7 +38,7 @@
     <main class="col s12 m12 l9 container ">
       {{-- Boton del menu hamburguesa --}}
       {{-- @auth --}}
-      <a id="button_open-menu-sidenav" href="#" data-target="slide-out" class="sidenav-trigger white-text"><i class="material-icons">menu</i></a>
+      <a id="button_open-menu-sidenav" href="#" data-target="slide-out" class="sidenav-trigger white-text pulse"><i class="material-icons">menu</i></a>
       {{-- @endauth --}}
       {{-- Contenido --}}
       @yield('content')
