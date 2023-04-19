@@ -5,7 +5,7 @@
 @section('content')
     @component('components.container')
       @section('titulo_card','CONSULTA DE ARMAS PNC')
-    
+
 
         @section('contenido_card')
 
@@ -44,7 +44,7 @@
                 {{-- </div> --}}
             {{-- </div> --}}
             {{-- @endif --}}
-                        
+
             <div class="row">
                 <div class="col s12">
                     <em>
@@ -70,7 +70,7 @@
                                         <i class="material-icons prefix">chevron_right</i>
                                         <input type="number" name="numero_cui" class="validate" value="" id="numero_cui">
                                         <label for="numero_cui" class="active">Ingrese número de DPI</label>
-                                        @error('numero_cui') 
+                                        @error('numero_cui')
                                         <span class="helper-text red-text" data-error="" data-success="">{{$message}}</span>
                                         @enderror
                                     </div>
@@ -96,7 +96,7 @@
                                         <i class="material-icons prefix">chevron_right</i>
                                         <input type="text" id="numero_registro" name="numero_registro" class="validate" value="">
                                         <label for="numero_registro" class="active">Ingrese número de serie/registro</label>
-                                        @error('numero_registro') 
+                                        @error('numero_registro')
                                         <span class="helper-text red-text" data-error="" data-success="">{{$message}}</span>
                                         @enderror
                                     </div>
@@ -109,7 +109,7 @@
                                     </button>
                                 </div>
                             </form>
-                        </div>                
+                        </div>
                     </li>
                     <li>
                         <div class="collapsible-header"><i class="material-icons">keyboard</i>Número de licencia </div>
@@ -120,9 +120,9 @@
                                 <div class="row ">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">chevron_right</i>
-                                        <input type="number" name="numero_licencia" id="numero_licencia" class="validate" value="">
+                                        <input type="number" name="numero_licencia" id="numero_licencia" class="validate" value="" disabled>
                                         <label for="numero_licencia" class="active">Ingrese número de licencia</label>
-                                        @error('numero_licencia') 
+                                        @error('numero_licencia')
                                         <span class="helper-text red-text" data-error="" data-success="">{{$message}}</span>
                                         @enderror
                                     </div>
@@ -135,7 +135,7 @@
                                     </button>
                                 </div>
                             </form>
-                        </div>               
+                        </div>
                      </li>
                     <li>
                         <div class="collapsible-header"><i class="material-icons">keyboard</i>Número de tenencia </div>
@@ -146,9 +146,9 @@
                                 <div class="row ">
                                     <div class="input-field col s12">
                                         <i class="material-icons prefix">chevron_right</i>
-                                        <input type="number" name="numero_tenencia" id="numero_tenencia" class="validate" value="">
+                                        <input type="number" name="numero_tenencia" id="numero_tenencia" class="validate" value="" disabled>
                                         <label for="numero_tenencia" class="active">Ingrese número de tenencia</label>
-                                        @error('numero_tenencia') 
+                                        @error('numero_tenencia')
                                         <span class="helper-text red-text" data-error="" data-success="">{{$message}}</span>
                                         @enderror
                                     </div>
@@ -161,7 +161,7 @@
                                     </button>
                                 </div>
                             </form>
-                        </div>               
+                        </div>
                      </li>
                 </ul>
 

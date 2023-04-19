@@ -64,13 +64,13 @@ class ProcesosController extends Controller
 
     public function agregarMarca(Request $request){
 
-        $item = Item::where('descripcion',strtoupper($request->marcaArma))->get();
-//      dd($item);
+        $item =  Item::where('descripcion',strtoupper($request->marcaArma));
         //1. Tenemos que traernos los items.]
 
         $idcategoria_marca_arma = (Categoria::select('id_categoria')->where('descripcion','Marca arma')->first())->id_categoria;
 
-        if (empty($item) ){
+        if ($item->doesntExist() ){
+//      dd($idcategoria_marca_arma);
 
         $marca_toUpper = strtoupper($request->marcaArma);
         $lastId = DB::table('sae.item')->max('id_item');
@@ -93,23 +93,29 @@ class ProcesosController extends Controller
 
     public function agregarCalibre(Request $request){
 
+        $item =  Item::where('descripcion',strtoupper($request->calibreArma));
+
         //1. Tenemos que traernos los items.]
         $idcategoria_calibre = (Categoria::select('id_categoria')->where('descripcion','Calibre')->first())->id_categoria;
+
+      if ($item->doesntExist() ) {
 
         $calibre_toUpper = strtoupper($request->calibreArma);
         $lastId = DB::table('sae.item')->max('id_item');
         $newId = $lastId + 1;
 
         $item_calibre_update = new Item();
-         $item_calibre_update->id_item = $newId;
-         $item_calibre_update->descripcion = $calibre_toUpper;
-         $item_calibre_update->id_categoria = $idcategoria_calibre;
+        $item_calibre_update->id_item = $newId;
+        $item_calibre_update->descripcion = $calibre_toUpper;
+        $item_calibre_update->id_categoria = $idcategoria_calibre;
         $item_calibre_update->save();
 
         $calibre_arma = $item_calibre_update;
 
         return response()->json($calibre_arma);
-
+      }else{
+        return  response()->json($item->first());
+      }
 
     }
 

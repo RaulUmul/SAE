@@ -119,50 +119,53 @@ class ConsultaController extends Controller
     } else if (request('numero_registro') || request('numero_licencia') || request('numero_tenencia')) {
 
       if (request('numero_registro')) {
-        $arma = Arma::orWhere('registro', strtoupper(request()->only('numero_registro')['numero_registro']));
+        $arma = Arma::where('registro', strtoupper(request()->only('numero_registro')['numero_registro']));
       }
       if (request('numero_licencia')) {
-        $arma = Arma::orWhere('licencia', request()->only('numero_licencia'));
+        $arma = Arma::where('licencia', request()->only('numero_licencia'));
       }
       if (request('numero_tenencia')) {
-        $arma = Arma::orWhere('tenencia', request()->only('numero_tenencia'));
+        $arma = Arma::where('tenencia', request()->only('numero_tenencia'));
       }
 
 
       if ($arma->exists()) {
         // Si arma existe ejecuta lo sig.
-
-        $denuncia = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->first('id_arma')->id_arma]])->get();
-
-        // Denuncia y Persona;
-        $persona_denuncia = Persona_Denuncia::with('persona')
-          ->whereRelation('denuncia', 'id_denuncia', $denuncia->first()->id_denuncia)
-          ->get();
-          foreach($persona_denuncia as $persona){
-            $direccion=[];
-             if(isset($persona['persona']['id_direccion'])){
-              if(is_array(json_decode($persona['persona']['id_direccion'], true))){
-                    foreach (json_decode($persona['persona']['id_direccion']) as $direc){
-                      $direccion[]=self::direccion($direc->id_direccion);
-                }
-               }
-             }
-            $persona['persona']['direccion']=$direccion;
-
-          }
-
-
-        // Hecho y Direccion
-        $hecho_direccion = Hecho::where('id_hecho', $denuncia->first()->id_hecho)
-          ->with('direccion')
-          ->first();
-
-        $denunciante = $persona_denuncia->where('id_tipo_persona', 403)->first();
-        $sindicados = $persona_denuncia->where('id_tipo_persona', 404);
-
+        $denuncias = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->first('id_arma')->id_arma]])->get();
         $i_denuncia = [];
-        $count = 0;
-        $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . (string)$count + 1, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
+
+        foreach ($denuncias as $key => $denuncia) {
+
+          // Denuncia y Persona;
+          $persona_denuncia = Persona_Denuncia::with('persona')
+            ->whereRelation('denuncia', 'id_denuncia', $denuncia->id_denuncia)
+            ->get();
+            foreach($persona_denuncia as $persona){
+              $direccion=[];
+               if(isset($persona['persona']['id_direccion'])){
+                if(is_array(json_decode($persona['persona']['id_direccion'], true))){
+                      foreach (json_decode($persona['persona']['id_direccion']) as $direc){
+                        $direccion[]=self::direccion($direc->id_direccion);
+                  }
+                 }
+               }
+              $persona['persona']['direccion']=$direccion;
+
+            }
+
+
+          // Hecho y Direccion
+          $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
+            ->with('direccion')
+            ->first();
+
+          $denunciante = $persona_denuncia->where('id_tipo_persona', 403)->first();
+          $sindicados = $persona_denuncia->where('id_tipo_persona', 404);
+
+          $count = 0;
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
+
+        }
 
 //        return $i_denuncia;
           // Agregarle sus compact y el resto de weas xdxd

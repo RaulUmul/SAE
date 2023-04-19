@@ -475,11 +475,16 @@ class DenunciaControllerVJsonB extends Controller
 	  foreach($datosArmas as $value){
 		// Evaluamos que el arma no se encuentre registrada, y si lo esta, que tenga un estado diferente de solvente.
 		$registro_arma_db = Arma::where('registro',$value['registro_arma'])
-							->where('estado_arma',$item_robada)
-							->where('estado_arma',$item_hurtada)
-							->where('estado_arma',$item_extraviada);
+							->where(function ($q) use ($item_robada,$item_hurtada,$item_extraviada){
+                  $q->orwhere('estado_arma',$item_robada)
+                    ->orWhere('estado_arma',$item_hurtada)
+                    ->orWhere('estado_arma',$item_extraviada);
+              });
+    $registro_arma_db_solvente = Arma::where('registro',$value['registro_arma'])
+                                      ->where('estado_arma',$item_solvente);
 
-		if(!$registro_arma_db->count()){
+
+		if($registro_arma_db->doesntExist() && $registro_arma_db_solvente->doesntExist()){
 		  // Si no existe el arma se agrega.
 		  $arma = new Arma();
 
@@ -531,7 +536,32 @@ class DenunciaControllerVJsonB extends Controller
 		  // $id_armas = Arr::prepend($id_armas,Arma::latest('id_arma')->first('id_arma'));
 		  //Almacenamos el id de armas.
 		  $id_armas = Arr::prepend($id_armas,$arma->latest('id_arma')->first('id_arma'));
-		}
+		}else if($registro_arma_db_solvente->exists()){
+      //Si existe pero con estado de solvente, unicamente actualizamos.
+//      return $registro_arma_db_solvente->first()->id_arma;
+      $arma_update = Arma::find($registro_arma_db_solvente->first()->id_arma);
+
+      switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
+
+        case('Robo'):
+          $arma_update->estado_arma = $item_robada;
+          break;
+
+        case('Hurto'):
+          $arma_update->estado_arma = $item_hurtada;
+          break;
+
+        case('Extravio'):
+          $arma_update->estado_arma = $item_extraviada;
+          break;
+
+      }
+
+      $arma_update->save();
+
+      $id_armas = Arr::prepend($id_armas,($arma_update->latest('id_arma')->first('id_arma')));
+
+    }
 
 
 	  }
