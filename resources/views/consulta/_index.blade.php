@@ -50,10 +50,10 @@
                       <br>
                       <p>Para consultar datos de denuncias en base de datos de DIGECAM seleccione en Buscar:</p>
                         <br>
-                        
+
                         <div class="container center-align">
                           <div class="row">
-                              <a href="#" class=" btn white-text"><i class="material-icons right white-text">search</i>BUSCAR</a>
+                              <a href="#" class=" btn white-text disabled"><i class="material-icons right white-text">search</i>BUSCAR</a>
                           </div>
                           <br>
                         </div>

@@ -8,7 +8,7 @@
     @section('contenido_card')
 
       <form action="{{route("denuncia.store")}}" method="post">
-     
+
         @csrf
         @method("post")
 
@@ -45,7 +45,7 @@
               {{-- Aqui preguntamos si tiene documento o no. --}}
               <div class="input-field col s12 m6 l4" style="text-align: center">
                 <span >¿Poseé documento de identificación?</span>
-                <div style="display:flex; justify-content: center"> 
+                <div style="display:flex; justify-content: center">
                     <label>
                       <input name="poseeDocumento" type="radio" id="si_check" value="{{1}}"/>
                       <span>Si</span>
@@ -219,7 +219,7 @@
             <div class="row">
 
              {{-- Inputs --}}
-              
+
              {{-- Ingresamos un Tab para agregar armas --}}
 
              <div class="row" style="min-height: 50vh; ">
@@ -233,7 +233,7 @@
 
 
                 <div id="divtab_arma_plus" class="col s12"  style=" background-color: #93939314">
-                  
+
                   {{-- Aqui agregar los inputs --}}
 
                   <div class="input-field col s12 m6 l4">
@@ -328,14 +328,14 @@
                 </div>
 
                 <div id="container_collapsible" class="col s12" style=" background-color: #93939314;">
-                  
+
                   <div id="container_collapsible_son" class=" col s12 " style="min-width: 100%">
                   </div>
 
                   <div id="advice1" class=" col s12  " style="display: flex; justify-content: center; padding: 2rem; ">
                     <p id="text-advice" class="red-text">Agruegue un arma...</p>
                   </div>
-                  
+
                   <div class=" container  col s12" >
                     <div class="divider"></div>
                   </div>
@@ -368,30 +368,32 @@
                   </a>
                 </div>
               </div>
-              
+
             </div>
           </div>
 
           {{-- MAIN HECHO --}}
-          <div class="cols s12" id="div-main_hecho">
+          <div class="cols s12" id="div-main_hecho" >
             @include('partials.divider',['title'=> 'Datos del hecho'])
-            <div class="row">
+            <div class="row" >
 
             {{-- Inputs --}}
-              <div class="input-field col s12 m6 l4">
+              <div class="input-field col s12 m6 l4" >
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" name="numero_diligencia" id="numero_diligencia" class="validate" value="{{old('numero_diligencia')}}">
+                <input type="text" name="numero_diligencia" id="numero_diligencia" class="validate" value="{{old('numero_diligencia')}}" required="" aria-required="true">
                 <label for="numero_diligencia" class="active">Numero diligencia</label>
+{{--                <p class="helper-text" data-error="*Numero diligencia requerido" data-success="" style="position: absolute" >*Numero diligencia requerido</p>--}}
               </div>
 
               <div class="input-field col s12 m6 l4 ">
                 <i class="material-icons prefix">chevron_right</i>
-                <select name="tipo_hecho" id="tipo_hecho">
+                <select name="tipo_hecho" id="tipo_hecho" required="" aria-required="true">
                   <option value="{{null}}" selected>Tipo de hecho</option>
                   @foreach ($tipo_denuncia as $key => $value)
                   <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
                   @endforeach
                 </select>
+{{--                <p class="helper-text" data-error="*Tipo del hecho requerido" data-success="" style="position: absolute; left: 50%" >*Tipo del hecho requerido</p>--}}
               </div>
 
               <div  class="input-field col s12 m6 l4">
@@ -520,7 +522,7 @@
                         <option value="Extranjero"  >Extranjero</option>
                       </select>
                     </div>
-      
+
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
                       <input type="number" id="cui_sindicado" class="" value="" oninput="validar_longitud_sindicado()" data-length="13">
@@ -528,7 +530,7 @@
                       <span class="helper-text" data-error="DPI debe ser de 13 digitos" data-success="">DPI debe ser de 13 digitos</span>
                       <a class="btn btn-verificar-sindicado" onclick="verificarCUIsindicado()" disabled><i class="material-icons">check</i></a>
                     </div>
-                    
+
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
                       <input type="text" id="pasaporte_sindicado"  class="validate" value="">
@@ -613,7 +615,7 @@
                         @endforeach
                       </select>
                     </div>
-      
+
                     <div class="input-field col s12 m6 l4 ">
                       <i class="material-icons prefix">chevron_right</i>
                       <select  id="municipio_sindicado">
@@ -650,7 +652,7 @@
                       <input type="text" id="referencia_residencia_sindicado"  class="validate" value="{{old('referencia_residencia_sindicado')}}">
                       <label for="referencia_residencia_sindicado" >Referencia </label>
                     </div>
-                    
+
                   </div>
 
                   <div class="row">
@@ -689,23 +691,23 @@
                       <input type="text" id="telefono_sindicado" class="validate" value="">
                       <label for="telefono_sindicado" class="active">Telefono / Celular</label>
                     </div>
-                    
-    
+
+
                   </div>
 
                   {{-- Boton Guardar Arma --}}
                   <div class="col s12" style="display: flex; justify-content: end;">
                     <a href="#divtab_sospechoso_plus" class="waves-effect waves-light btn gray"  id="addSindicado">+Agregar sindicado</a>
                   </div>
-    
+
                 </div>
 
                 <div id="container_collapsible_sospechoso" class="col s12" style=" background-color: #93939314;">
-              
+
                   <div id="advice2" class=" col s12  " style="display: flex; justify-content: center; padding: 2rem; ">
                     <p id="text-advice_2" class="red-text">Si existen sindicados, agregarlos...</p>
                   </div>
-                  
+
                   <div class=" container  col s12" >
                     <div class="divider"></div>
                   </div>
@@ -769,7 +771,7 @@
     // Document Ready
     // Carga lo que existe en el local storage
     $(document).ready(function(){
-      
+
       $("form").keypress(function(e) {
             if (e.which == 13) {
                 return false;
@@ -798,7 +800,7 @@
             $('#container_collapsible_son').append(
               rspnse
             )
-            $('.collapsible').collapsible(); 
+            $('.collapsible').collapsible();
             $('#advice1').remove();
           },
           error : function(xhr, status) {
@@ -811,7 +813,7 @@
         })
 
         // $('.dropdown-trigger').dropdown();
-        
+
       } //Fin del if principal.
     }); //Fin ReadyDocument
 
@@ -870,7 +872,7 @@
     // 1. Formulario Datos Personales.
 
 
-    //  VERIFICAR CUI 
+    //  VERIFICAR CUI
     function verificarCUI() {
       // Primero vamos a consultar.
 
@@ -919,7 +921,7 @@
 
     // Añadimos el arma
     $('#addArma').click(function(e){
-          
+
       e.preventDefault();
       // Verificamos estado del campo registro del arma.
       let check = checkCampos($('#registro_arma').val());
@@ -932,7 +934,7 @@
         $('#linkAgregar').removeClass('active');
         $('#linkAsociada').addClass('active');
         $('.tabs').tabs();
-        
+
       }else{ //Si no han ingresado el numero de registro, lanzamos el focus.
         $('input#registro_arma').addClass('invalid');
         $('input#registro_arma').focus();
@@ -942,7 +944,7 @@
 
 
     // Funcion que ejecuta el boton para eliminar un arma en la lista de asociadas.
-    function restarArma(objIndex) { 
+    function restarArma(objIndex) {
       $(`#collapsible_${objIndex}`).remove();
       let datosLocalStorage = JSON.parse(localStorage.getItem("data"));
       datosLocalStorage.splice(objIndex,1)
@@ -961,7 +963,7 @@
             $('#container_collapsible_son').html(
               rspnse
             )
-            $('.collapsible').collapsible(); 
+            $('.collapsible').collapsible();
             // console.log($('#container_collapsible_son').find('ul').length);
           },
           error : function(xhr, status) {
@@ -1004,8 +1006,8 @@
 
       let formularioSerial = $('form').serialize();
       console.log('formularioSerial: ', formularioSerial);
-      
-        
+
+
       $.ajax({
         url: "{{route('agregarArma')}}",
         type: "GET",
@@ -1016,7 +1018,7 @@
         },
 
         // El dataType es el formato de lo que recibo
-        dataType: "json", 
+        dataType: "json",
         success : function(rspnse) {
 
           // Variable para validar el proceso de guardar los datos del arma.
@@ -1031,7 +1033,7 @@
               if(registro_arma==$(this).val()){
                 M.toast({html: 'No se puede agregar, ya ha ingresado el arma en la denuncia.'});
                 registro_repetido = true;
-                return;            
+                return;
               }
             });
           }
@@ -1080,7 +1082,7 @@
             }
 
             let datosLocalStorage = JSON.parse(localStorage.getItem("data"));
-                
+
             $.ajax({
               url: "{{route('form_arma')}}",
               type: 'get',
@@ -1094,7 +1096,7 @@
                 $('#container_collapsible_son').html(
                   rspnse
                 )
-                $('.collapsible').collapsible(); 
+                $('.collapsible').collapsible();
               },
               error : function(xhr, status) {
               console.log('Disculpe, existió un problema');
@@ -1106,14 +1108,14 @@
             });
 
             // Agregar el input del propietario?
-            $('.collapsible').collapsible(); 
+            $('.collapsible').collapsible();
             $('.dropdown-trigger').dropdown();
             $('#advice1').remove();
             M.toast({html: 'Arma agregada!'}) //Notificamos que ya se agrego el arma
 
           }else if((rspnse.registro_arma.length > 0)){
             // Alertamos que el arma ya se encuentra con denuncia en la DB.
-            M.toast({html: 'No se puede asociar, el arma ya cuenta con denuncia asociada.'})            
+            M.toast({html: 'No se puede asociar, el arma ya cuenta con denuncia asociada.'})
 
           }
 
@@ -1189,7 +1191,7 @@
             statsTelefono  = checkCampos($('#telefono_sindicado').val());
 
       if(!statsNacionalidad && !statsCUI && !statsPasaporte && !statsGenero && !statsEdad && !statsFisicas && !statsVestimenta && !statsOrganizacion  && !statsTelefono){
-         M.toast({html: 'Ingrese alguna caracteristica.'})            
+         M.toast({html: 'Ingrese alguna caracteristica.'})
       }else{
         // Agregamos sindicado.
         agregarSindicado(reload);
@@ -1269,13 +1271,13 @@
             vestimenta,
             organizacion_criminal,
             telefono_sindicado
-          
+
         },
         dataType: 'text',
         // beforeSend: mostrarImagenCargando,
         success: function (rspnse){
           $('#container_collapsible_sospechoso').append(rspnse);
-          $('.collapsible').collapsible(); 
+          $('.collapsible').collapsible();
           // console.log(rspnse);
           $('#advice2').remove();
         },
@@ -1287,13 +1289,48 @@
         }
 
       });
-      
+
 
     }
 
 
     $('#Enviar').click(function(e){
       let text_advice = $('#text-advice');
+      let cui_denunciante = $('#cui').val();
+      let numero_diligencia = $('#numero_diligencia').val();
+      let tipo_hecho = $('#tipo_hecho').val();
+      let poseeDocumento = $('input[type="radio"][name="poseeDocumento"]:checked').val();
+
+      $.ajax({
+        url: "{{route('denuncia.store')}}",
+        type: 'POST',
+        data: {
+          cui_denunciante,
+          poseeDocumento,
+          numero_diligencia,
+          tipo_hecho,
+          _token: '{{ csrf_token() }}'
+        },
+        dataType: 'json',
+        // beforeSend: mostrarImagenCargando,
+        success: function (rspnse){
+        //   No recibo nada, solo estoy verificando
+        },
+        error : function(response, status) {
+          console.log('Disculpe, existió un problema-EnviarForm');
+          if(response.responseJSON.message == undefined){
+            let errores = Object.values(response.responseJSON);
+            errores.map(el => {
+              M.toast({html: el });
+              }
+            )
+          }
+        },
+        complete : function(xhr, status) {
+          console.log('Petición realizada');
+        }
+
+      });
 
       if(text_advice.length == 0 ){
 
@@ -1307,7 +1344,7 @@
         M.toast({html: 'Agruegue un arma a la denuncia!'});
       }
 
-    }); 
+    });
 
   </script>
 @endpush

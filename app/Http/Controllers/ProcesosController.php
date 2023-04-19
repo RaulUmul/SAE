@@ -10,14 +10,15 @@ use Illuminate\Support\Facades\DB;
 
 class ProcesosController extends Controller
 {
+//  Procesos relacionados a la interaccion de los datos de armas en Denuncia, Consulta.
     public function agregarArma(Request $request){
 
         // Verifica si se recargo la pagina.
         // if($request->statusReload == 'true'){
         //     Cache::flush();
         // }
-        
-        
+
+
         // Si no se recargo mantiene la cache.
         // Por lo que entiendo, dice que la funcion cache::get(par1: variablearecuperar, par2: variablepordefectosinoexiste);
         // Incluso podemos pasar un "closure", callback que retorne un valor por defecto en el par2.
@@ -45,9 +46,11 @@ class ProcesosController extends Controller
         };
 
         $registro_arma = Arma::select('registro')->where('registro',$request->registroArma)
-                                                ->where('estado_arma',$item_robada)
-                                                ->where('estado_arma',$item_hurtada)
-                                                ->where('estado_arma',$item_extraviada)
+                                                ->where(function($q) use ($item_robada,$item_hurtada,$item_extraviada) {
+                                                  $q->orwhere('estado_arma',$item_robada)
+                                                    ->orWhere('estado_arma',$item_hurtada)
+                                                    ->orWhere('estado_arma',$item_extraviada);
+                                                })
                                                 ->get();
 
 
@@ -55,14 +58,19 @@ class ProcesosController extends Controller
             'statusReload' => $request->statusReload,
             'registro_arma'=>$registro_arma
         ];
-        
+
         return  response()->json($data);
     }
 
     public function agregarMarca(Request $request){
 
+        $item = Item::where('descripcion',strtoupper($request->marcaArma))->get();
+//      dd($item);
         //1. Tenemos que traernos los items.]
+
         $idcategoria_marca_arma = (Categoria::select('id_categoria')->where('descripcion','Marca arma')->first())->id_categoria;
+
+        if (empty($item) ){
 
         $marca_toUpper = strtoupper($request->marcaArma);
         $lastId = DB::table('sae.item')->max('id_item');
@@ -75,9 +83,11 @@ class ProcesosController extends Controller
         $item_marca_arma_update->save();
 
         $marca_arma = $item_marca_arma_update;
-        
-        return response()->json($marca_arma);
 
+        return response()->json($marca_arma);
+        }else{
+          return  response()->json($item->first());
+        }
 
     }
 
@@ -97,9 +107,47 @@ class ProcesosController extends Controller
         $item_calibre_update->save();
 
         $calibre_arma = $item_calibre_update;
-        
+
         return response()->json($calibre_arma);
 
+
+    }
+
+    public function showStatusArma(Request $request){
+
+      $request->estado_arma;
+      $desc_estado = Item::where('id_item',$request->estado_arma)
+                          ->where('id_categoria',9)->first();
+      $solvente = false;
+      $descripcion =$desc_estado->descripcion;
+      $id_arma = $request->id_arma;
+
+      if($desc_estado->descripcion != 'Solvente'){
+          return view('consulta.showEstadoArma',compact('solvente','descripcion','id_arma'));
+      }else{
+        $solvente = true;
+        return view('consulta.showEstadoArma',compact('solvente','descripcion'));
+      }
+
+    }
+
+    public  function editStatusArma(Request $request){
+//      return $request;
+
+      $item_solvente = Item::select('id_item')->where('descripcion','Solvente')->where('id_categoria',9)->first();
+
+
+      try {
+        $arma_update = Arma::find($request->id_arma);
+        $arma_update->estado_arma = $item_solvente->id_item;
+        $arma_update->save();
+
+        return response('success');
+
+      }catch (\Throwable $th){
+        throw $th;
+        DB::rollBack();
+      }
 
     }
 

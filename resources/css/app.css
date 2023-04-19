@@ -1,5 +1,7 @@
 /* Vamos a definir los colores de la aplicacion */
-
+*{
+  box-sizing: border-box;
+}
 :root{
   --main-color: #00599f;
   --secundary-color: #23b9f5;
@@ -40,8 +42,8 @@ h3{
   grid-row-gap: 0px;
   background-color: transparent;
 }
-  
-.navbar_sub_grid1 { grid-area: 2 / 1 / 4 / 5; 
+
+.navbar_sub_grid1 { grid-area: 2 / 1 / 4 / 5;
   background-color: white;
   border-radius: 4px 4px 0px 0px;
   text-align: center;
@@ -50,7 +52,7 @@ h3{
 }
 
 .navbar_sub_grid2 {
-  grid-area: 1 / 2 / 3 / 4; 
+  grid-area: 1 / 2 / 3 / 4;
 }
 
 .lema{
@@ -113,7 +115,7 @@ h3{
   text-align: center;
 }
 #index-button_cancel{
-  padding-left: 2rem;  
+  padding-left: 2rem;
   padding-right: 2rem;
 }
 
@@ -211,7 +213,7 @@ h3{
   border-right: 1px  solid #5f748e;
   border-top: 1px  solid #5f748e;
   /* border-bottom: 1px solid #5f748e; */
-  
+
 }
 .tabs .tab.deactive-tab{
   border-bottom: 1px solid #5f748e;
@@ -241,7 +243,7 @@ top: 25vh;
 /* table caption {
   font-size: 10.3em;
 } */
-/* 
+/*
 table thead {
   position: absolute;
 }
@@ -284,7 +286,7 @@ table th:last-child {
     max-width: 40%;
     background-color: transparent;
   }
-  
+
 
 }
 /* Se aplica entre el rango de 546 a 992  */
@@ -304,7 +306,7 @@ table th:last-child {
     left: 20vw;
     right: 20vw;
   }
-  
+
 
 }
 

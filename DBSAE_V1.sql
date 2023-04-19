@@ -23,7 +23,7 @@
   );
 
   INSERT INTO sae.categoria(id_categoria,descripcion)
-  VALUES 
+  VALUES
     (1,'Nacionalidad'),
     (2,'Genero'),
     (3,'Tipo arma'),
@@ -50,7 +50,7 @@
     -- id_item integer NOT NULL DEFAULT 'nextval('sae.item_id_item_seq')',
     descripcion VARCHAR(128),
     id_categoria INT,
-    FOREIGN KEY (id_categoria) REFERENCES sae.categoria(id_categoria) 
+    FOREIGN KEY (id_categoria) REFERENCES sae.categoria(id_categoria)
   );
 
   -- ALTER TABLE sae.item ALTER COLUMN id_item SET DEFAULT nextval('sae.item_id_seq');
@@ -504,7 +504,7 @@
     id_municipio SERIAL PRIMARY KEY,
     municipio VARCHAR,
     id_departamento INT,
-    FOREIGN KEY (id_departamento)  REFERENCES departamento(id_departamento)
+    FOREIGN KEY (id_departamento)  REFERENCES sae.departamento(id_departamento)
   );
 
   INSERT INTO sae.municipio(id_municipio,municipio,id_departamento)
@@ -879,7 +879,7 @@
     pasaporte NUMERIC,
     telefono_celular NUMERIC,
     fecha_nacimiento DATE,
-    edad INT, 
+    edad INT,
     id_genero INT, --FK (sae.item)
     id_nacionalidad INT, --FK (sae.item)
     id_direccion JSONB,
