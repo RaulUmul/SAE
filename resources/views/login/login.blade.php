@@ -1,6 +1,6 @@
 @extends('layouts.plantilla')
   @section('title','Crear denuncia')
-  
+
   @section('content')
     <form method="POST" action="{{route('login')}}" id="login-form" autocomplete="off">
       @csrf
@@ -11,7 +11,7 @@
             <div class="card" style="border-radius: 8px">
               <div class="card-action" style="border-radius: 20px">
                 <div class="row">
-                          
+
                   <form class="col s12">
                     <div class="row">
                       <div align="center">
@@ -48,7 +48,6 @@
                       </div>
                     </div>
                   </form>
-
                 </div>
               </div>
             </div>

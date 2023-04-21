@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,8 +42,12 @@
       {{-- @endauth --}}
       {{-- Contenido --}}
       @yield('content')
-    
+
     </main>
+
+    <footer class=" col s12  center-align" style="">
+      @include('partials.footer')
+    </footer>
 
   </div>
 
@@ -66,6 +70,6 @@
 @stack('scripts')
 
 
-  
+
 </body>
 </html>

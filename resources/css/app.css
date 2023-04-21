@@ -16,6 +16,9 @@
 html {
   background: linear-gradient(to right, var(--secundary-color),var(--main-color));
 }
+
+
+
 h3{
   font-size: 2rem;
 }
@@ -70,6 +73,22 @@ h3{
   height: 50%;
   overflow-y: auto;
 }
+
+/* Footer */
+
+footer{
+  /*border: 1px solid yellow;*/
+  /*margin-top: 100vh;*/
+  /*margin-top: 100%;*/
+  margin-bottom: -100%;
+}
+body{
+  /*margin-bottom: -10px;*/
+  /*padding-bottom: -100px;*/
+  /*min-height: 100vh;*/
+  /*border: 1px solid red;*/
+}
+
 /* Estilos para los label de materialize y Select2 */
 .input-field>label{
   color: var(--color-etiquetas);

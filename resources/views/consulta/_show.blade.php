@@ -27,7 +27,7 @@
             <ul class="collapsible">
               <li>
                 <div class="collapsible-header">
-                  Denuncia No.<b> {{$denuncia['denunciante']->id_denuncia}}</b> {{' '}}  / Registro Arma
+                  Denuncia No.<b> {{$denuncia['denunciante']->id_denuncia}}</b>
                 </div>
                 <div class="collapsible-body">
 
@@ -47,7 +47,7 @@
                           <th>Edad</th>
                           <th>Fecha de nacimiento</th>
                           <th>Genero</th>
-                          <th>Direccion</th>
+                          <th>Direccion residencia</th>
                         </tr>
 
                       </thead>
