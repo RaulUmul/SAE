@@ -292,10 +292,10 @@ function selectTipoDocumento (valor){
   if(valor == 'dpi'){
       $('#div_documento_identificacion').html(`
       <i class="material-icons prefix">chevron_right</i>
-      <input type="number" id="cui" name="cui" class="" value="" oninput="validar_longitud()" data-length="13">
+      <input type="number" id="cui" name="cui" class="" value="" oninput="validar_longitud(), inputsPersonaLimpio()" data-length="13">
       <label for="cui">No. DPI / CUI</label>
       <span class="helper-text" data-error="DPI debe ser de 13 digitos" data-success="">DPI debe ser de 13 digitos</span>
-      <a class="btn btn-verificar" onclick="verificarCUI()" disabled><i class="material-icons">check</i></a>
+      <a class="btn btn-verificar" onclick="verificarCUI()" disabled><i class="material-icons">search</i></a>
       `);
       $('input#cui').characterCounter();
   }else if(valor == 'pasaporte'){
@@ -518,10 +518,16 @@ function inputsPersonaLlenos(request){
 
   if(request.genero == 'M'){
     // Setear el valor a Masculino
-    $('#genero_persona').val('Masculino');
+    $('#genero_persona').val(2);
+    $('#genero_persona').trigger('change');
+    $('#genero_persona').attr('disabled','disabled');
+
   }else if(request.genero == 'F'){
-    // Setear el valor a 
-    $('#genero_persona').val('Femenino');
+    // Setear el valor a Femenino
+    $('#genero_persona').val(3);
+    $('#genero_persona').trigger('change');
+    $('#genero_persona').attr('disabled','disabled');
+
   }else{
     // Setear valor nulo
   }
@@ -556,6 +562,11 @@ function inputsPersonaLimpio(){
   $('#apellido_casada').removeAttr('disabled');
 
   $('#fecha_nacimiento').val("");
+  $('#fecha_nacimiento').removeAttr('disabled');
+
+  $('#genero_persona').val("");
+  $('#genero_persona').removeAttr('disabled');
+
   M.updateTextFields();
 
 }
@@ -581,10 +592,16 @@ function inputsSindicadoLlenos(request){
 
   if(request.genero == 'M'){
     // Setear el valor a Masculino
-    $('#genero_sindicado').val('Masculino');
+    $('#genero_sindicado').val(2);
+    $('#genero_sindicado').trigger('change');
+    $('#genero_sindicado').attr('disabled','disabled');
   }else if(request.genero == 'F'){
     // Setear el valor a 
-    $('#genero_sindicado').val('Femenino');
+    $('#genero_sindicado').val(3);
+    $('#genero_sindicado').trigger('change');
+    $('#genero_sindicado').attr('disabled','disabled');
+
+    
   }else{
     // Setear valor nulo
   }
@@ -619,6 +636,12 @@ function inputsSindicadoLimpio(){
   $('#apellido_casada_sindicado').removeAttr('disabled');
 
   $('#fecha_nacimiento_sindicado').val("");
+  $('#fecha_nacimiento_sindicado').removeAttr('disabled');
+
+  $('#genero_sindicado').val("");
+  $('#genero_sindicado').removeAttr('disabled');
+
+  
   M.updateTextFields();
 
 }

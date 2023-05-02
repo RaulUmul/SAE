@@ -23,6 +23,32 @@
 <body>
 
   <div id="particles-js"></div>
+  <style>
+    .all-the-ground{
+      position: absolute;
+      z-index: 1000;
+      height: 100%;
+      width: 100%;
+      /* border: 1px solid yellow; */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.2);
+      /* display: none; */
+    }
+
+    
+    .preloader-wrapper{
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+
+  <div class="all-the-ground">
+    {{-- <div class="preloader-wrapper big  active"> --}}
+      <img src="{{asset('img/cargando.svg')}}" alt="">
+    {{-- </div> --}}
+  </div>
 
   <div class="row">
 
@@ -69,6 +95,13 @@
 {{-- <script src="{{asset('js/app.js')}}"></script> --}}
 @stack('scripts')
 
+<script>
+  $(document).ready(function () {
+
+     $('.all-the-ground').hide();
+
+  });
+</script>
 
 
 </body>

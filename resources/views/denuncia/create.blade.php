@@ -525,10 +525,10 @@
 
                     <div class="input-field col s12 m6 l4">
                       <i class="material-icons prefix">chevron_right</i>
-                      <input type="number" id="cui_sindicado" class="" value="" oninput="validar_longitud_sindicado()" data-length="13">
+                      <input type="number" id="cui_sindicado" class="" value="" oninput="validar_longitud_sindicado(),inputsSindicadoLimpio()" data-length="13">
                       <label for="cui_sindicado">No. DPI / CUI</label>
                       <span class="helper-text" data-error="DPI debe ser de 13 digitos" data-success="">DPI debe ser de 13 digitos</span>
-                      <a class="btn btn-verificar-sindicado" onclick="verificarCUIsindicado()" disabled><i class="material-icons">check</i></a>
+                      <a class="btn btn-verificar-sindicado" onclick="verificarCUIsindicado()" disabled><i class="material-icons">search</i></a>
                     </div>
 
                     <div class="input-field col s12 m6 l4">
@@ -740,23 +740,25 @@
       </form>
 
 
-      <div id="modal_renap" class="modal">
+      <div id="modal_renap" class="modal" style="overflow-x: hidden">
         <div class="modal-content" id="content_modal_renap">
           <h4>Cargando...</h4>
         </div>
         <div class="modal-footer">
           <div class="row">
             <div class="col s12" style="display: flex; justify-content: space-around ">
-              <div class="" style="display:flex; align-self: flex-end;">
-                <a onclick="insertar_datos()"  class="waves-light btn modal-close" style="padding-left: 2rem;padding-right: 2rem;">
+              {{-- <div class="" style="display:flex; align-self: flex-end;"> --}}
+                <a onclick="insertar_datos()"  class="waves-light btn modal-close" >
                   Aceptar
                   <i class="large material-icons right">check</i>
                 </a>
-              </div>
+              {{-- </div> --}}
             </div>
           </div>
         </div>
       </div>
+
+      
 
     @endsection
   @endcomponent
@@ -771,7 +773,6 @@
     // Document Ready
     // Carga lo que existe en el local storage
     $(document).ready(function(){
-
       $("form").keypress(function(e) {
             if (e.which == 13) {
                 return false;
@@ -865,9 +866,6 @@
           }
       });
     }
-
-
-
 
     // 1. Formulario Datos Personales.
 
@@ -1134,18 +1132,20 @@
     function verificarCUIsindicado() {
       // Primero vamos a consultar.
 
-      let cuiSindicado = $('#cui_sindicado').val();
-      let statsCUI = checkCampos(cuiSindicado);
+      let cui = $('#cui_sindicado').val();
+      let statsCUI = checkCampos(cui);
 
       if(statsCUI){
 
         $.ajax({
           url: "{{route('consulta_renap')}}",
           type: "GET",
-          data: {cuiSindicado},
+          data: {cui},
           dataType: "json",
           success : function(rspnse) {
             // No hay errores
+            console.log(cui);
+            console.log(rspnse.consulta);
             if(rspnse.consulta.error == 0){
               $('#modal_renap').html(rspnse.content);
               $('#datos_aceptados').click(function(){

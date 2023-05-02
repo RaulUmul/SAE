@@ -82,12 +82,12 @@ footer{
   /*margin-top: 100%;*/
   margin-bottom: -100%;
 }
-body{
+/* body{ */
   /*margin-bottom: -10px;*/
   /*padding-bottom: -100px;*/
   /*min-height: 100vh;*/
   /*border: 1px solid red;*/
-}
+/* } */
 
 /* Estilos para los label de materialize y Select2 */
 .input-field>label{

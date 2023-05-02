@@ -85,6 +85,32 @@
                             </form>
                         </div>
                     </li>
+                    <li>
+                        <div class="collapsible-header"><i class="material-icons">person_pin</i>Nombre</div>
+                        <div class="collapsible-body" >
+                            <form action="{{route('consulta.show')}}" method="POST" >
+                                @csrf
+                                @method('post')
+                                <div class="row ">
+                                    <div class="input-field col s12">
+                                        <i class="material-icons prefix">chevron_right</i>
+                                        <input type="text" name="nombre_completo" class="validate" value="" id="nombre_completo">
+                                        <label for="nombre_completo" class="active">Ingrese nombre</label>
+                                        @error('nombre_completo')
+                                        <span class="helper-text red-text" data-error="" data-success="">{{$message}}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="center">
+                                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                                        Buscar
+                                        <i class="material-icons right">search</i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
                     <li class="active">
                         <div class="collapsible-header"><i class="material-icons">keyboard</i>Número de registro</div>
                         <div class="collapsible-body" >
@@ -178,18 +204,6 @@
             $('.collapsible').collapsible();
         });
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @endpush

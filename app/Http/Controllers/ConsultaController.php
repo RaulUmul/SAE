@@ -43,16 +43,16 @@ class ConsultaController extends Controller
 
     // 1. Preguntar de que viene la consulta. Persona o Arma.
     if (request('numero_cui')) {
-      $persona = Persona::where('cui', request()->only('numero_cui'));
+      $personas = Persona::where('cui', request()->only('numero_cui'));
 
-      if ($persona->exists()) {
+      if ($personas->exists()) {
         // Obtenemos el id de cada denuncia.
-        $persona_denuncia = Persona_Denuncia::where('id_persona', $persona->first()->id_persona);
-        // $persona_denuncia->get();
+        $personas_denuncia = Persona_Denuncia::where('id_persona', $personas->first()->id_persona);
+        // $personas_denuncia->get();
 
         $id_denuncias = [];
 
-        foreach ($persona_denuncia->get() as $key => $value) {
+        foreach ($personas_denuncia->get() as $key => $value) {
           $id_denuncias = Arr::add($id_denuncias, $key, $value->id_denuncia);
         }
 
@@ -60,19 +60,19 @@ class ConsultaController extends Controller
         $i_denuncia = [];
         $count = 0;
         foreach ($id_denuncias as $key => $value) {
-          $persona_denuncia = Persona_Denuncia::with('persona')
+          $personas_denuncia = Persona_Denuncia::with('persona')
             ->whereRelation('denuncia', 'id_denuncia', $value)
             ->get();
-          foreach($persona_denuncia as $persona){
+          foreach($personas_denuncia as $personas){
             $direccion=[];
-            if(isset($persona['persona']['id_direccion'])){
-              if(is_array(json_decode($persona['persona']['id_direccion'], true))){
-                foreach (json_decode($persona['persona']['id_direccion']) as $direc){
+            if(isset($personas['persona']['id_direccion'])){
+              if(is_array(json_decode($personas['persona']['id_direccion'], true))){
+                foreach (json_decode($personas['persona']['id_direccion']) as $direc){
                   $direccion[]=self::direccion($direc->id_direccion);
                 }
               }
             }
-            $persona['persona']['direccion']=$direccion;
+            $personas['persona']['direccion']=$direccion;
 
           }
 
@@ -85,17 +85,13 @@ class ConsultaController extends Controller
           $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
             ->with('direccion')
             ->first();
-//          $denuncia = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->first('id_arma')->id_arma]])->get();
-//          $arma = Arma::where('id_arma',
 
-
-          $denunciante = $persona_denuncia->where('id_tipo_persona', 403)->first();
-          $sindicados = $persona_denuncia->where('id_tipo_persona', 404);
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
 
           $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
 
         }
-//           return $i_denuncia;
 
         return view('consulta._show',
           compact('i_denuncia',
@@ -110,12 +106,38 @@ class ConsultaController extends Controller
 
         );
 
-      } else if ($persona->doesntExist()) {
+      } else if ($personas->doesntExist()) {
         return redirect(route('consulta.create'))
           ->with('error', 'No se ha encontrado el registro.');
       }
 
+    }else if(request('nombre_completo')){
 
+        $nombre_completo = ucwords(request('nombre_completo'));
+        $personas = Persona::whereRaw("REPLACE(TRIM(CONCAT(COALESCE(primer_nombre,''),' ',COALESCE(segundo_nombre,''),' ',COALESCE(tercer_nombre,''),' ',COALESCE(primer_apellido,''),' ',COALESCE(segundo_apellido,''),' ',COALESCE(apellido_casada,''))),'  ',' ') LIKE '%$nombre_completo%'");
+
+
+
+        if($personas->exists()){
+
+          // return $personas->get();
+          // Pos como seria la pinchi logica?
+          $datos=[];
+          foreach($personas->get() as $persona){
+            $datos[] = ['nombre_completo' => $persona->primer_nombre.' '.$persona->segundo_nombre.' '.$persona->tercer_nombre.' '.$persona->primer_apellido.' '.$persona->segundo_apellido.' '.$persona->apeliido_casada,
+                        'id'=>$persona->id_persona];
+          }
+          return view('consulta.consulta_persona_eleccion',compact('datos'));
+
+
+          return  'avwsiexite';
+        }else if($personas->doesntExist()){
+          return redirect(route('consulta.create'))
+          ->with('error', 'No se ha encontrado el registro.');
+
+        }
+
+    
     } else if (request('numero_registro') || request('numero_licencia') || request('numero_tenencia')) {
 
       if (request('numero_registro')) {
@@ -137,19 +159,19 @@ class ConsultaController extends Controller
         foreach ($denuncias as $key => $denuncia) {
 
           // Denuncia y Persona;
-          $persona_denuncia = Persona_Denuncia::with('persona')
+          $personas_denuncia = Persona_Denuncia::with('persona')
             ->whereRelation('denuncia', 'id_denuncia', $denuncia->id_denuncia)
             ->get();
-            foreach($persona_denuncia as $persona){
+            foreach($personas_denuncia as $personas){
               $direccion=[];
-               if(isset($persona['persona']['id_direccion'])){
-                if(is_array(json_decode($persona['persona']['id_direccion'], true))){
-                      foreach (json_decode($persona['persona']['id_direccion']) as $direc){
+               if(isset($personas['persona']['id_direccion'])){
+                if(is_array(json_decode($personas['persona']['id_direccion'], true))){
+                      foreach (json_decode($personas['persona']['id_direccion']) as $direc){
                         $direccion[]=self::direccion($direc->id_direccion);
                   }
                  }
                }
-              $persona['persona']['direccion']=$direccion;
+              $personas['persona']['direccion']=$direccion;
 
             }
 
@@ -159,19 +181,19 @@ class ConsultaController extends Controller
             ->with('direccion')
             ->first();
 
-          $denunciante = $persona_denuncia->where('id_tipo_persona', 403)->first();
-          $sindicados = $persona_denuncia->where('id_tipo_persona', 404);
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
 
           $count = 0;
           $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
 
         }
 
-//        return $i_denuncia;
+          //        return $i_denuncia;
           // Agregarle sus compact y el resto de weas xdxd
 
 
-        // return $genero;
+          // return $genero;
         return view('consulta._show',
           // (['denunciante'=>$denunciante,'sindicados'=>$sindicados,'hecho'=>$hecho_direccion,'arma'=>$arma->get()])
           compact(
@@ -191,15 +213,78 @@ class ConsultaController extends Controller
           ->with('error', 'No se ha encontrado el registro.');
       }
 
+    } else if(request('id_persona')){
+
+      
+        // Obtenemos el id de cada denuncia.
+        $personas_denuncia = Persona_Denuncia::where('id_persona', request('id_persona'));
+        // $personas_denuncia->get();
+
+        $id_denuncias = [];
+
+        foreach ($personas_denuncia->get() as $key => $value) {
+          $id_denuncias = Arr::add($id_denuncias, $key, $value->id_denuncia);
+        }
+
+        // Recorremos el arreglo
+        $i_denuncia = [];
+        $count = 0;
+        foreach ($id_denuncias as $key => $value) {
+          $personas_denuncia = Persona_Denuncia::with('persona')
+            ->whereRelation('denuncia', 'id_denuncia', $value)
+            ->get();
+          foreach($personas_denuncia as $personas){
+            $direccion=[];
+            if(isset($personas['persona']['id_direccion'])){
+              if(is_array(json_decode($personas['persona']['id_direccion'], true))){
+                foreach (json_decode($personas['persona']['id_direccion']) as $direc){
+                  $direccion[]=self::direccion($direc->id_direccion);
+                }
+              }
+            }
+            $personas['persona']['direccion']=$direccion;
+
+          }
+
+          $denuncia = Denuncia::where('id_denuncia', $value)->first();
+          $armas = [];
+          foreach( (json_decode($denuncia->id_armas)) as $arma){
+            $armas[] = Arma::where('id_arma',$arma->id_arma)->first();
+          }
+
+          $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
+            ->with('direccion')
+            ->first();
+
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
+
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
+
+        
+
+        return view('consulta._show',
+          compact('i_denuncia',
+            'departamento',
+            'municipio',
+            'genero',
+            'tipo_arma',
+            'marca_arma',
+            'calibre_arma',
+            'estado_arma',
+            'tipo_denuncia')
+
+        );
+
+      }
     }
   }
 
     static  function direccion($id_direcccon = 0){
-
-              $direccion = [];
-              if ($id_direcccon!= 0) {
-                $direccion = Direccion::find($id_direcccon);
-              }
-              return $direccion;
+      $direccion = [];
+        if ($id_direcccon!= 0) {
+          $direccion = Direccion::find($id_direcccon);
         }
+      return $direccion;
+    }
 }
