@@ -14,6 +14,9 @@
   <link rel="shortcut icon" type="image/x-icon" href="{{ asset('img/pnc.ico') }}">
   {{-- Style de Select2 --}}
   <link rel="stylesheet" href="{{asset('css/select2.css')}}">
+  {{-- Style de SweetAlert2 --}}
+  <link rel="stylesheet" href="{{asset('css/sweetalert2.min.css')}}">
+
   {{-- Styles de la App --}}
   @vite(['resources/css/app.css','resources/js/app.js'])
   {{-- Nombre de Titulo --}}
@@ -91,6 +94,8 @@
 {{-- Script Particles JS --}}
 <script src="{{ asset('js/particles.min.js') }}"></script>
 <script src="{{ asset('js/particles.inc.js') }}"></script>
+{{-- Script SweetAlert2 --}}
+<script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 {{-- Scripts de cada Modulo --}}
 {{-- <script src="{{asset('js/app.js')}}"></script> --}}
 @stack('scripts')

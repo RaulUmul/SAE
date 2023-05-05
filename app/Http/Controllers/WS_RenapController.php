@@ -12,7 +12,7 @@ class WS_RenapController extends Controller
 
     public static function renap(Request $request,$renap=false){
 
-        $cui = $request->cui;   
+        $cui = $request->cui;
     	$url = 'http://172.21.68.211/optimus2_rest/WS_OptimusPrime.php';
     	$cliente= "RAUL";
     	// $user= \Auth::user()->usuario;
@@ -36,13 +36,6 @@ class WS_RenapController extends Controller
 
         // Aqui hay que verificar si la consulta trae la data o si trae errores.\
 
-        $xml = new \SimpleXMLElement($consulta['foto']);
-        $newdataset = $xml->children();
-        $dataset = get_object_vars($newdataset);
-        $foto=$dataset['PortraitImage'];
-        $img = base64_decode($foto);
-
-        $imgSrc = 'data: '. $xml . ';base64,' . $foto;
 
 
         if($consulta['error']){
@@ -51,7 +44,16 @@ class WS_RenapController extends Controller
                 'descripcion'=>$consulta['descripcion'],
             ]);
         }else{
-            return view("denuncia\_modal_wsrenap",[
+
+          $xml = new \SimpleXMLElement($consulta['foto']);
+          $newdataset = $xml->children();
+          $dataset = get_object_vars($newdataset);
+          $foto=$dataset['PortraitImage'];
+//        $img = base64_decode($foto);
+
+          $imgSrc = 'data: '. $xml . ';base64,' . $foto;
+
+          return view("denuncia\_modal_wsrenap",[
                 'dpi'=>$consulta['dpi'],
                 'primer_nombre'=>$consulta['primer_nombre'],
                 'segundo_nombre'=>$consulta['segundo_nombre'],

@@ -112,10 +112,16 @@ class ConsultaController extends Controller
       }
 
     }else if(request('nombre_completo')){
-
+        // Solo encuentra busquedas exactas, la tilde por ejemplo.
         $nombre_completo = ucwords(request('nombre_completo'));
-        $personas = Persona::whereRaw("REPLACE(TRIM(CONCAT(COALESCE(primer_nombre,''),' ',COALESCE(segundo_nombre,''),' ',COALESCE(tercer_nombre,''),' ',COALESCE(primer_apellido,''),' ',COALESCE(segundo_apellido,''),' ',COALESCE(apellido_casada,''))),'  ',' ') LIKE '%$nombre_completo%'");
-
+        $personas = Persona::whereRaw("REPLACE(TRIM(CONCAT(
+                                        COALESCE(primer_nombre,''),' ',
+                                        COALESCE(segundo_nombre,''),' ',
+                                        COALESCE(tercer_nombre,''),' ',
+                                        COALESCE(primer_apellido,''),' ',
+                                        COALESCE(segundo_apellido,''),' ',
+                                        COALESCE(apellido_casada,''))),'  ',' ')
+                                        LIKE '%$nombre_completo%'");
 
 
         if($personas->exists()){
@@ -130,14 +136,13 @@ class ConsultaController extends Controller
           return view('consulta.consulta_persona_eleccion',compact('datos'));
 
 
-          return  'avwsiexite';
+//          return  'avwsiexite';
         }else if($personas->doesntExist()){
           return redirect(route('consulta.create'))
           ->with('error', 'No se ha encontrado el registro.');
 
         }
 
-    
     } else if (request('numero_registro') || request('numero_licencia') || request('numero_tenencia')) {
 
       if (request('numero_registro')) {
@@ -215,7 +220,7 @@ class ConsultaController extends Controller
 
     } else if(request('id_persona')){
 
-      
+
         // Obtenemos el id de cada denuncia.
         $personas_denuncia = Persona_Denuncia::where('id_persona', request('id_persona'));
         // $personas_denuncia->get();
@@ -261,7 +266,7 @@ class ConsultaController extends Controller
 
           $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
 
-        
+
 
         return view('consulta._show',
           compact('i_denuncia',

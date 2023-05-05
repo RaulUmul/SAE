@@ -495,27 +495,16 @@ class DenunciaControllerVJsonB extends Controller
 			}
 
 			isset($value['marca_arma']) && $arma->id_marca_arma = $value['marca_arma'];
-
 			isset($value['modelo_arma']) && $arma->modelo_arma = $value['modelo_arma'];
-
 			isset($value['licencia_arma']) && $arma->licencia = $value['licencia_arma'];
-
 			$arma->registro = $value['registro_arma'];
-
 			isset($value['tenencia_arma']) && $arma->tenencia = $value['tenencia_arma'];
-
 			isset($value['calibre_arma']) && $arma->id_calibre = $value['calibre_arma'];
-
 			isset($value['pais_fabricacion']) && $arma->id_pais_fabricante = $value['pais_fabricacion'];
-
 			isset($value['cantidad_tolvas']) && $arma->cantidad_tolvas = $value['cantidad_tolvas'];
-
 			isset($value['cantidad_municion']) && $arma->cantidad_municion = $value['cantidad_municion'];
-
 			isset($value['propietario']) && $arma->propietario = $value['propietario'];
-
 			// $arma->id_tipo_propietario = $value['']; //No he registrado esto aun
-
 			// El estado se determina a un inicio por el tipo de hecho.
 			switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
 
