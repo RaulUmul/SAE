@@ -185,4 +185,10 @@ class ProcesosController extends Controller
     public function registroRecuperacion(){
 
     }
+
+    public function recibirForm(Request $request){
+
+      return $request;
+      return response()->json(["Success"=>'Hola']);
+    }
 }
