@@ -50,6 +50,7 @@ Route::controller(ProcesosController::class)->group(function(){
   Route::get('/sae/proceso/show_status_arma','showStatusArma')->name('showStatusArma');
   Route::get('/sae/proceso/edit_status_arma','editStatusArma')->name('editStatusArma');
   Route::get('/sae/proceso/edit_arma','editArma')->name('editArma');
+  Route::post('/sae/proceso/recibir_form','recibirForm')->name('recibirForm');
 });
 // Consulta de CUI a WSRenap.
 Route::controller(WS_RenapController::class)->group(function(){

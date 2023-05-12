@@ -440,11 +440,11 @@
       </div>
 
       {{-- Modal modificar estado arma --}}
-      <div id="modEstadoArma" class="modal valign-wrapper modal-fixed-footer">
-        <div class="modal-content ">
+      <div id="modEstadoArma" class="modal valign-wrapper modal-fixed-footer" >
+        <div class="modal-content " >
           <h4 class="center-align">Registrar recuperacion del arma"</h4>
-          <div id="form-recuperacion" class="">
-            <form>
+          <div id="form-recuperacion" class="" style="overflow-x: hidden">
+            <form id="recuperacion_arma" name="recuperacion_arma">
               {{--  Existe detenido  --}}
               {{--  Generamos la funcion verdad? --}}
               <div class="row row" style="box-shadow: 0px 10px 5px 1px rgba(0, 0, 0, 0.1)">
@@ -472,22 +472,50 @@
               <div id="personas_raiz" class="row z-depth-0" style=" background-color: #93939314;">
 
               </div>
+
+              <div class="row">
+                @include('partials.divider',['title'=> 'Hecho'])
+                <div class="input-field col s12 m6 l4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <select name="demarcacion_hecho" id="demarcacion_hecho">
+{{--                    @foreach ($departamento as $key => $value)--}}
+{{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
+{{--                    @endforeach--}}
+                  </select>
+                </div>
+                <div class="input-field col s12 m6 l4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <select name="unidad_recupera" id="unidad_recupera">
+{{--                    @foreach ($departamento as $key => $value)--}}
+{{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
+{{--                    @endforeach--}}
+                  </select>
+                </div>
+              </div>
+
               <div class="row">
                 @include('partials.divider',['title'=> 'Direccion del hecho'])
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <select name="departamento_hecho_recuperacion" id="departamento_hecho_recuperacion" onchange="">
+                  <select name="departamento_hecho_recuperacion" id="departamento_hecho_recuperacion" onchange="selectMunicipio(value,{{$municipio}},'municipio_hecho_recuperacion')">
                     <option value="{{null}}" selected>Departamento</option>
                     @foreach ($departamento as $key => $value)
                       <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>
                     @endforeach
                   </select>
                 </div>
+                <div class="input-field col s12 m6 l4 ">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <select name="municipio_hecho_recuperacion" id="municipio_hecho_recuperacion">
+                    <option value="{{null}}" selected>Municipio</option>
+                  </select>
+                </div>
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <input class="" id="numero_prevencion" name="numero_prevencion" type="text">
-                  <label for="numero_prevencion">Numero prevencion</label>
+                  <input type="text" name="direccion_hecho" id="direccion_hecho">
+                  <label for="direccion_hecho">Direccion completa</label>
                 </div>
+
               </div>
 
               <div class="row">
@@ -500,6 +528,9 @@
                 </div>
 
               </div>
+
+              <a class="btn" id="enviar_form" onclick="enviar_form()">Enviar</a>
+
             </form>
           </div>
         </div>
@@ -554,20 +585,9 @@
     $(document).ready(function () {
       $('.collapsible').collapsible();
       $('.modal').modal();
-      $('.tooltipped').tooltip();
 
-      $('#departamento_hecho_recuperacion').select2({
-        width: '100%',
-        placeholder: 'Departamento',
-        allowClear: true,
-        dropdownParent: $("#modEstadoArma"),
-        language: {
-          noResults: function() {
-            return "No existe la categoria.";
-          }
-        },
-      })
     });
+
 
 
     let var_id_arma;
@@ -595,6 +615,8 @@
 
       $('#modEstadoArma').modal('open');
     }
+
+    // Mandamos a inyectar el show.js?
 
     // Funcion para Ampliar Registros de las armas.
     function editArma(arma) {
@@ -751,6 +773,31 @@
         }
       });
     }
+
+
+    function enviar_form(){
+       let datos = $('#recuperacion_arma').serialize();
+
+
+      $.ajax({
+        url: '{{route("recibirForm")}}',
+        type: "POST",
+        data: {datos,
+         _token: '{{ csrf_token() }}'
+        },
+        dataType: "text",
+        success: function (rspnse) {
+          console.log(rspnse)
+        },
+        error: function (xhr, status) {
+          console.log('Disculpe, existió un problema');
+        },
+        complete: function (xhr, status) {
+          console.log('Petición realizada');
+        }
+      });
+    };
+
 
   </script>
 @endpush
