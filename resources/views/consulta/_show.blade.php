@@ -6,7 +6,7 @@
   @component('components.container')
     @section('titulo_card','RESULTADO DE LA BUSQUEDA')
     @section('contenido_card')
-
+      @csrf
       {{-- Aqui presentaremos los resultados satisfactorios de la busqueda. --}}
       {{-- Como? T.T --}}
       {{-- Por cada arma recuperada verdad... o no? --}}
@@ -31,12 +31,12 @@
                 </div>
                 <div class="collapsible-body">
 
-                <div class="row divs-datos-resultado">
-                  <div class="col s12 white opos">
-                    <h3 class="center-align">Denunciante</h3>
+                  <div class="row divs-datos-resultado">
+                    <div class="col s12 white opos">
+                      <h3 class="center-align">Denunciante</h3>
 
-                    <table class="centered highlight ">
-                      <thead>
+                      <table class="centered highlight ">
+                        <thead>
                         <tr>
                           {{-- Todos evaluaran ifset --}}
                           <th>Nombre</th>
@@ -50,31 +50,31 @@
                           <th>Direccion residencia</th>
                         </tr>
 
-                      </thead>
+                        </thead>
 
-                      <tbody>
+                        <tbody>
                         <tr>
                           <td>
                             {{-- Nombres --}}
-                          {{isset($denuncia['denunciante']->persona->primer_nombre) ? $denuncia['denunciante']->persona->primer_nombre : null}}
-                          {{isset($denuncia['denunciante']->persona->segundo_nombre) ? $denuncia['denunciante']->persona->segundo_nombre : null}}
-                          {{isset($denuncia['denunciante']->persona->tercer_nombre) ? $denuncia['denunciante']->persona->tercer_nombre : null}}
+                            {{isset($denuncia['denunciante']->persona->primer_nombre) ? $denuncia['denunciante']->persona->primer_nombre : null}}
+                            {{isset($denuncia['denunciante']->persona->segundo_nombre) ? $denuncia['denunciante']->persona->segundo_nombre : null}}
+                            {{isset($denuncia['denunciante']->persona->tercer_nombre) ? $denuncia['denunciante']->persona->tercer_nombre : null}}
 
                           </td>
                           <td>
                             {{-- Apellidos --}}
-                          {{isset($denuncia['denunciante']->persona->primer_apellido) ? $denuncia['denunciante']->persona->primer_apellido : null}}
-                          {{isset($denuncia['denunciante']->persona->segundo_apellido) ? $denuncia['denunciante']->persona->segundo_apellido : null}}
-                          {{isset($denuncia['denunciante']->persona->apellido_casada) ? $denuncia['denunciante']->persona->apellido_casada : null}}
+                            {{isset($denuncia['denunciante']->persona->primer_apellido) ? $denuncia['denunciante']->persona->primer_apellido : null}}
+                            {{isset($denuncia['denunciante']->persona->segundo_apellido) ? $denuncia['denunciante']->persona->segundo_apellido : null}}
+                            {{isset($denuncia['denunciante']->persona->apellido_casada) ? $denuncia['denunciante']->persona->apellido_casada : null}}
                           </td>
                           <td>
                             {{-- CUI --}}
-                          {{isset($denuncia['denunciante']->persona->cui) ? $denuncia['denunciante']->persona->cui : 'N/I'}}
+                            {{isset($denuncia['denunciante']->persona->cui) ? $denuncia['denunciante']->persona->cui : 'N/I'}}
 
                           </td>
                           <td>
                             {{-- Pasaporte --}}
-                          {{isset($denuncia['denunciante']->persona->pasaporte) ? $denuncia['denunciante']->persona->pasaporte : 'N/I'}}
+                            {{isset($denuncia['denunciante']->persona->pasaporte) ? $denuncia['denunciante']->persona->pasaporte : 'N/I'}}
                           </td>
                           <td>
                             {{-- Telefono Celular --}}
@@ -91,12 +91,12 @@
                           <td>
                             {{-- Genero --}}
                             @isset($denuncia['denunciante']->persona->id_genero)
-                                @foreach ( $genero as  $value )
-                                  @if( $value->id_item == ($denuncia['denunciante']->persona->id_genero) )
+                              @foreach ( $genero as  $value )
+                                @if( $value->id_item == ($denuncia['denunciante']->persona->id_genero) )
                                   {{$value->descripcion}}
-                                  @endif
-                                @endforeach
-                              @else
+                                @endif
+                              @endforeach
+                            @else
                               N/I
                             @endisset
                           </td>
@@ -120,11 +120,11 @@
                                 @endforeach
 
                                 {{-- Departamento --}}
-                                  @foreach ( $departamento as  $depto )
-                                    @if( $depto->id_departamento == ($direccion->id_departamento) )
-                                      {{$depto->departamento}}
-                                    @endif
-                                  @endforeach
+                                @foreach ( $departamento as  $depto )
+                                  @if( $depto->id_departamento == ($direccion->id_departamento) )
+                                    {{$depto->departamento}}
+                                  @endif
+                                @endforeach
 
                                 <br>
                                 {{-- Departamento --}}
@@ -132,14 +132,14 @@
                             @endisset
                           </td>
                         </tr>
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
 
-                  </div>
-                  <div class="col s12 white opos">
-                    <h3 class="center-align">Hecho</h3>
-                    <table class="centered highlight">
-                      <thead>
+                    </div>
+                    <div class="col s12 white opos">
+                      <h3 class="center-align">Hecho</h3>
+                      <table class="centered highlight">
+                        <thead>
                         <tr>
                           {{-- Todos evaluaran ifset --}}
                           <th>No. Diligencia</th>
@@ -150,34 +150,34 @@
                           <th>Narracion</th>
                         </tr>
 
-                      </thead>
+                        </thead>
 
-                      <tbody>
+                        <tbody>
                         <tr>
                           <td>
                             {{-- No.Diligencia --}}
-                          {{isset($denuncia['hecho']->numero_diligencia) ? $denuncia['hecho']->numero_diligencia : 'N/I'}}
+                            {{isset($denuncia['hecho']->numero_diligencia) ? $denuncia['hecho']->numero_diligencia : 'N/I'}}
                           </td>
                           <td>
                             {{-- Direccion --}}
-                              {{-- Calle --}} {{-- o Avenida--}}
-                              {{isset($denuncia['hecho']->direccion->calle) ? $denuncia['hecho']->direccion->calle. " calle":null}}
-                              {{isset($denuncia['hecho']->direccion->avenida) ? $denuncia['hecho']->direccion->avenida. " avenida":null}}
-                              {{-- Casa --}}
-                              {{isset($denuncia['hecho']->direccion->numero_casa) ? $denuncia['hecho']->direccion->numero_casa:null}}
-                              {{-- Zona --}}
-                              {{isset($denuncia['hecho']->direccion->zona) ? "Zona ".$denuncia['hecho']->direccion->zona:null}}
-                              {{-- Municipio --}}
-                              @foreach ( $municipio as  $municip )
-                                @if( $municip->id_municipio == ($denuncia['hecho']->direccion->id_municipio) )
-                                  {{$municip->municipio}},
-                                @endif
-                              @endforeach
-                              {{-- Departamento --}}
-                              @foreach ( $departamento as  $depto )
-                                @if( $depto->id_departamento == ($denuncia['hecho']->direccion->id_departamento) )
-                                  {{$depto->departamento}}
-                                @endif
+                            {{-- Calle --}} {{-- o Avenida--}}
+                            {{isset($denuncia['hecho']->direccion->calle) ? $denuncia['hecho']->direccion->calle. " calle":null}}
+                            {{isset($denuncia['hecho']->direccion->avenida) ? $denuncia['hecho']->direccion->avenida. " avenida":null}}
+                            {{-- Casa --}}
+                            {{isset($denuncia['hecho']->direccion->numero_casa) ? $denuncia['hecho']->direccion->numero_casa:null}}
+                            {{-- Zona --}}
+                            {{isset($denuncia['hecho']->direccion->zona) ? "Zona ".$denuncia['hecho']->direccion->zona:null}}
+                            {{-- Municipio --}}
+                            @foreach ( $municipio as  $municip )
+                              @if( $municip->id_municipio == ($denuncia['hecho']->direccion->id_municipio) )
+                                {{$municip->municipio}},
+                              @endif
+                            @endforeach
+                            {{-- Departamento --}}
+                            @foreach ( $departamento as  $depto )
+                              @if( $depto->id_departamento == ($denuncia['hecho']->direccion->id_departamento) )
+                                {{$depto->departamento}}
+                              @endif
                             @endforeach
                           </td>
                           <td>
@@ -205,20 +205,20 @@
                             {{isset($denuncia['hecho']->narracion) ? $denuncia['hecho']->narracion : 'N/I'}}
                           </td>
                         </tr>
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
 
-                  </div>
+                    </div>
 
-                  <div class="col s12 white opos ">
-                    <h3 class="center-align">Sindicado(s)</h3>
-                    {{--
-                    @if ( $denuncia['sindicados']   )
-                        {{'toyvacio'}}
-                    @endif --}}
+                    <div class="col s12 white opos ">
+                      <h3 class="center-align">Sindicado(s)</h3>
+                      {{--
+                      @if ( $denuncia['sindicados']   )
+                          {{'toyvacio'}}
+                      @endif --}}
 
-                    <table class="centered highlight">
-                      <thead>
+                      <table class="centered highlight">
+                        <thead>
                         <tr>
                           <th>Nombre</th>
                           <th>Apellidos</th>
@@ -230,63 +230,63 @@
                           <th>Genero</th>
                           <th>Direccion</th>
                         </tr>
-                      </thead>
+                        </thead>
 
-                      <tbody>
+                        <tbody>
                         @foreach ($denuncia['sindicados'] as $sindicado)
                           <tr>
                             <td>
                               {{-- Nombres --}}
-                            {{isset($sindicado->persona->primer_nombre) ? $sindicado->persona->primer_nombre : null}}
-                            {{isset($sindicado->persona->tercer_nombre) ? $sindicado->persona->tercer_nombre : null}}
-                            {{isset($sindicado->persona->segundo_nombre) ? $sindicado->persona->segundo_nombre : null}}
-                            {{(!isset($sindicado->persona->primer_nombre) && !isset($sindicado->persona->segundo_nombre)  && !isset($sindicado->persona->tercer_nombre))? 'N/I' : null}}
+                              {{isset($sindicado->persona->primer_nombre) ? $sindicado->persona->primer_nombre : null}}
+                              {{isset($sindicado->persona->tercer_nombre) ? $sindicado->persona->tercer_nombre : null}}
+                              {{isset($sindicado->persona->segundo_nombre) ? $sindicado->persona->segundo_nombre : null}}
+                              {{(!isset($sindicado->persona->primer_nombre) && !isset($sindicado->persona->segundo_nombre)  && !isset($sindicado->persona->tercer_nombre))? 'N/I' : null}}
 
                             </td>
                             <td>
                               {{-- Apellidos  --}}
-                            {{isset($sindicado->persona->primer_apellido) ? $sindicado->persona->primer_apellido : null}}
-                            {{isset($sindicado->persona->segundo_apellido) ? $sindicado->persona->segundo_apellido : null}}
-                            {{isset($sindicado->persona->apellido_casada) ? $sindicado->persona->apellido_casada : null}}
-                            {{!isset($sindicado->persona->primer_apellido)  && !isset($sindicado->persona->segundo_apellido) && !isset($sindicado->persona->apellido_casada) ?'N/I' : null}}
+                              {{isset($sindicado->persona->primer_apellido) ? $sindicado->persona->primer_apellido : null}}
+                              {{isset($sindicado->persona->segundo_apellido) ? $sindicado->persona->segundo_apellido : null}}
+                              {{isset($sindicado->persona->apellido_casada) ? $sindicado->persona->apellido_casada : null}}
+                              {{!isset($sindicado->persona->primer_apellido)  && !isset($sindicado->persona->segundo_apellido) && !isset($sindicado->persona->apellido_casada) ?'N/I' : null}}
                             </td>
                             <td>
                               {{-- CUI --}}
-                            {{isset($sindicado->persona->cui) ? $sindicado->persona->cui : 'N/I'}}
+                              {{isset($sindicado->persona->cui) ? $sindicado->persona->cui : 'N/I'}}
                             </td>
                             <td>
                               {{-- Pasaporte --}}
-                            {{isset($sindicado->persona->pasaporte) ? $sindicado->persona->cui : 'N/I'}}
+                              {{isset($sindicado->persona->pasaporte) ? $sindicado->persona->cui : 'N/I'}}
                             </td>
                             <td>
                               {{-- Telefono --}}
-                            {{isset($sindicado->persona->telefono_celular) ? $sindicado->persona->telefono_celular : 'N/I'}}
+                              {{isset($sindicado->persona->telefono_celular) ? $sindicado->persona->telefono_celular : 'N/I'}}
                             </td>
                             <td>
                               {{--  Edad --}}
-                            {{isset($sindicado->persona->edad) ? $sindicado->persona->edad : 'N/I'}}
+                              {{isset($sindicado->persona->edad) ? $sindicado->persona->edad : 'N/I'}}
                             </td>
                             <td>
                               {{--  Fecha nacimiento --}}
-                            {{isset($sindicado->persona->fecha_nacimiento) ? $sindicado->persona->fecha_nacimiento : 'N/I'}}
+                              {{isset($sindicado->persona->fecha_nacimiento) ? $sindicado->persona->fecha_nacimiento : 'N/I'}}
                             </td>
                             <td>
                               {{-- Genero --}}
                               @isset($sindicado->persona->id_genero)
                                 @foreach ( $genero as  $value )
                                   @if( $value->id_item == ($sindicado->persona->id_genero) )
-                                  {{$value->descripcion}}
+                                    {{$value->descripcion}}
                                   @endif
                                 @endforeach
-                                  @else
-                                  N/I
+                              @else
+                                N/I
                               @endisset
                             </td>
                             <td>
                               {{-- Direccion --}}
                               @isset($sindicado['persona']->direccion)
                                 @foreach($sindicado['persona']->direccion as $direc)
-{{--                                  {{$direc}}--}}
+                                  {{--                                  {{$direc}}--}}
                                   {{-- Calle --}} {{-- o Avenida--}}
                                   {{isset($direc->calle) ? $direc->calle. " calle":null}}
                                   {{isset($direc->avenida) ? $direc->avenida. " Av. ":null}}
@@ -315,16 +315,16 @@
                         @endforeach
 
 
-                      </tbody>
-                    </table>
+                        </tbody>
+                      </table>
 
 
-                  </div>
-                  <div class="col s12 white opos">
-                    <h3 class="center-align">Arma</h3>
+                    </div>
+                    <div class="col s12 white opos">
+                      <h3 class="center-align">Arma</h3>
 
-                    <table  class="centered highlight">
-                      <thead>
+                      <table class="centered highlight">
+                        <thead>
                         <tr>
                           <th>Tipo</th>
                           <th>Marca</th>
@@ -339,91 +339,98 @@
                           <th>Estatus</th>
                           <th>Acciones</th>
                         </tr>
-                      </thead>
-                      <tbody>
-                      @foreach($denuncia['armas'] as $arma)
-                        <tr>
-                          <td>
-                            {{-- Tipo Arma --}}
-                            @isset($arma->id_tipo_arma)
-                            @foreach ( $tipo_arma as  $value )
-                              @if( $value->id_item == ($arma->id_tipo_arma) )
-                              {{$value->descripcion}}
-                              @endif
-                            @endforeach
+                        </thead>
+                        <tbody>
+                        @foreach($denuncia['armas'] as $arma)
+                          <tr>
+                            <td>
+                              {{-- Tipo Arma --}}
+                              @isset($arma->id_tipo_arma)
+                                @foreach ( $tipo_arma as  $value )
+                                  @if( $value->id_item == ($arma->id_tipo_arma) )
+                                    {{$value->descripcion}}
+                                  @endif
+                                @endforeach
                               @else
-                              N/I
-                          @endisset
-                          </td>
-                          <td>
-                            {{-- Marca Arma --}}
-                            @isset($arma->id_marca_arma)
-                            @foreach ( $marca_arma as  $value )
-                              @if( $value->id_item == ($arma->id_marca_arma) )
-                              {{$value->descripcion}}
-                              @endif
-                            @endforeach
+                                N/I
+                              @endisset
+                            </td>
+                            <td>
+                              {{-- Marca Arma --}}
+                              @isset($arma->id_marca_arma)
+                                @foreach ( $marca_arma as  $value )
+                                  @if( $value->id_item == ($arma->id_marca_arma) )
+                                    {{$value->descripcion}}
+                                  @endif
+                                @endforeach
                               @else
-                              N/I
-                          @endisset
-                          </td>
-                          <td>
-                            {{isset($arma->modelo_arma) ? $arma->modelo_arma : 'N/I'}}
-                          </td>
-                          <td>
-                            {{isset($arma->registro) ? $arma->registro : 'N/I'}}
-                          </td>
-                          <td>
-                            {{isset($arma->licencia) ? $arma->licencia : 'N/I'}}
-                          </td>
-                          <td>
-                            {{isset($arma->tenencia) ? $arma->tenencia : 'N/I'}}
-                          </td>
-                          <td>
-                            {{-- Calibre --}}
-                            @isset($arma->id_calibre)
-                            @foreach ( $calibre_arma as  $value )
-                              @if( $value->id_item == ($arma->id_calibre) )
-                              {{$value->descripcion}}
-                              @endif
-                            @endforeach
+                                N/I
+                              @endisset
+                            </td>
+                            <td>
+                              {{isset($arma->modelo_arma) ? $arma->modelo_arma : 'N/I'}}
+                            </td>
+                            <td>
+                              {{isset($arma->registro) ? $arma->registro : 'N/I'}}
+                            </td>
+                            <td>
+                              {{isset($arma->licencia) ? $arma->licencia : 'N/I'}}
+                            </td>
+                            <td>
+                              {{isset($arma->tenencia) ? $arma->tenencia : 'N/I'}}
+                            </td>
+                            <td>
+                              {{-- Calibre --}}
+                              @isset($arma->id_calibre)
+                                @foreach ( $calibre_arma as  $value )
+                                  @if( $value->id_item == ($arma->id_calibre) )
+                                    {{$value->descripcion}}
+                                  @endif
+                                @endforeach
                               @else
-                              N/I
-                          @endisset
-                          </td>
-                          <td>
-                            {{isset($arma->cantidad_tolvas) ? $arma->cantidad_tolvas : 'N/I'}}
-                          </td>
-                          <td>
-                            {{isset($arma->cantidad_municion) ? $arma->cantidad_municion : 'N/I'}}
-                          </td>
-                          <td>
-                            {{-- Hay que indicar quien es el propietario --}}
-                            {{isset($arma->propietario) ? $arma->propietario : 'N/I'}}
-                          </td>
-                          <td>
-                            {{-- Estatus --}}
-                            @isset($arma->estado_arma)
-                            @foreach ( $estado_arma as  $value )
-                              @if( $value->id_item == ($arma->estado_arma) )
-                              {{$value->descripcion}}
-                              @endif
-                            @endforeach
+                                N/I
+                              @endisset
+                            </td>
+                            <td>
+                              {{isset($arma->cantidad_tolvas) ? $arma->cantidad_tolvas : 'N/I'}}
+                            </td>
+                            <td>
+                              {{isset($arma->cantidad_municion) ? $arma->cantidad_municion : 'N/I'}}
+                            </td>
+                            <td>
+                              {{-- Hay que indicar quien es el propietario --}}
+                              {{isset($arma->propietario) ? $arma->propietario : 'N/I'}}
+                            </td>
+                            <td>
+                              {{-- Estatus --}}
+                              @isset($arma->estado_arma)
+                                @foreach ( $estado_arma as  $value )
+                                  @if( $value->id_item == ($arma->estado_arma) )
+                                    {{$value->descripcion}}
+                                  @endif
+                                @endforeach
                               @else
-                              N/I
-                          @endisset
-                          </td>
-                          <td>
-                            <a href="#modEstadoArma" class="btn tooltipped modal-trigger" data-position="top" data-tooltip="Editar" onclick="editStatus({{$arma}})" >
-                              <i class="material-icons">create</i>
-                            </a>
-                        </tr>
-                      @endforeach
-                      </tbody>
-                    </table>
-                  </div>
+                                N/I
+                              @endisset
+                            </td>
+                            <td>
+                              <a class="btn tooltipped" data-position="top" data-tooltip="Ampliar"
+                                 onclick="editArma({{$arma}})">
+                                <i class="material-icons">zoom_out_map</i>
+                              </a>
+                              <a class="btn tooltipped " data-position="top" data-tooltip="Cambiar Estado"
+                                 onclick="editStatus({{$arma}})">
+                                <i class="material-icons">create</i>
+                              </a>
 
-                </div>
+                            </td>
+                          </tr>
+                        @endforeach
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
                 </div>
               </li>
             </ul>
@@ -432,11 +439,68 @@
 
       </div>
 
-    {{-- Modal modificar estado arma --}}
-      <div id="modEstadoArma" class="modal valign-wrapper">
-        <div class="modal-content center-align">
-          <h4>Modificar</h4>
-          <div id="modificar-estado">
+      {{-- Modal modificar estado arma --}}
+      <div id="modEstadoArma" class="modal valign-wrapper modal-fixed-footer">
+        <div class="modal-content ">
+          <h4 class="center-align">Registrar recuperacion del arma"</h4>
+          <div id="form-recuperacion" class="">
+            <form>
+              {{--  Existe detenido  --}}
+              {{--  Generamos la funcion verdad? --}}
+              <div class="row row" style="box-shadow: 0px 10px 5px 1px rgba(0, 0, 0, 0.1)">
+
+                  <div class="input-field col s12 m6 l4">
+                    <i class="material-icons prefix">chevron_right</i>
+                    <input class="" id="numero_prevencion" name="numero_prevencion" type="text">
+                    <label for="numero_prevencion">Numero prevencion</label>
+                  </div>
+
+                <div class="input-field col s12 m6 " style="text-align: center">
+                  <span>¿Hay personas detenidas?</span>
+                  <div style="display:flex; justify-content: center">
+                    <label>
+                      <input name="existeDetenido" type="radio" id="si_check" value="{{1}}"/>
+                      <span>Si</span>
+                    </label>
+                    <label>
+                      <input name="existeDetenido" type="radio" id="no_check" value="{{0}}"/>
+                      <span>No</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div id="personas_raiz" class="row z-depth-0" style=" background-color: #93939314;">
+
+              </div>
+              <div class="row">
+                @include('partials.divider',['title'=> 'Direccion del hecho'])
+                <div class="input-field col s12 m6 l4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <select name="departamento_hecho_recuperacion" id="departamento_hecho_recuperacion" onchange="">
+                    <option value="{{null}}" selected>Departamento</option>
+                    @foreach ($departamento as $key => $value)
+                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="input-field col s12 m6 l4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <input class="" id="numero_prevencion" name="numero_prevencion" type="text">
+                  <label for="numero_prevencion">Numero prevencion</label>
+                </div>
+              </div>
+
+              <div class="row">
+                @include('partials.divider',['title'=> 'Descripcion del hecho'])
+
+                <div class="input-field col s12">
+                  <i class="prefix material-icons">chevron_right</i>
+                  <textarea id="descripcion_hecho" name="descripcion_hecho" class="materialize-textarea"></textarea>
+                  <label for="descripcion_hecho">Descripcion/Reseña</label>
+                </div>
+
+              </div>
+            </form>
           </div>
         </div>
         <div class="modal-footer">
@@ -444,10 +508,34 @@
         </div>
       </div>
 
+
+
+      {{-- Modal Form Recuperacion --}}
+      <div id="modRecuperacion" class="modal valign-wrapper">
+        <div class="modal-content center-align">
+          <h4>Aqui iran los forms correspondientes :) </h4>
+        </div>
+      </div>
+
+      {{-- Modal Ampliacion --}}
+      <div id="modAmpliacion" class="modal valign-wrapper modal-fixed-footer">
+        <div class="modal-content">
+          <h4 class="center-align">Registro de ampliacion</h4>
+          <div id="form-edit-arma">
+
+          </div>
+        </div>
+        <div class="modal-footer ">
+          <a class="btn"><i class="material-icons left">done</i>Guardar</a>
+          <a class="modal-close waves-effect waves-green btn-flat"><i class="material-icons left">cancel</i>Cancelar</a>
+        </div>
+      </div>
+
       {{-- Modal Confirmar --}}
       <div id="modConfirmEstado" class="modal" style="height:fit-content; width: fit-content; margin-top: 8% ">
-        <a href="#" class="btn btn-large"  id="confirmStatus">Confirmar<i class="material-icons right">check</i></a>
+        <a href="#" class="btn btn-large" id="confirmStatus">Confirmar<i class="material-icons right">check</i></a>
       </div>
+
       {{-- Modal Success --}}
       <div id="modSuccess" class="modal valign-wrapper">
         <div class="modal-content center-align">
@@ -461,72 +549,208 @@
 @endsection
 
 @push('scripts')
+  <script src="{{asset('js/consulta/show.js')}}"></script>
   <script>
-    $(document).ready(function(){
-     $('.collapsible').collapsible();
-     $('.modal').modal();
-     $('.tooltipped').tooltip();
-    });
-  //   Empezamos con el espagueti :(
-  //   Tengo que aprender hacer las cosas ome!
-      let var_id_arma;
+    $(document).ready(function () {
+      $('.collapsible').collapsible();
+      $('.modal').modal();
+      $('.tooltipped').tooltip();
 
-      function editStatus(content){
-        let id_arma = content.id_arma;
-        let estado_arma = content.estado_arma;
-        $.ajax({
-          url: "{{route('showStatusArma')}}",
-          type: "GET",
-          data: {id_arma,estado_arma},
-          dataType: "text",
-          success : function(rspnse) {
-
-            $('#modificar-estado').html(rspnse);
-            $('#modEstadoArma').modal('open');
-            // console.log(rspnse);
-
-          },
-          error : function (xhr,status){},
-          complete : function (xhr,status){
-            console.log('Peticion-realizada - ')
-          },
-        })
-      }
-
-
-      function showModalConfirm(id_arma){
-        $('#modConfirmEstado').modal('open');
-          var_id_arma = id_arma;
-      }
-
-      $('#confirmStatus').click( function (){
-        console.log('El id del arma es: '+var_id_arma);
-        $.ajax({
-          url: "{{route('editStatusArma')}}",
-          type: "GET",
-          data: {id_arma: var_id_arma},
-          dataType: 'text',
-          success:function(rspnse){
-
-            $('#modSuccess').modal('open');
-            $('#modConfirmEstado').modal('close');
-            $('#modEstadoArma').modal('close');
-            // evaluamos si la rspnse fue exitosa.
-
-            setTimeout(() => {
-              location.reload();
-            }, 2000);
-
-          },
-          error:function(xhr,status){
-            console.log('Error en la peticion - editStatus ')
-          },
-          complete:function(xhr,status){
-            console.log('Peticion realizada - editStatus')
-          },
-
-        })
+      $('#departamento_hecho_recuperacion').select2({
+        width: '100%',
+        placeholder: 'Departamento',
+        allowClear: true,
+        dropdownParent: $("#modEstadoArma"),
+        language: {
+          noResults: function() {
+            return "No existe la categoria.";
+          }
+        },
       })
+    });
+
+
+    let var_id_arma;
+
+
+    // Funcion para Editar Arma a Recuperada.
+    function editStatus(arma) {
+      console.log(arma);
+      // $.ajax({
+      //   url:,
+      //   type:"get",
+      //   data:{},
+      //   beforeSend: function (){
+      //     $('.all-the-ground').show();
+      //   },
+      //   success:function (resp){
+      //     $('.all-the-ground').hide();
+      //
+      //   },
+      //   error:function (){
+      //
+      //   }
+      // });
+
+
+      $('#modEstadoArma').modal('open');
+    }
+
+    // Funcion para Ampliar Registros de las armas.
+    function editArma(arma) {
+      console.log(arma);
+
+      //   Con una consulta ajax nos traemos todos los datos del arma para que sean modificados.
+      $.ajax({
+        url: "{{route('editArma')}}",
+        type: "get",
+        data: {
+          {{--_token: '{{ csrf_token() }}'--}}
+            arma
+        },
+        dataType: 'text',
+        beforeSend: function () {
+          $('.all-the-ground').show();
+        },
+        success: function (resp) {
+          $('.all-the-ground').hide();
+          $('#form-edit-arma').html(resp);
+
+          $('#tipo_arma').select2({
+            width: '100%',
+            placeholder: 'Tipo de arma',
+            allowClear: true,
+            dropdownParent: $("#modAmpliacion"),
+          });
+
+          $('#marca_arma').select2({
+            width: '100%',
+            placeholder: 'Marca',
+            allowClear: true,
+            // tags: true,
+            dropdownParent: $("#modAmpliacion"),
+            language: {
+              noResults: function () {
+                return "<div style='display:flex; justify-content:space-between;'><div>No existe la categoria.</div><div><a class='btn' id='addMarca' onclick='agregarMarca()'>Agregar</a></div></div>";
+              },
+            },
+            escapeMarkup: function (markup) {
+              return markup;
+            }
+          });
+
+          $('#calibre_arma').select2({
+            width: '100%',
+            placeholder: 'Calibre',
+            allowClear: true,
+            dropdownParent: $("#modAmpliacion"),
+            // tags: true,
+            language: {
+              noResults: function () {
+                return "<div style='display:flex; justify-content:space-between;'><div>No existe la categoria.</div><div><a class='btn' id='addCalibre' onclick='agregarCalibre()'>Agregar</a></div></div>";
+              },
+            },
+            escapeMarkup: function (markup) {
+              return markup;
+            }
+          });
+          $('#modAmpliacion').modal('open');
+
+        },
+        error: function (xhr, status) {
+          console.log(status, xhr);
+        }
+      })
+    }
+
+
+    function showModalConfirm(id_arma) {
+      // Ahora en lugar de que confirme, vamos a tener que mostrar un nuevo Modal.
+
+      // Modal Form Pal registro de recuperada.
+
+      $('#modRecuperacion').modal('open');
+      $('#modConfirmEstado').modal('open');
+      var_id_arma = id_arma;
+    }
+
+    $('#confirmStatus').click(function () {
+      // console.log('El id del arma es: '+var_id_arma);
+      $.ajax({
+        url: "{{route('editStatusArma')}}",
+        type: "GET",
+        data: {id_arma: var_id_arma},
+        dataType: 'text',
+        success: function (rspnse) {
+
+          $('#modSuccess').modal('open');
+          $('#modConfirmEstado').modal('close');
+          $('#modEstadoArma').modal('close');
+          // evaluamos si la rspnse fue exitosa.
+
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
+
+        },
+        error: function (xhr, status) {
+          console.log('Error en la peticion - editStatus ')
+        },
+        complete: function (xhr, status) {
+          console.log('Peticion realizada - editStatus')
+        },
+
+      })
+    })
+
+
+    function agregarMarca() {
+      let marcaArma = $('input.select2-search__field').val().trim();
+      let marcaArmaSelect = $('#marca_arma');
+      $('#addMarca').addClass('disabled', 'disabled');
+      $.ajax({
+        url: '{{route("agregarMarca")}}',
+        type: "GET",
+        data: {marcaArma},
+        dataType: "json",
+        success: function (rspnse) {
+          let {id_item, descripcion} = rspnse
+          let option = new Option(descripcion, id_item, true, true);
+          marcaArmaSelect.append(option).trigger('change');
+          $('.select2-search__field').val('');
+        },
+        error: function (xhr, status) {
+          console.log('Disculpe, existió un problema-agregarMarca');
+        },
+        complete: function (xhr, status) {
+          console.log('Petición realizada');
+        }
+      });
+    }
+
+    function agregarCalibre() {
+      let calibreArma = $('input.select2-search__field').val().trim();
+      let calibreArmaSelect = $('#calibre_arma');
+      $('#addCalibre').addClass('disabled', 'disabled');
+      $.ajax({
+        url: '{{route("agregarCalibre")}}',
+        type: "GET",
+        data: {calibreArma},
+        dataType: "json",
+        success: function (rspnse) {
+          let {id_item, descripcion} = rspnse
+          let option = new Option(descripcion, id_item, true, true);
+          calibreArmaSelect.append(option).trigger('change');
+          $('.select2-search__field').val('');
+        },
+        error: function (xhr, status) {
+          console.log('Disculpe, existió un problema-agregarCalibre');
+        },
+        complete: function (xhr, status) {
+          console.log('Petición realizada');
+        }
+      });
+    }
 
   </script>
 @endpush

@@ -16,7 +16,8 @@
   <link rel="stylesheet" href="{{asset('css/select2.css')}}">
   {{-- Style de SweetAlert2 --}}
   <link rel="stylesheet" href="{{asset('css/sweetalert2.min.css')}}">
-
+  {{-- Style de Tabulator  --}}
+  <link rel="stylesheet" href="{{asset('css/tabulator.min.css')}}">
   {{-- Styles de la App --}}
   @vite(['resources/css/app.css','resources/js/app.js'])
   {{-- Nombre de Titulo --}}
@@ -32,7 +33,7 @@
       z-index: 1000;
       height: 100%;
       width: 100%;
-      /* border: 1px solid yellow; */
+       /*border: 1px solid yellow;*/
       display: flex;
       justify-content: center;
       align-items: center;
@@ -40,7 +41,7 @@
       /* display: none; */
     }
 
-    
+
     .preloader-wrapper{
       justify-content: center;
       align-items: center;
@@ -96,6 +97,8 @@
 <script src="{{ asset('js/particles.inc.js') }}"></script>
 {{-- Script SweetAlert2 --}}
 <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
+{{-- Script Tabulator--}}
+<script src="{{ asset('js/tabulator.min.js') }}"></script>
 {{-- Scripts de cada Modulo --}}
 {{-- <script src="{{asset('js/app.js')}}"></script> --}}
 @stack('scripts')

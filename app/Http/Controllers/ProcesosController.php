@@ -157,4 +157,32 @@ class ProcesosController extends Controller
 
     }
 
+    public  function editArma(Request $request){
+
+      $marca_arma = Item::where('id_categoria',4)->get();
+      $calibre_arma = Item::where('id_categoria',7)->get();
+      $tipo_arma = Item::where('id_categoria',3)->get();
+
+      //Recibimos todos los datos del arma, para devolver una vista Form. Con los datos del arma.
+      //Vista del modal con los datos a editar del arma
+      $arma = $request->arma;
+      return view('consulta._form_edit_arma',compact('arma','calibre_arma','marca_arma','tipo_arma'));
+    }
+
+    public  function  updateArma(Request $request){
+      return 'Todo bien prro :)';
+    }
+
+    public function showArmas(){
+      $tipo_arma = Item::where('id_categoria',3)->get();
+      $marca_arma = Item::where('id_categoria',4)->get();
+      $estado_arma = Item::where('id_categoria',9)->get();
+      $calibre_arma = Item::where('id_categoria',7)->get();
+      $armas = Arma::all();
+      return ['armas'=>$armas,'tipo_arma'=>$tipo_arma,'marca_arma'=>$marca_arma,'estado_arma'=>$estado_arma,'calibre_arma'=>$calibre_arma];
+    }
+
+    public function registroRecuperacion(){
+
+    }
 }

@@ -25,14 +25,15 @@ class DenunciaController extends Controller
 {
 
   public function index(){
-    return view('denuncia.index');
+    $tipo_arma = Item::where('id_categoria',3)->get();
+    return view('denuncia.index',compact('tipo_arma'));
   }
-  
+
   public function create(){
     $departamento = Departamento::all();
-    $municipio = Municipio::all(); 
+    $municipio = Municipio::all();
     $genero = Item::where('id_categoria',2)->get();
-    $tipo_arma = Item::where('id_categoria',3)->get(); 
+    $tipo_arma = Item::where('id_categoria',3)->get();
     $tipo_denuncia = Item::where('id_categoria',5)->get();
     $marca_arma = Item::where('id_categoria',4)->get();
     $calibre_arma = Item::where('id_categoria',7)->get();
@@ -79,11 +80,11 @@ class DenunciaController extends Controller
 
 
 
-    
+
     switch($request->poseeDocumento){
       case(0): //Si no posee documento identificacion.
         $denunciante_db = Denunciante::where('primer_nombre',request('primer_nombre'))
-                                    ->where('primer_nombre',request('primer_nombre'))                    
+                                    ->where('primer_nombre',request('primer_nombre'))
                                     ->where('segundo_nombre',request('segundo_nombre'))
                                     ->where('tercer_nombre',request('tercer_nombre'))
                                     ->where('primer_apellido',request('primer_apellido'))
@@ -104,9 +105,9 @@ class DenunciaController extends Controller
       break;
     };
 
-    
 
-    
+
+
     $item_tipo_direccion = Item::where('id_categoria',10)->get();
     foreach($item_tipo_direccion as $value){
       switch($value->descripcion){
@@ -151,9 +152,9 @@ class DenunciaController extends Controller
                                                   ->where('avenida',request('avenida_residencia'))
                                                   ->where('numero_casa',request('numero_casa'))
                                                   ->where('id_tipo_direccion',$item_residencia);
-                                                  
-                                                  
-                                        
+
+
+
     $direccion_db_hecho = Direccion::select('id_direccion')->where('id_departamento',request('departamento_hecho'))
                                                   ->where('id_municipio',request('municipio_hecho'))
                                                   ->where('zona',request('zona_hecho'))
@@ -162,8 +163,8 @@ class DenunciaController extends Controller
                                                   ->where('numero_casa',request('numero_casa_hecho'))
                                                   ->where('id_tipo_direccion',$item_hecho);
 
-                                  
-                                        
+
+
     try {
       DB::beginTransaction();
 
@@ -232,7 +233,7 @@ class DenunciaController extends Controller
       //3. Ingresamos Armas
       foreach($datosArmas as $value){
         $registro_arma_db = Arma::where('registro',$value['registro_arma']);
-        
+
         if(!$registro_arma_db->count()){
           // Si no existe el arma se agrega.
           $arma = new Arma();
@@ -242,8 +243,8 @@ class DenunciaController extends Controller
               $arma->id_tipo_arma = $value['tipo_arma'];
             }
 
-            
-            
+
+
             if(isset($value['marca_arma'])){
 
                 // if(isset($e) =='22P02'){
@@ -265,7 +266,7 @@ class DenunciaController extends Controller
             if(isset($value['licencia_arma'])){
               $arma->licencia = $value['licencia_arma'];
             }
-            
+
             $arma->registro = $value['registro_arma'];
 
             if(isset($value['tenencia_arma'])){
@@ -288,7 +289,7 @@ class DenunciaController extends Controller
             if(isset($value['propietario'])){
               $arma->propietario = $value['propietario'];
             }
-            // $arma->id_tipo_propietario = $value['']; //No he registrado esto aun 
+            // $arma->id_tipo_propietario = $value['']; //No he registrado esto aun
 
             // El estado se determina a un inicio por el tipo de denuncia.
             switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
@@ -304,7 +305,7 @@ class DenunciaController extends Controller
               case('Extravio'):
                 $arma->estado_arma = $item_extraviada;
               break;
-              
+
             }
           $arma->save();
           // $id_armas = Arr::prepend($id_armas,Arma::latest('id_arma')->first('id_arma'));
@@ -316,7 +317,7 @@ class DenunciaController extends Controller
         }
 
       }
-      
+
       // return $id_armas;
       //4. Ingresamos Hecho.
       $hecho = new Hecho();
@@ -357,7 +358,7 @@ class DenunciaController extends Controller
         // Si al menos existe departamento, se ingresa la direccion.
         if(isset($value['departamento_sindicado'])){
 
-          
+
 
           //  return isset($value['municipio_sindicado']) ? $value['municipio_sindicado']: null;
 
@@ -395,7 +396,7 @@ class DenunciaController extends Controller
           }
         }
         // si no, salta el ingreso de direccion y se agrega solo los datos del sindicado.
-        
+
         // Si ya existe el sindicado no se agrega la informacion,
         if(!$sindicado_db->count()){
           // return $sindicado_db;
@@ -446,13 +447,13 @@ class DenunciaController extends Controller
           $sindicado->save();
           // Almacenamos el id de cada sindicado ingresado a la db.
           // $id_sindicados = Arr::add($id_sindicados,'id',($sindicado->get('id_sindicado')));
-          
+
           $id_sindicados = Arr::prepend($id_sindicados,($sindicado->latest('id_sindicado')->first('id_sindicado')));
-            
+
         }else if(isset($value['departamento_sindicado'])){
           // si no solo se actualiza el jsonb de id_direccion, pero se verifica que exista departamento al menos
           // return $sindicado_db->id_sindicado;
-          
+
           // Si se agrego la direccion.
           if(!$direccion_db_sindicado->count()){
             $sindicadoDireccion_update = Sindicado::find(($sindicado_db->first())->id_sindicado);
@@ -470,7 +471,7 @@ class DenunciaController extends Controller
             // $id_sindicados = Arr::add($id_sindicados,'id',($sindicado_db->first())->id_sindicado);
             $id_sindicados = Arr::prepend($id_sindicados,($sindicado_db->first())->id_sindicado,'id');
           }
-          
+
         }
       }
       }
@@ -489,7 +490,7 @@ class DenunciaController extends Controller
            $denuncia->id_tipo_denuncia = request('tipo_hecho');
            $denuncia->id_hecho = ($hecho->latest('id_hecho')->first('id_hecho'))->id_hecho;
           //  $denuncia->id_sindicados = $id_sindicados;
-          
+
           // echo implode($id_sindicados);
           foreach($id_sindicados as $value){
             // return $value;
@@ -498,7 +499,7 @@ class DenunciaController extends Controller
             // }
           }
           $denuncia->save();
-        
+
 
       }
 
@@ -514,15 +515,15 @@ class DenunciaController extends Controller
       DB::rollBack();
       return throw $th;
     }
-    
-    
+
+
   }
 
 
   public function form_arma(Request $request){
     $data = $request['datosLocalStorage'];
     $strings = [];
-    
+
     foreach($data as $key => $value){
       $vista = view("denuncia\_form_arma",[
         'index'=>$key,
@@ -548,7 +549,7 @@ class DenunciaController extends Controller
   }
 
   public function form_sindicado(Request $request){
-      
+
     // dd($request);
     // Verifica si se recargo la pagina.
     if($request['statusReload'] == 'true'){
@@ -577,7 +578,7 @@ class DenunciaController extends Controller
       'vestimenta'=>$request['vestimenta'],
       'organizacion_criminal'=>$request['organizacion_criminal'],
       'telefono_sindicado'=>$request['telefono_sindicado']
-    ]); 
+    ]);
     return $vista->render();
   }
 

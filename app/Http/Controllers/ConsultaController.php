@@ -42,6 +42,7 @@ class ConsultaController extends Controller
     $tipo_denuncia = Item::where('id_categoria',5)->get();
 
     // 1. Preguntar de que viene la consulta. Persona o Arma.
+    // Request CUI
     if (request('numero_cui')) {
       $personas = Persona::where('cui', request()->only('numero_cui'));
 
@@ -105,12 +106,11 @@ class ConsultaController extends Controller
             'tipo_denuncia')
 
         );
-
       } else if ($personas->doesntExist()) {
         return redirect(route('consulta.create'))
           ->with('error', 'No se ha encontrado el registro.');
       }
-
+    // Request Nombre
     }else if(request('nombre_completo')){
         // Solo encuentra busquedas exactas, la tilde por ejemplo.
         $nombre_completo = ucwords(request('nombre_completo'));
@@ -142,7 +142,7 @@ class ConsultaController extends Controller
           ->with('error', 'No se ha encontrado el registro.');
 
         }
-
+    // Request Numero Registro, Licencia , Tenencia
     } else if (request('numero_registro') || request('numero_licencia') || request('numero_tenencia')) {
 
       if (request('numero_registro')) {
@@ -217,7 +217,7 @@ class ConsultaController extends Controller
         return redirect(route('consulta.create'))
           ->with('error', 'No se ha encontrado el registro.');
       }
-
+    // Request ID Persona resultado de Busqueda por nombre;
     } else if(request('id_persona')){
 
 
@@ -238,23 +238,23 @@ class ConsultaController extends Controller
           $personas_denuncia = Persona_Denuncia::with('persona')
             ->whereRelation('denuncia', 'id_denuncia', $value)
             ->get();
-          foreach($personas_denuncia as $personas){
-            $direccion=[];
-            if(isset($personas['persona']['id_direccion'])){
-              if(is_array(json_decode($personas['persona']['id_direccion'], true))){
-                foreach (json_decode($personas['persona']['id_direccion']) as $direc){
-                  $direccion[]=self::direccion($direc->id_direccion);
+          foreach ($personas_denuncia as $personas) {
+            $direccion = [];
+            if (isset($personas['persona']['id_direccion'])) {
+              if (is_array(json_decode($personas['persona']['id_direccion'], true))) {
+                foreach (json_decode($personas['persona']['id_direccion']) as $direc) {
+                  $direccion[] = self::direccion($direc->id_direccion);
                 }
               }
             }
-            $personas['persona']['direccion']=$direccion;
+            $personas['persona']['direccion'] = $direccion;
 
           }
 
           $denuncia = Denuncia::where('id_denuncia', $value)->first();
           $armas = [];
-          foreach( (json_decode($denuncia->id_armas)) as $arma){
-            $armas[] = Arma::where('id_arma',$arma->id_arma)->first();
+          foreach ((json_decode($denuncia->id_armas)) as $arma) {
+            $armas[] = Arma::where('id_arma', $arma->id_arma)->first();
           }
 
           $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
@@ -264,8 +264,8 @@ class ConsultaController extends Controller
           $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
           $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
 
-          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
-
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $armas]);
+        }
 
 
         return view('consulta._show',
@@ -281,6 +281,69 @@ class ConsultaController extends Controller
 
         );
 
+
+    }else if(request('id_arma')){
+        $arma = Arma::find(request('id_arma'));
+      if ($arma->exists()) {
+        // Si arma existe ejecuta lo sig.
+        $denuncias = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->id_arma]])->get();
+        $i_denuncia = [];
+
+        foreach ($denuncias as $key => $denuncia) {
+
+          // Denuncia y Persona;
+          $personas_denuncia = Persona_Denuncia::with('persona')
+            ->whereRelation('denuncia', 'id_denuncia', $denuncia->id_denuncia)
+            ->get();
+          foreach($personas_denuncia as $personas){
+            $direccion=[];
+            if(isset($personas['persona']['id_direccion'])){
+              if(is_array(json_decode($personas['persona']['id_direccion'], true))){
+                foreach (json_decode($personas['persona']['id_direccion']) as $direc){
+                  $direccion[]=self::direccion($direc->id_direccion);
+                }
+              }
+            }
+            $personas['persona']['direccion']=$direccion;
+
+          }
+
+
+          // Hecho y Direccion
+          $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
+            ->with('direccion')
+            ->first();
+
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
+
+          $count = 0;
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
+
+        }
+
+        //        return $i_denuncia;
+        // Agregarle sus compact y el resto de weas xdxd
+
+
+        // return $genero;
+        return view('consulta._show',
+          // (['denunciante'=>$denunciante,'sindicados'=>$sindicados,'hecho'=>$hecho_direccion,'arma'=>$arma->get()])
+          compact(
+            'i_denuncia',
+            'departamento',
+            'municipio',
+            'genero',
+            'tipo_arma',
+            'marca_arma',
+            'calibre_arma',
+            'estado_arma',
+            'tipo_denuncia',
+          )
+        );
+      } else if ($arma->doesntExist()) {
+        return redirect(route('consulta.create'))
+          ->with('error', 'No se ha encontrado el registro.');
       }
     }
   }
