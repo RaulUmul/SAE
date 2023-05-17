@@ -40,10 +40,22 @@ $(document).ready(function (){
   },
   })
 
-  // Select Unidad Especializada recupera
+  // Select Unidad Especializada recupera / apoyo
+  // $('#unidad_especial').select2({
+  //   width: '100%',
+  //   placeholder: 'Unidad Especializada',
+  //   allowClear: true,
+  //   dropdownParent: $("#modEstadoArma"),
+  //   language: {
+  //     noResults: function() {
+  //       return "No existe la categoria.";
+  //     }
+  //   },
+  // })
+  // Unidad Movil que recupera
   $('#unidad_recupera').select2({
     width: '100%',
-    placeholder: 'Unidad Especializada',
+    placeholder: 'Unidad que recupera',
     allowClear: true,
     dropdownParent: $("#modEstadoArma"),
     language: {
@@ -81,33 +93,38 @@ $('input:radio[name=existeDetenido]').click(function () {
 
 //Valida -> Si existe detenido.
 
+  var cantDetenido = 0;
 function validarDetenido(value){
 
-  let cantDetenido = $('#detenidos_row').children().length;
 
-  value == 1
-    // Si existe deteneido devolvemos el form dinamico...
-    ?
-    // Obtenemos el valor de los nodos de detenidos.
+  if (value == 1) {
     $('#personas_raiz').html(`
       <div class="col s12 right-align" style="padding-right: 2rem; padding-top: 1rem">
-      <a class="btn" onclick="agregarFormDetenido($('#detenidos_row').children().length)"><i class="material-icons left">add_box</i>Agregar persona</a>
+      <a class="btn" onclick="agregarFormDetenido()"><i class="material-icons left">add_box</i>Agregar persona</a>
       </div>
       <div  id="detenidos_row">
           <div class="row" id="row_${cantDetenido}">
+              <div class="input-field col s12 m6 l4 ">
+                <i class="material-icons prefix">chevron_right</i>
+                <select data-posicion="${cantDetenido}" name="detenido_${cantDetenido}[nacionalidad_detenido]" id="nacionalidad_detenido_${cantDetenido}" onchange="nacionalidadDoc(value,this.dataset.posicion)">
+                  <option value="{{null}}" disabled selected>Nacionalidad</option>
+                  <option value="1">Guatemalteca</option>
+                  <option value="Extranjero"  >Extranjero</option>
+                </select>
+              </div>
               <div class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input class="" id="cui_detenido_${cantDetenido}" name="cui_detenido_${cantDetenido}[cui_detenido]" type="number">
+                <input class="" id="cui_detenido_${cantDetenido}" name="detenido_${cantDetenido}[cui_detenido]" type="number">
                 <label for="cui_detenido_${cantDetenido}">DPI</label>
               </div>
               <div class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input class="" id="nombres_detenido_${cantDetenido}" name="nombres_detenido_${cantDetenido}[nombres_detenido]" type="text">
+                <input class="" id="nombres_detenido_${cantDetenido}" name="detenido_${cantDetenido}[nombres_detenido]" type="text">
                 <label for="nombres_detenido_${cantDetenido}">Nombres</label>
               </div>
               <div class="input-field col s12 m6 l4">
                 <i class="material-icons prefix">chevron_right</i>
-                <input class="" id="apellidos_detenido_${cantDetenido}" name="apellidos_detenido_${cantDetenido}][apellidos_detenido]" type="text">
+                <input class="" id="apellidos_detenido_${cantDetenido}" name="detenido_${cantDetenido}[apellidos_detenido]" type="text">
                 <label for="apellidos_detenido_${cantDetenido}">Apellidos</label>
               </div>
               <div class="col s12  right-align " style="padding-right: 4rem">
@@ -117,30 +134,44 @@ function validarDetenido(value){
                 </a>
               </div>
           </div>
-      </div>`)
-    : $('#personas_raiz').html('');
+      </div>`);
+  } else {
+    $('#personas_raiz').html('');
+    cantDetenido = 0;
+  }
+
+  $(`#nacionalidad_detenido_${cantDetenido}`).formSelect();
+
 
 
 }
 
 
-function agregarFormDetenido(cantDetenido){
-
+function agregarFormDetenido(){
+  cantDetenido++;
   $('#detenidos_row').prepend(`
-             <div class="row" id="row_${cantDetenido}">
+            <div class="row" id="row_${cantDetenido}">
+                <div class="input-field col s12 m6 l4 ">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <select  data-posicion="${cantDetenido}" name="detenido_${cantDetenido}[nacionalidad_detenido]" id="nacionalidad_detenido_${cantDetenido}" onchange="nacionalidadDoc(value,this.dataset.posicion)">
+                    <option value="{{null}}" disabled selected>Nacionalidad</option>
+                    <option value="1">Guatemalteca</option>
+                    <option value="Extranjero"  >Extranjero</option>
+                  </select>
+                </div>
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <input class="" id="cui_detenido_${cantDetenido}" name="cui_detenido_${cantDetenido}[cui_detenido]" type="number">
+                  <input class="" id="cui_detenido_${cantDetenido}" name="detenido_${cantDetenido}[cui_detenido]" type="number">
                   <label for="cui_detenido_${cantDetenido}">DPI</label>
                 </div>
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <input class="" id="nombres_detenido_${cantDetenido}" name="nombres_detenido_${cantDetenido}[nombres_detenido]" type="text">
+                  <input class="" id="nombres_detenido_${cantDetenido}" name="detenido_${cantDetenido}[nombres_detenido]" type="text">
                   <label for="nombres_detenido_${cantDetenido}">Nombres</label>
                 </div>
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <input class="" id="apellidos_detenido_${cantDetenido}" name="apellidos_detenido_${cantDetenido}[apellidos_detenido]" type="text">
+                  <input class="" id="apellidos_detenido_${cantDetenido}" name="detenido_${cantDetenido}[apellidos_detenido]" type="text">
                   <label for="apellidos_detenido_${cantDetenido}">Apellidos</label>
                 </div>
               <div class="col s12  right-align" style="padding-right: 4rem">
@@ -149,11 +180,37 @@ function agregarFormDetenido(cantDetenido){
                     Eliminar
                 </a>
               </div>
-             </div>
-                `);
+            </div>`);
+
+  $(`#nacionalidad_detenido_${cantDetenido}`).formSelect();
+
 
 }
 
 function eliminarDetenido(cantDetenido){
   $(`#row_${cantDetenido}`).remove();
+}
+
+
+function nacionalidadDoc(val,valDetenido){
+  // console.log(val);
+  // console.log(data);
+
+  // let selectData = document.getElementById('')
+  if(val  == 'Extranjero'){
+    let detenido = $(`#cui_detenido_${valDetenido}`);
+    detenido.attr('id',`pasaporte_detenido_${valDetenido}`);
+    detenido.attr('name',`detenido_${valDetenido}[pasaporte_detenido]`);
+    let etiqueta = $(`label[ for="cui_detenido_${valDetenido}"]`);
+    etiqueta.attr('for',`pasaporte_detenido_${valDetenido}`);
+    etiqueta.html('Pasaporte');
+  }else if(val == 1){
+
+    let detenido = $(`#pasaporte_detenido_${valDetenido}`);
+    detenido.attr('id',`cui_detenido_${valDetenido}`);
+    detenido.attr('name',`detenido_${valDetenido}[cui_detenido]`);
+    let etiqueta = $(`label[ for="pasaporte_detenido_${valDetenido}"]`);
+    etiqueta.attr('for',`cui_detenido_${valDetenido}`);
+    etiqueta.html('DPI');
+  }
 }

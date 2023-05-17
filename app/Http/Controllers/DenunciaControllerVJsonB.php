@@ -70,7 +70,7 @@ class DenunciaControllerVJsonB extends Controller
       return  response()->json($result,500);
     }
 
-	   return $request;
+//	   return $request;
 	  $data = $request->all();
 	  $patron = "/arma_plus_/";
 	  $patronSindicado = "/sindicado_plus/";

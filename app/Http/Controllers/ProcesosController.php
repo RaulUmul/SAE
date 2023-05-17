@@ -3,33 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Arma;
+use App\Models\Arma_Recuperada;
 use App\Models\Categoria;
+use App\Models\Direccion;
+use App\Models\Hecho;
 use App\Models\Item;
+use App\Models\Persona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class ProcesosController extends Controller
 {
 //  Procesos relacionados a la interaccion de los datos de armas en Denuncia, Consulta.
     public function agregarArma(Request $request){
 
-        // Verifica si se recargo la pagina.
-        // if($request->statusReload == 'true'){
-        //     Cache::flush();
-        // }
-
-
-        // Si no se recargo mantiene la cache.
-        // Por lo que entiendo, dice que la funcion cache::get(par1: variablearecuperar, par2: variablepordefectosinoexiste);
-        // Incluso podemos pasar un "closure", callback que retorne un valor por defecto en el par2.
-
-        // $value = Cache::get('peticion',1);
-        // El increment o decrement incrementara o disminuira el valor de un item de tipo int y el segundo parametro indicando en cuanto
-        // Se incrementara o decrementara.
-        // Cache::increment('peticion', 1);
-
-        // $tipo_arma = TipoArma::where('id_tipo_arma',$request->tipo_arma)->get();
-        // return response()->json($request->tipo_arma);
         $item_estado_arma = Item::where('id_categoria',9)->get();
         foreach($item_estado_arma as $value){
           switch($value->descripcion){
@@ -77,9 +66,9 @@ class ProcesosController extends Controller
         $newId = $lastId + 1;
 
         $item_marca_arma_update = new Item();
-         $item_marca_arma_update->id_item = $newId;
-         $item_marca_arma_update->descripcion = $marca_toUpper;
-         $item_marca_arma_update->id_categoria = $idcategoria_marca_arma;
+          $item_marca_arma_update->id_item = $newId;
+          $item_marca_arma_update->descripcion = $marca_toUpper;
+          $item_marca_arma_update->id_categoria = $idcategoria_marca_arma;
         $item_marca_arma_update->save();
 
         $marca_arma = $item_marca_arma_update;
@@ -118,7 +107,7 @@ class ProcesosController extends Controller
       }
 
     }
-
+//    PENDIENTE
     public function showStatusArma(Request $request){
 
       $request->estado_arma;
@@ -137,22 +126,22 @@ class ProcesosController extends Controller
 
     }
 
-    public  function editStatusArma(Request $request){
-//      return $request;
+    static function editStatusArma($id_arma,$estado){
 
-      $item_solvente = Item::select('id_item')->where('descripcion','Solvente')->where('id_categoria',9)->first();
+      $item_estado = Item::select('id_item')->where('descripcion',$estado)->where('id_categoria',9)->first();
 
 
       try {
-        $arma_update = Arma::find($request->id_arma);
-        $arma_update->estado_arma = $item_solvente->id_item;
+        $arma_update = Arma::find($id_arma);
+        $arma_update->estado_arma = $item_estado->id_item;
         $arma_update->save();
 
-        return response('success');
+        return true;
 
       }catch (\Throwable $th){
         throw $th;
         DB::rollBack();
+        return false;
       }
 
     }
@@ -173,7 +162,7 @@ class ProcesosController extends Controller
       return 'Todo bien prro :)';
     }
 
-    public function showArmas(){
+    public function showArmas(){ //En table del Index - Denuncias
       $tipo_arma = Item::where('id_categoria',3)->get();
       $marca_arma = Item::where('id_categoria',4)->get();
       $estado_arma = Item::where('id_categoria',9)->get();
@@ -181,14 +170,135 @@ class ProcesosController extends Controller
       $armas = Arma::all();
       return ['armas'=>$armas,'tipo_arma'=>$tipo_arma,'marca_arma'=>$marca_arma,'estado_arma'=>$estado_arma,'calibre_arma'=>$calibre_arma];
     }
+    public function registroRecuperacion(Request $request){
 
-    public function registroRecuperacion(){
+      $queryString = $request['datos'];
+      parse_str($queryString,$data);
+      $detenidos = [];
+      $id_detenidos=[];
+//      return $data;
+
+
+
+      $rules = [
+        '$data["numero_prevencion"]' => 'required',
+        '$data["fecha_hecho"]' => 'required',
+        '$data["descripcion_hecho"]' => 'required',
+        '$data["departamento_hecho_recuperacion"]' => 'required',
+        '$data["direccion_hecho"]' => 'required',
+      ];
+
+      $mensajes = [
+        '$data["numero_prevencion"].required' => 'Ingrese No. Prevencion',
+        '$data["fecha_hecho"].required' => 'Ingrese Fecha',
+        '$data["descripcion_hecho"].required' => 'Ingrese descripcion',
+        '$data["departamento_hecho_recuperacion"].required' => 'Ingrese departamento del hecho',
+        '$data["direccion_hecho"].required' => 'Agrege direccion o referencia del hecho',
+      ];
+
+      $validator = Validator::make([
+        '$data["numero_prevencion"]'=>$data['numero_prevencion'],
+        '$data["fecha_hecho"]'=>$data['fecha_hecho'],
+        '$data["descripcion_hecho"]'=>$data['descripcion_hecho'],
+        '$data["departamento_hecho_recuperacion"]'=>$data['departamento_hecho_recuperacion'],
+        '$data["direccion_hecho"]'=>$data['direccion_hecho'],
+      ],$rules,$mensajes);
+
+      if($validator->fails()){
+        $result = $validator->errors();
+        return  response()->json($result,500);
+      }
+
+      if($data['existeDetenido'] == 1) {
+        $patron = "/detenido_/";
+        foreach ($data as $key => $value) {
+          if (preg_match($patron, $key, $coincidencias))
+            $detenidos[] = $value;
+        }
+      }
+      if($data['existeDetenido'] == 1){
+//      Ahora se encuentra en $detenidos el arreglo de detenidos.xd
+        foreach ($detenidos as $detenido) {
+          //        Preguntamos si ya existe segun dpi.
+
+          if(empty($detenido['cui_detenido']) && empty($detenido['nombres_detenido'])){
+            break;
+          }
+
+          if(!empty($detenido['cui_detenido'] )){
+            $detenido_db = Persona::where('cui',$detenido['cui_detenido']);
+          }
+
+          if ($detenido_db->exists()){
+            $id_detenidos[] = $detenido_db->first()->id_persona;
+          }else{
+            $newDetenido = new Persona();
+            if(!empty($detenido['cui_detenido'])){$newDetenido->cui = $detenido['cui_detenido'];}
+            if(!empty($detenido['nombres_detenido'])){
+              $arrNombres = explode(" ",$detenido['nombres_detenido'],2);
+              $newDetenido->primer_nombre = $arrNombres[0];
+              isset($arrNombres[1]) ? $newDetenido->segundo_nombre = $arrNombres[1] : $newDetenido->segundo_nombre = null;
+              isset($arrNombres[2]) ? $newDetenido->tercer_nombre = $arrNombres[2] : $newDetenido->tercer_nombre = null;
+            }
+            if(!empty($detenido['apellidos_detenido'])){
+              $arrApellidos = explode(" ",$detenido['apellidos_detenido'],2);
+              $newDetenido->primer_apellido = $arrApellidos[0];
+              isset($arrApellidos[1]) ? $newDetenido->segundo_apellido = $arrApellidos[1] : $newDetenido->segundo_apellido = null;
+            }
+            $newDetenido->save();
+            $id_detenidos[] = $newDetenido->latest('id_persona')->first('id_persona')->id_persona;
+          }
+        }
+      }
+//      return $id_detenidos;
+
+
+
+      try {
+
+        $direccion_hecho = new Direccion();
+        $direccion_hecho->id_departamento = $data['departamento_hecho_recuperacion'];
+        isset($data['municipio_hecho_direccion']) && $direccion_hecho->id_municipio = $data['municipio_hecho_direccion'];
+        $direccion_hecho->direccion_exacta = $data['direccion_hecho'];
+        $direccion_hecho->save();
+
+        $hecho = new Hecho();
+        $hecho->numero_diligencia = $data['numero_prevencion'];
+        $hecho->id_tipo_hecho = '412'; //Remplazar para que sea dinamico.
+        $hecho->fecha_hecho = $data['fecha_hecho'];
+        isset($data['hora_hecho']) && $hecho->hora_hecho = $data['hora_hecho'];
+        $hecho->narracion = $data['descripcion_hecho'];
+        isset($data['demarcacion_hecho']) && $hecho->id_demarcacion = $data['demarcacion_hecho'];
+        $hecho->id_direccion = $direccion_hecho->latest('id_direccion')->first('id_direccion')->id_direccion;
+        $hecho->save();
+
+
+        $arma_recuperada = new Arma_Recuperada();
+        $arma_recuperada->id_arma = $data['id_arma'];
+        $arma_recuperada->numero_prevencion = $data['numero_prevencion'];
+        $arma_recuperada->id_hecho = $hecho->latest('id_hecho')->first('id_hecho')->id_hecho;
+        $arma_recuperada->id_persona = json_encode($id_detenidos);
+        $arma_recuperada->id_tipo_persona = 405;
+        $arma_recuperada->descripcion = $data['descripcion_hecho'];
+        $arma_recuperada->save();
+
+        $actualizacion = self::editStatusArma($data['id_arma'],'Recuperada');
+        if($actualizacion){
+          return response()->json(['success'=>'Recuperada correctamente']);
+        }
+
+      }catch (\Throwable $th){
+
+        throw $th;
+        DB::rollBack();
+
+      }
+
+
 
     }
 
-    public function recibirForm(Request $request){
 
-      return $request;
-      return response()->json(["Success"=>'Hola']);
-    }
+
 }
+

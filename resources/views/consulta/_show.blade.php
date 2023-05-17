@@ -414,14 +414,33 @@
                               @endisset
                             </td>
                             <td>
-                              <a class="btn tooltipped" data-position="top" data-tooltip="Ampliar"
-                                 onclick="editArma({{$arma}})">
-                                <i class="material-icons">zoom_out_map</i>
-                              </a>
-                              <a class="btn tooltipped " data-position="top" data-tooltip="Cambiar Estado"
-                                 onclick="editStatus({{$arma}})">
-                                <i class="material-icons">create</i>
-                              </a>
+                              @isset($arma->estado_arma)
+                                @foreach ( $estado_arma as  $value )
+                                @if( $value->id_item == ($arma->estado_arma) )
+                                  @if($value->descripcion == 'Recuperada')
+                                    <a class="btn tooltipped disabled" data-position="top" data-tooltip="Ampliar"
+                                       onclick="editArma({{$arma}})">
+                                      <i class="material-icons">zoom_out_map</i>
+                                    </a>
+                                    <a class="btn tooltipped disabled" data-position="top" data-tooltip="Cambiar Estado"
+                                       onclick="editStatus({{$arma}})">
+                                      <i class="material-icons">create</i>
+                                    </a>
+                                  @else
+                                    <a class="btn tooltipped" data-position="top" data-tooltip="Ampliar"
+                                       onclick="editArma({{$arma}})">
+                                      <i class="material-icons">zoom_out_map</i>
+                                    </a>
+                                    <a class="btn tooltipped " data-position="top" data-tooltip="Cambiar Estado"
+                                       onclick="editStatus({{$arma}})">
+                                      <i class="material-icons">create</i>
+                                    </a>
+
+                                  @endif
+
+                                @endif
+                                @endforeach
+                              @endisset
 
                             </td>
                           </tr>
@@ -447,6 +466,7 @@
             <form id="recuperacion_arma" name="recuperacion_arma">
               {{--  Existe detenido  --}}
               {{--  Generamos la funcion verdad? --}}
+              <input type="hidden" id="id_arma" name="id_arma" value="">
               <div class="row row" style="box-shadow: 0px 10px 5px 1px rgba(0, 0, 0, 0.1)">
 
                   <div class="input-field col s12 m6 l4">
@@ -463,7 +483,7 @@
                       <span>Si</span>
                     </label>
                     <label>
-                      <input name="existeDetenido" type="radio" id="no_check" value="{{0}}"/>
+                      <input name="existeDetenido" type="radio" id="no_check" value="{{0}}" checked/>
                       <span>No</span>
                     </label>
                   </div>
@@ -475,15 +495,27 @@
 
               <div class="row">
                 @include('partials.divider',['title'=> 'Hecho'])
-                <div class="input-field col s12 m6 l4">
+
+                <div  class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <select name="demarcacion_hecho" id="demarcacion_hecho">
+                  <input type="date" id="fecha_hecho" name="fecha_hecho" class="validate" value="">
+                  <label for="fecha_hecho" >Fecha de la recuperacion</label>
+                </div>
+                <div  class="input-field col s12 m6 l4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <input type="time" id="hora_hecho" name="hora_hecho" class="validate" value="">
+                  <label for="hora_hecho" >Hora aproximada</label>
+                </div>
+
+{{--                <div class="input-field col s12 m6 l4">--}}
+{{--                  <i class="material-icons prefix">chevron_right</i>--}}
+{{--                  <select name="unidad_especial" id="unidad_especial">--}}
 {{--                    @foreach ($departamento as $key => $value)--}}
 {{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
 {{--                    @endforeach--}}
-                  </select>
-                </div>
-                <div class="input-field col s12 m6 l4">
+{{--                  </select>--}}
+{{--                </div>--}}
+                <div class="input-field col s12 m6 l4 ">
                   <i class="material-icons prefix">chevron_right</i>
                   <select name="unidad_recupera" id="unidad_recupera">
 {{--                    @foreach ($departamento as $key => $value)--}}
@@ -512,6 +544,14 @@
                 </div>
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
+                  <select name="demarcacion_hecho" id="demarcacion_hecho">
+                    {{--                    @foreach ($departamento as $key => $value)--}}
+                    {{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
+                    {{--                    @endforeach--}}
+                  </select>
+                </div>
+                <div class="input-field col s12 ">
+                  <i class="material-icons prefix">chevron_right</i>
                   <input type="text" name="direccion_hecho" id="direccion_hecho">
                   <label for="direccion_hecho">Direccion completa</label>
                 </div>
@@ -529,12 +569,12 @@
 
               </div>
 
-              <a class="btn" id="enviar_form" onclick="enviar_form()">Enviar</a>
 
             </form>
           </div>
         </div>
         <div class="modal-footer">
+          <a class="btn" id="enviar_form" onclick="registrarRecuperacion()"><i class="material-icons left">check</i>Guardar</a>
           <a href="#!" class="modal-close waves-effect waves-green btn-flat"><i class="material-icons left">cancel</i>Cancelar</a>
         </div>
       </div>
@@ -585,7 +625,6 @@
     $(document).ready(function () {
       $('.collapsible').collapsible();
       $('.modal').modal();
-
     });
 
 
@@ -593,30 +632,7 @@
     let var_id_arma;
 
 
-    // Funcion para Editar Arma a Recuperada.
-    function editStatus(arma) {
-      console.log(arma);
-      // $.ajax({
-      //   url:,
-      //   type:"get",
-      //   data:{},
-      //   beforeSend: function (){
-      //     $('.all-the-ground').show();
-      //   },
-      //   success:function (resp){
-      //     $('.all-the-ground').hide();
-      //
-      //   },
-      //   error:function (){
-      //
-      //   }
-      // });
 
-
-      $('#modEstadoArma').modal('open');
-    }
-
-    // Mandamos a inyectar el show.js?
 
     // Funcion para Ampliar Registros de las armas.
     function editArma(arma) {
@@ -685,7 +701,7 @@
       })
     }
 
-
+    // PENDIENTE
     function showModalConfirm(id_arma) {
       // Ahora en lugar de que confirme, vamos a tener que mostrar un nuevo Modal.
 
@@ -695,7 +711,7 @@
       $('#modConfirmEstado').modal('open');
       var_id_arma = id_arma;
     }
-
+    // PENDIENTE
     $('#confirmStatus').click(function () {
       // console.log('El id del arma es: '+var_id_arma);
       $.ajax({
@@ -725,6 +741,48 @@
       })
     })
 
+
+
+
+    // Editar Arma a Recuperada -Modals
+    function editStatus(arma) {
+      $('#id_arma').attr('value',arma.id_arma);
+      $('#modEstadoArma').modal('open');
+    }
+    // Registro de la recuperacion
+    function registrarRecuperacion(){
+       let datos = $('#recuperacion_arma').serialize();
+
+
+      $.ajax({
+        url: '{{route("registroRecuperacion")}}',
+        type: "POST",
+        data: {
+          datos,
+         _token: '{{ csrf_token() }}'
+        },
+        dataType: "json",
+        success: function (response) {
+          console.log(response)
+          $('#modSuccess').modal('open');
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
+        },
+        error: function (response, status) {
+          if(response.responseJSON.message == undefined){
+            let errores = Object.values(response.responseJSON);
+            errores.map(error => {
+                M.toast({html: error });
+              }
+            )
+          }
+        },
+        complete: function (xhr, status) {
+          console.log('Petición realizada');
+        }
+      });
+    };
 
     function agregarMarca() {
       let marcaArma = $('input.select2-search__field').val().trim();
@@ -773,31 +831,6 @@
         }
       });
     }
-
-
-    function enviar_form(){
-       let datos = $('#recuperacion_arma').serialize();
-
-
-      $.ajax({
-        url: '{{route("recibirForm")}}',
-        type: "POST",
-        data: {datos,
-         _token: '{{ csrf_token() }}'
-        },
-        dataType: "text",
-        success: function (rspnse) {
-          console.log(rspnse)
-        },
-        error: function (xhr, status) {
-          console.log('Disculpe, existió un problema');
-        },
-        complete: function (xhr, status) {
-          console.log('Petición realizada');
-        }
-      });
-    };
-
 
   </script>
 @endpush

@@ -194,7 +194,7 @@ class ConsultaController extends Controller
 
         }
 
-          //        return $i_denuncia;
+//                  return $i_denuncia;
           // Agregarle sus compact y el resto de weas xdxd
 
 

@@ -1,4 +1,6 @@
   -- Active: 1677186833542@@127.0.0.1@5432@didae@sae
+  DROP TABLE IF EXISTS sae.registro_procedimiento_arma;
+  DROP TABLE IF EXISTS sae.arma_recuperada;
   DROP TABLE IF EXISTS sae.persona_denuncia;
   DROP TABLE IF EXISTS sae.persona;
   DROP TABLE IF EXISTS sae.denuncia;
@@ -458,10 +460,20 @@
     (398,'Robada',9),
     (399,'Extraviada',9),
     (400,'Hurtada',9),
-    (401,'Solvente',9),
-    (402,'Sindicado',10),
-    (403,'Denunciante',13),
-    (404,'Sindicado',13)
+    (401,'Recuperada',9),
+    (402,'Solvente',9),
+    (403,'Sindicado',13),
+    (404,'Denunciante',13),
+    (405,'Detenido',13),
+    (406,'Flagrancia',6),
+    (407,'Allanamiento',6),
+    (408,'Requiza',6),
+    (409,'Orden de captura',6),
+    (410,'Desalojo',6),
+    (411,'Hallazgo',6),
+    (412,'Recuperacion',6),
+    (413,'Hallazgo',6),
+    (414,'Sindicado',10)
   ;
 
   -- ===============================================
@@ -960,13 +972,40 @@
   -- ===============================================
 
   CREATE TABLE sae.persona_denuncia(
-  id SERIAL PRIMARY KEY UNIQUE NOT NULL,
-  id_persona INT, --FK (sae.persona)
-  id_denuncia INT, --FK (sae.denuncia)
-  id_tipo_persona INT, --FK (sae.item)
-  id_denuncias_relacionadas JSONB,
-  FOREIGN KEY (id_persona) REFERENCES sae.persona(id_persona),
-  FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia),
-  FOREIGN KEY (id_tipo_persona) REFERENCES sae.item(id_item)
+    id SERIAL PRIMARY KEY UNIQUE NOT NULL,
+    id_persona INT, --FK (sae.persona)
+    id_denuncia INT, --FK (sae.denuncia)
+    id_tipo_persona INT, --FK (sae.item)
+    id_denuncias_relacionadas JSONB,
+    FOREIGN KEY (id_persona) REFERENCES sae.persona(id_persona),
+    FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia),
+    FOREIGN KEY (id_tipo_persona) REFERENCES sae.item(id_item)
+  );
+
+  -- ===============================================
+  -- Tabla arma_recuperada
+  -- ===============================================
+  CREATE TABLE sae.arma_recuperada(
+   id_recuperacion SERIAL PRIMARY KEY,
+   id_arma INT,--FK (sae.arma)
+   numero_prevencion VARCHAR,
+   id_hecho INT, --FK (sae.hecho)
+   id_persona JSONB, --FK (sae.persona)
+   id_tipo_persona INT, --FK (sae.item)
+   descripcion VARCHAR,
+   FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma),
+   FOREIGN KEY (id_hecho) REFERENCES sae.hecho(id_hecho),
+   FOREIGN KEY (id_tipo_persona) REFERENCES sae.item(id_item)
+  );
+
+  CREATE TABLE sae.registro_procedimiento_arma(
+    id_procedimiento SERIAL PRIMARY KEY,
+    id_tipo_procedimiento INT, --FK sae.item(item)
+    id_arma INT, --FK sae.arma(id_arma)
+--    id_owner INT, --FK ammm el id del operador, pendiente.
+    numero_documento VARCHAR,
+    descripcion VARCHAR,
+    FOREIGN KEY (id_tipo_procedimiento) REFERENCES sae.item(id_item),
+    FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma)
   );
 
