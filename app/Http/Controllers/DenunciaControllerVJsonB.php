@@ -11,6 +11,7 @@ use App\Models\Item;
 use App\Models\Municipio;
 use App\Models\Persona;
 use App\Models\Persona_Denuncia;
+use App\Models\Registro_Procedimiento_Arma;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -79,6 +80,7 @@ class DenunciaControllerVJsonB extends Controller
 	  $id_armas=[];
 	  $id_denunciante = NULL;
 	  $id_sindicados = [];
+    $tipo_procedimiento = Item::where('id_categoria', 14)->get();
 
 
 	// Aislamos los registros de armas y transformamos en mayusculas los datos.
@@ -632,6 +634,19 @@ class DenunciaControllerVJsonB extends Controller
 			$persona_denuncia->id_denuncias_relacionadas = json_encode(($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia);
 		  $persona_denuncia->save();
 		}
+
+
+     // Registro de la denuncia en historial.
+
+      foreach ($id_armas as $id_arma) {
+        $registro_historial = new Registro_Procedimiento_Arma();
+        $registro_historial->id_tipo_procedimiento = 416; //Automatizar.
+        $registro_historial->id_arma = $id_arma->id_arma;
+        $registro_historial->numero_documento = request('numero_diligencia');
+        $registro_historial->descripcion = 'Creacion de denuncia';
+        $registro_historial->save();
+      }
+
 	  }
 
 	  DB::commit();

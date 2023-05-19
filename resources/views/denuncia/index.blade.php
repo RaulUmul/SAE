@@ -124,7 +124,7 @@
         data:{},
         beforeSend: function (){},
         success: function (resp){
-          console.log(resp.tipo_arma);
+          // console.log(resp.tipo_arma);
 
           var tipoArmaMutator = function (value, data, type, params, component){
             let descripcion;
@@ -216,7 +216,6 @@
     function showDenuncias(id_arma){
 
       $.ajax({
-
         url:"{{route('consulta.show')}}",
         type:"post",
         data:{
@@ -232,7 +231,6 @@
           console.log('Nosepudocuas - showDenunciaIndexDenuncia');
         }
       })
-      console.log('Quepaso');
     }
 
   </script>

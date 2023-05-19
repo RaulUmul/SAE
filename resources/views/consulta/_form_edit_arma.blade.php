@@ -1,8 +1,10 @@
-<form>
+<form id="form-edit-arma" name="form-edit-arma">
   @include('partials.divider',['title'=> 'Datos del arma'])
+
+  <input type="hidden" name="id_arma" value="{{$arma['id_arma']}}">
   <div class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <select  id="tipo_arma">
+    <select  id="tipo_arma" name="tipo_arma">
       @if($arma['id_tipo_arma'])
         <option value="{{$arma['id_tipo_arma']}}" selected>@foreach($tipo_arma as $value) {{ ($value->id_item) == $arma['id_tipo_arma'] ? $value->descripcion : null }} @endforeach</option>
       @else
@@ -16,28 +18,28 @@
 
   <div  class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <input type="text" id="modelo_arma"  class="validate" value="{{$arma['modelo_arma']?$arma['modelo_arma']:null}}">
+    <input type="text" id="modelo_arma" name="modelo_arma" class="validate" value="{{$arma['modelo_arma']?$arma['modelo_arma']:null}}">
     <label for="modelo_arma" class="{{$arma['modelo_arma'] ?'active':''}}">Modelo </label>
   </div>
   <div  class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <input type="text" id="tenencia_arma"  class="validate" value="{{$arma['tenencia']?$arma['tenencia']:null}}">
+    <input type="text" id="tenencia_arma"  name="tenencia_arma" class="validate" value="{{$arma['tenencia']?$arma['tenencia']:null}}">
     <label for="tenencia_arma" class="{{$arma['tenencia'] ?'active':''}}">Numero tenencia</label>
   </div>
   <div  class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <input type="text" id="licencia_arma" class="validate" value="{{$arma['licencia']?$arma['licencia']:null}}">
+    <input type="text" id="licencia_arma"  name="licencia_arma" class="validate" value="{{$arma['licencia']?$arma['licencia']:null}}">
     <label for="licencia_arma" class="{{$arma['licencia'] ?'active':''}}">Numero licencia</label>
   </div>
   <div  class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <input type="text" id="registro_arma" class="validate" value="{{$arma['registro']?$arma['registro']:null}}">
+    <input type="text" id="registro_arma" name="registro_arma" class="validate" value="{{$arma['registro']?$arma['registro']:null}}">
     <label for="registro_arma" class="{{$arma['registro'] ?'active':''}}">Numero Registro / Serie</label>
   </div>
 
   <div class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <select  id="marca_arma">
+    <select  id="marca_arma" name="marca_arma">
       @if($arma['id_marca_arma'])
       <option value="{{$arma['id_marca_arma']}}" selected>@foreach($marca_arma as $value) {{ ($value->id_item) == $arma['id_marca_arma'] ? $value->descripcion : null }} @endforeach</option>
         @else
@@ -51,7 +53,7 @@
 
   <div class="input-field col s12 m6 l4 ">
     <i class="material-icons prefix">chevron_right</i>
-    <select id="calibre_arma">
+    <select id="calibre_arma" name="calibre_arma">
       @if($arma['id_calibre'])
         <option value="{{$arma['id_calibre']}}" selected>@foreach($calibre_arma as $value) {{ ($value->id_item) == $arma['id_calibre'] ? $value->descripcion : null }} @endforeach</option>
       @else
@@ -66,12 +68,12 @@
 
   <div  class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <input type="number" id="cantidad_tolvas" class="validate" value="{{$arma['cantidad_tolvas']?$arma['cantidad_tolvas']:null}}">
+    <input type="number" id="cantidad_tolvas" name="cantidad_tolvas" class="validate" value="{{$arma['cantidad_tolvas']?$arma['cantidad_tolvas']:null}}">
     <label for="cantidad_tolvas" class="{{$arma['cantidad_municion']?'active':''}}">Cantidad de tolvas</label>
   </div>
   <div  class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
-    <input type="number" id="cantidad_municion" class="validate" value="{{$arma['cantidad_municion']?$arma['cantidad_municion']:null}}">
+    <input type="number" id="cantidad_municion"  name="cantidad_municion" class="validate" value="{{$arma['cantidad_municion']?$arma['cantidad_municion']:null}}">
     <label for="cantidad_municion" class="{{$arma['cantidad_municion']?'active':''}}">Cantidad de municion</label>
   </div>
 

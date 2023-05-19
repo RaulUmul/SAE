@@ -9,6 +9,7 @@ use App\Models\Direccion;
 use App\Models\Hecho;
 use App\Models\Item;
 use App\Models\Persona;
+use App\Models\Registro_Procedimiento_Arma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -145,7 +146,7 @@ class ProcesosController extends Controller
       }
 
     }
-
+//  Muestra form para editar (ampliar) datos del arma.
     public  function editArma(Request $request){
 
       $marca_arma = Item::where('id_categoria',4)->get();
@@ -157,9 +158,63 @@ class ProcesosController extends Controller
       $arma = $request->arma;
       return view('consulta._form_edit_arma',compact('arma','calibre_arma','marca_arma','tipo_arma'));
     }
-
+//  Actualiza la informacioni del arma solicitada.
     public  function  updateArma(Request $request){
-      return 'Todo bien prro :)';
+      $queryString = $request['data'];
+      parse_str($queryString,$data);
+//      return $data;
+
+//      Generamos las reglas necesarias.
+
+      $rules = [
+        '$data["registro_arma"]' => 'required',
+        '$data["descripcion_ampliacion"]' => 'required',
+      ];
+
+      $mensajes = [
+        '$data["registro_arma"].required' => 'Ingrese No. de registro',
+        '$data["descripcion_ampliacion"].required' => 'Ingrese motivo de ampliacion',
+      ];
+
+      $validator = Validator::make([
+        '$data["registro_arma"]'=>$data['registro_arma'],
+        '$data["descripcion_ampliacion"]'=>$data['descripcion_ampliacion'],
+      ],$rules,$mensajes);
+
+      if($validator->fails()){
+        $result = $validator->errors();
+        return  response()->json($result,500);
+      }
+
+      // Actualizacion del arma, guardarla en un try catch;
+
+      try {
+        $arma_actualizada = Arma::find($data['id_arma']);
+        $arma_actualizada->id_tipo_arma = $data['tipo_arma'];
+        empty($data['marca_arma']) ? $arma_actualizada->id_marca_arma = null : $arma_actualizada->id_marca_arma = $data['marca_arma'] ;
+        empty($data['modelo_arma']) ?  $arma_actualizada->modelo_arma = null : $arma_actualizada->modelo_arma = $data['modelo_arma'];
+        $arma_actualizada->registro = $data['registro_arma'];
+        empty($data['licencia_arma']) ? $arma_actualizada->licencia = null : $arma_actualizada->licencia = $data['licencia_arma'];
+        empty($data['tenencia_arma']) ? $arma_actualizada->tenencia = null : $arma_actualizada->tenencia = $data['tenencia_arma'];
+        empty($data['calibre_arma']) ? $arma_actualizada->id_calibre = null : $arma_actualizada->id_calibre = $data['calibre_arma'];
+        empty($data['cantidad_tolvas']) ? $arma_actualizada->cantidad_tolvas = null : $arma_actualizada->cantidad_tolvas = $data['cantidad_tolvas'];
+        empty($data['cantidad_municion']) ? $arma_actualizada->cantidad_municion = null : $arma_actualizada->cantidad_municion = $data['cantidad_municion'];
+        $arma_actualizada->save();
+
+        // Registro de la ampliacion, en efecto.
+        $registro_historial = new Registro_Procedimiento_Arma();
+        $registro_historial->id_tipo_procedimiento = 418; // Automatizar.
+        $registro_historial->id_arma = $data['id_arma'];
+        $registro_historial->descripcion = $data['descripcion_ampliacion'];
+        $registro_historial->save();
+        return response()->json(['success'=>'Recuperada correctamente']);
+//      Fin :)
+      }catch (\Throwable $th){
+        throw $th;
+        DB::rollBack();
+        return response()->json($th,500);
+      }
+
     }
 
     public function showArmas(){ //En table del Index - Denuncias
@@ -255,7 +310,7 @@ class ProcesosController extends Controller
 
 
       try {
-
+        DB::beginTransaction();
         $direccion_hecho = new Direccion();
         $direccion_hecho->id_departamento = $data['departamento_hecho_recuperacion'];
         isset($data['municipio_hecho_direccion']) && $direccion_hecho->id_municipio = $data['municipio_hecho_direccion'];
@@ -264,7 +319,7 @@ class ProcesosController extends Controller
 
         $hecho = new Hecho();
         $hecho->numero_diligencia = $data['numero_prevencion'];
-        $hecho->id_tipo_hecho = '412'; //Remplazar para que sea dinamico.
+        $hecho->id_tipo_hecho = '412'; //Automatizar.
         $hecho->fecha_hecho = $data['fecha_hecho'];
         isset($data['hora_hecho']) && $hecho->hora_hecho = $data['hora_hecho'];
         $hecho->narracion = $data['descripcion_hecho'];
@@ -283,7 +338,16 @@ class ProcesosController extends Controller
         $arma_recuperada->save();
 
         $actualizacion = self::editStatusArma($data['id_arma'],'Recuperada');
+
+
+        DB::commit();
         if($actualizacion){
+          $registro_historial = new Registro_Procedimiento_Arma();
+          $registro_historial->id_tipo_procedimiento = 417; // Automatizar
+          $registro_historial->id_arma = $data['id_arma'];
+          $registro_historial->numero_documento = $data['numero_prevencion'];
+          $registro_historial->descripcion = $data['descripcion_hecho'];
+          $registro_historial->save();
           return response()->json(['success'=>'Recuperada correctamente']);
         }
 
@@ -299,6 +363,21 @@ class ProcesosController extends Controller
     }
 
 
+//    Devuelve el historial del arma.
+
+    public function showHistorial(Request $request){
+      $tipo_procedimiento = Item::where('id_categoria', 14)->get();
+      $arma = $request['arma'];
+      $id_arma = $arma['id_arma'];
+      $registro = $arma['registro'];
+
+//       Vamos a traernos lo de la tabla registro procedimiento.
+      $historial = Registro_Procedimiento_Arma::where('id_arma',$id_arma)->get();
+
+
+
+      return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento'));
+    }
 
 }
 

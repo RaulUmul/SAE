@@ -437,11 +437,12 @@
                                     </a>
 
                                   @endif
-
                                 @endif
                                 @endforeach
                               @endisset
-
+                                <a class="btn tooltipped" data-position="top" data-tooltip="Historial" onclick="showHistorial({{$arma}})">
+                                  <i class="material-icons">description</i>
+                                </a>
                             </td>
                           </tr>
                         @endforeach
@@ -580,7 +581,7 @@
       </div>
 
 
-
+        {{-- Eliminar, sin uso --}}
       {{-- Modal Form Recuperacion --}}
       <div id="modRecuperacion" class="modal valign-wrapper">
         <div class="modal-content center-align">
@@ -592,12 +593,12 @@
       <div id="modAmpliacion" class="modal valign-wrapper modal-fixed-footer">
         <div class="modal-content">
           <h4 class="center-align">Registro de ampliacion</h4>
-          <div id="form-edit-arma">
+          <div id="div_form-edit-arma">
 
           </div>
         </div>
         <div class="modal-footer ">
-          <a class="btn"><i class="material-icons left">done</i>Guardar</a>
+          <a class="btn" onclick="updateSend()"><i class="material-icons left">done</i>Guardar</a>
           <a class="modal-close waves-effect waves-green btn-flat"><i class="material-icons left">cancel</i>Cancelar</a>
         </div>
       </div>
@@ -623,6 +624,7 @@
   <script src="{{asset('js/consulta/show.js')}}"></script>
   <script>
     $(document).ready(function () {
+      $('.tooltipped').tooltip();
       $('.collapsible').collapsible();
       $('.modal').modal();
     });
@@ -631,12 +633,30 @@
 
     let var_id_arma;
 
+    // Muestra el historial del arma.
+    function showHistorial(arma){
+      $.ajax({
+        url: "{{route('showHistorial')}}",
+        type: 'POST',
+        data:{
+          arma,
+          _token: '{{ csrf_token() }}'
+        },
+        dataType:'text',
+        beforeSend: function (){},
+        success: function (response){
+          $('body').html(response);
+        },
+        error: function (response){
+
+        }
+      })
+    }
 
 
-
-    // Funcion para Ampliar Registros de las armas.
+    // Funcion para Ampliar Registros de las armas. (Cambiar a post)
     function editArma(arma) {
-      console.log(arma);
+      // console.log(arma);
 
       //   Con una consulta ajax nos traemos todos los datos del arma para que sean modificados.
       $.ajax({
@@ -652,7 +672,7 @@
         },
         success: function (resp) {
           $('.all-the-ground').hide();
-          $('#form-edit-arma').html(resp);
+          $('#div_form-edit-arma').html(resp);
 
           $('#tipo_arma').select2({
             width: '100%',
@@ -701,17 +721,52 @@
       })
     }
 
-    // PENDIENTE
+    function updateSend(){
+      let data = $('#form-edit-arma').serialize();
+      console.log(data);
+
+      $.ajax({
+        url: "{{route('updateArma')}}",
+        type: "POST",
+        dataType:"json",
+        data: {
+          data,
+          _token: '{{ csrf_token() }}'
+        },
+        beforeSend:function (){},
+        success: function (response){
+          // console.log(response);
+          $('#modSuccess').modal('open');
+          $('#modAmpliacion').modal('close');
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
+        },
+        error:function (response,status){
+          if(response.responseJSON.message == undefined){
+            let errores = Object.values(response.responseJSON);
+            errores.map(error => {
+                M.toast({html: error });
+              }
+            )
+          }
+          if(response.responseJSON.message != ""){
+            console.log('Hubo un erro, intente mas tardecito');
+          }
+        }
+      })
+    }
+
+    // PENDIENTE -> Eliminar, sin uso.
     function showModalConfirm(id_arma) {
       // Ahora en lugar de que confirme, vamos a tener que mostrar un nuevo Modal.
-
       // Modal Form Pal registro de recuperada.
 
       $('#modRecuperacion').modal('open');
       $('#modConfirmEstado').modal('open');
       var_id_arma = id_arma;
     }
-    // PENDIENTE
+    // PENDIENTE -> Eliminar, sin uso.
     $('#confirmStatus').click(function () {
       // console.log('El id del arma es: '+var_id_arma);
       $.ajax({

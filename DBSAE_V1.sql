@@ -38,7 +38,8 @@
     (10,'Tipo direccion'),
     (11,'Tipo entidad propietario'),
     (12,'Demarcacion'),
-    (13,'Tipo persona')
+    (13,'Tipo persona'),
+    (14,'Tipo procedimiento arma')
   ;
 
 
@@ -473,7 +474,11 @@
     (411,'Hallazgo',6),
     (412,'Recuperacion',6),
     (413,'Hallazgo',6),
-    (414,'Sindicado',10)
+    (414,'Sindicado',10),
+    (415,'Registro de incautacion',14),
+    (416,'Registro de denuncia',14),
+    (417,'Registro de recuperacion',14),
+    (418,'Registro de ampliacion',14)
   ;
 
   -- ===============================================
@@ -1005,6 +1010,8 @@
 --    id_owner INT, --FK ammm el id del operador, pendiente.
     numero_documento VARCHAR,
     descripcion VARCHAR,
+    fecha_creacion timestamp,
+    fecha_actualizacion timestamp,
     FOREIGN KEY (id_tipo_procedimiento) REFERENCES sae.item(id_item),
     FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma)
   );

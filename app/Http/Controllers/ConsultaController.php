@@ -87,8 +87,8 @@ class ConsultaController extends Controller
             ->with('direccion')
             ->first();
 
-          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
-          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 404)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
           $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
 
@@ -186,8 +186,8 @@ class ConsultaController extends Controller
             ->with('direccion')
             ->first();
 
-          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
-          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 404)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
           $count = 0;
           $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
@@ -261,8 +261,8 @@ class ConsultaController extends Controller
             ->with('direccion')
             ->first();
 
-          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
-          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 404)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
           $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $armas]);
         }
@@ -283,10 +283,11 @@ class ConsultaController extends Controller
 
 
     }else if(request('id_arma')){
-        $arma = Arma::find(request('id_arma'));
+        $arma = Arma::where('id_arma',request('id_arma'));
+//        dd($arma->first());
       if ($arma->exists()) {
         // Si arma existe ejecuta lo sig.
-        $denuncias = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->id_arma]])->get();
+        $denuncias = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->first()->id_arma]])->get();
         $i_denuncia = [];
 
         foreach ($denuncias as $key => $denuncia) {
@@ -314,11 +315,11 @@ class ConsultaController extends Controller
             ->with('direccion')
             ->first();
 
-          $denunciante = $personas_denuncia->where('id_tipo_persona', 403)->first();
-          $sindicados = $personas_denuncia->where('id_tipo_persona', 404);
+          $denunciante = $personas_denuncia->where('id_tipo_persona', 404)->first();
+          $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
           $count = 0;
-          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => [$arma->first()]]);
 
         }
 
