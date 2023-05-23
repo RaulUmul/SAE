@@ -57,27 +57,28 @@
   <div class="row">
 
     {{-- Cabecera --}}
-    {{-- @auth --}}
+     @auth
     <header class="col s0 l3">
         @include('partials.navbar')
     </header>
-    {{-- @endauth --}}
+     @endauth
 
 
     {{-- Contenido --}}
     <main class="col s12 m12 l9 container ">
       {{-- Boton del menu hamburguesa --}}
-      {{-- @auth --}}
+       @auth
       <a id="button_open-menu-sidenav" href="#" data-target="slide-out" class="sidenav-trigger white-text pulse"><i class="material-icons">menu</i></a>
-      {{-- @endauth --}}
+       @endauth
       {{-- Contenido --}}
       @yield('content')
 
     </main>
-
+    @auth()
     <footer class=" col s12  center-align" style="">
       @include('partials.footer')
     </footer>
+    @endauth
 
   </div>
 

@@ -1,8 +1,8 @@
 @extends('layouts.plantilla')
-  @section('title','Crear denuncia')
+  @section('title','Ingresar')
 
   @section('content')
-    <form method="POST" action="{{route('login')}}" id="login-form" autocomplete="off">
+    <form method="POST" action="{{route('acceso')}}" id="login-form" autocomplete="off">
       @csrf
 
       <div class="row " id="form_login">
@@ -48,6 +48,10 @@
                       </div>
                     </div>
                   </form>
+                  <div class="col s12 center">
+                    <span>Si aun no tienes cuenta  </span>
+                    <a href="{{route('registro')}}" class="blue-text" >Registrate</a>
+                  </div>
                 </div>
               </div>
             </div>

@@ -10,14 +10,18 @@ use Illuminate\Support\Facades\Route;
 
 
 // Login
-Route::view('','login.login');
-Route::post('',[AuthController::class,'login'])->name('login');
+Route::view('/','login.login')->name('login')->middleware('guest');
+Route::view('/registro','login.registro')->middleware('guest');
+Route::post('/login',[AuthController::class,'acceso'])->name('acceso')->middleware('guest');
+Route::post('/registro',[AuthController::class,'registro'])->name('registro');
+Route::get('logout',[AuthController::class,'logout'])->name('logout');
+
 
 // Inicio
-Route::view('/sae','index')->name('sae.inicio');
+Route::view('/sae','index')->name('sae.inicio')->middleware('auth');
 
 // Modulo Denuncia
-Route::resource('/sae/denuncia', DenunciaControllerVJsonB::class)->parameters(['denuncia'=>'item']);
+Route::resource('/sae/denuncia', DenunciaControllerVJsonB::class)->parameters(['denuncia'=>'item'])->middleware('auth');
 // Hay que individualizar las rutas.
 // Route::get('denuncia_form_sindicado',[DenunciaController::class, 'form_sindicado'])->name('form_sindicado');
 Route::get('denuncia_form_arma', [DenunciaControllerVJsonB::class, 'form_arma'])->name('form_arma');
@@ -25,8 +29,8 @@ Route::get('denuncia_form_sindicado',[DenunciaControllerVJsonB::class, 'form_sin
 
 // Modulo Consulta
 // Route::resource('/sae/consulta',ConsultaController::class)->parameters(['consulta'=>'item']);
-Route::get('/sae/consulta',[ConsultaController::class,'index'])->name('consulta.index');
-Route::get('/sae/consulta/create',[ConsultaController::class,'create'])->name('consulta.create');
+Route::get('/sae/consulta',[ConsultaController::class,'index'])->name('consulta.index')->middleware('auth');
+Route::get('/sae/consulta/create',[ConsultaController::class,'create'])->name('consulta.create')->middleware('auth');
 Route::post('/sae/consulta/show',[ConsultaController::class,'show'])->name('consulta.show');
 
 

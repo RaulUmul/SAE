@@ -71,8 +71,32 @@ h3{
   background-color: white;
   border-radius: 0 0 4px 4px;
   height: 50%;
+  max-height: 50%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
+.navbar_list li:last-child{
+  margin-top: auto;
+}
+
+.dropdown-content{
+  position: absolute;
+  top: 10%;
+}
+
+
+/*.user-account{*/
+/*  border: 1px solid yellow;*/
+/*  height: inherit;*/
+/*  display: flex;*/
+/*  align-items: flex-end;*/
+/*}*/
+
+/*.user-account > a{*/
+/*  width: 100%;*/
+/*  display: block;*/
+/*}*/
 
 /* Footer */
 
@@ -249,8 +273,9 @@ footer{
 }
 #form_login{
 position: absolute;
-top: 25vh;
+top: 22vh;
 }
+
 
 /* ******************Modulo Consultas****************************************** */
 
