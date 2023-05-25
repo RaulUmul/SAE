@@ -10,6 +10,7 @@ use App\Models\Hecho;
 use App\Models\Item;
 use App\Models\Persona;
 use App\Models\Registro_Procedimiento_Arma;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -204,6 +205,7 @@ class ProcesosController extends Controller
         // Registro de la ampliacion, en efecto.
         $registro_historial = new Registro_Procedimiento_Arma();
         $registro_historial->id_tipo_procedimiento = 418; // Automatizar.
+        $registro_historial->id_autor = auth()->user()->id_user; // Automatizar.
         $registro_historial->id_arma = $data['id_arma'];
         $registro_historial->descripcion = $data['descripcion_ampliacion'];
         $registro_historial->save();
@@ -344,6 +346,7 @@ class ProcesosController extends Controller
         if($actualizacion){
           $registro_historial = new Registro_Procedimiento_Arma();
           $registro_historial->id_tipo_procedimiento = 417; // Automatizar
+          $registro_historial->id_autor = auth()->user()->id_user; // Automatizar
           $registro_historial->id_arma = $data['id_arma'];
           $registro_historial->numero_documento = $data['numero_prevencion'];
           $registro_historial->descripcion = $data['descripcion_hecho'];
@@ -366,17 +369,25 @@ class ProcesosController extends Controller
 //    Devuelve el historial del arma.
 
     public function showHistorial(Request $request){
-      $tipo_procedimiento = Item::where('id_categoria', 14)->get();
+      $tipo_procedimiento = Item::where('id_categoria', 14)->get(); //Automatizar
+      $tipo_recuperacion = Item::select('id_item')->where('descripcion','Registro de recuperacion')->first()->id_item;
+      $usuarios = User::all();
       $arma = $request['arma'];
       $id_arma = $arma['id_arma'];
       $registro = $arma['registro'];
 
 //       Vamos a traernos lo de la tabla registro procedimiento.
       $historial = Registro_Procedimiento_Arma::where('id_arma',$id_arma)->get();
+      $arma_recuperada = null;
+      foreach ($historial as $value){
+        if($value->id_tipo_procedimiento == $tipo_recuperacion ){
+          $arma_recuperada = Arma_Recuperada::where('id_arma',$id_arma)->first();
+        }
+      }
 
 
 
-      return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento'));
+      return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento','arma_recuperada','usuarios'));
     }
 
 }

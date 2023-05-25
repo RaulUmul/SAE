@@ -25,7 +25,12 @@
             </div>
             @endisset
             <div class="col s12">
-            Autor: Raul Umul
+
+              @foreach($usuarios as $usuario)
+                @if($usuario->id_user == $evento->id_autor)
+                  Autor: {{ucwords( $usuario->user )}}
+                @endif
+              @endforeach
             </div>
             <div class="col s12">
               Descripcion: {{$evento->descripcion}}
@@ -34,14 +39,59 @@
               Fecha registro: {{date('d/m/Y',strtotime($evento->fecha_creacion))}}
               Hora: {{date('H:i:s'), strtotime($evento->fecha_creacion)  }}
             </div>
+            @foreach ( $tipo_procedimiento as  $tipo )
+              @if( $tipo->id_item == ($evento->id_tipo_procedimiento) )
+                 @if($tipo->descripcion == 'Registro de recuperacion')
+                   <div class="col s12">
+                    <a onclick="modalDetalleRecuperacion({{$arma_recuperada}})">Ver detalle</a>
+                     {{$arma_recuperada}}
+                   </div>
+                @endif
+              @endif
+            @endforeach
           </div>
         </li>
         @endforeach
       </ul>
+
+      <div id="modDetalleRecuperacion" class="modal">
+
+        <div class="modal-content">
+
+          <h4>Modal Header</h4>
+
+          <p>A bunch of text</p>
+
+        </div>
+
+        <div class="modal-footer">
+
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+
+        </div>
+
+      </div>
+
     @endsection
   @endcomponent
 @endsection
 
 @push('scripts')
+
+  <script>
+
+    $(document).ready(function(){
+      $('.modal').modal();
+    });
+    function modalDetalleRecuperacion(recuperacion){
+
+      $('#modDetalleRecuperacion>modal-content').html('Hola');
+
+    $('#modDetalleRecuperacion').modal('open');
+
+    }
+
+
+  </script>
 
 @endpush

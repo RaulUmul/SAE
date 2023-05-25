@@ -1007,12 +1007,13 @@
     id_procedimiento SERIAL PRIMARY KEY,
     id_tipo_procedimiento INT, --FK sae.item(item)
     id_arma INT, --FK sae.arma(id_arma)
---    id_owner INT, --FK ammm el id del operador, pendiente.
+    id_autor INT, --FK public.users ammm el id del operador, pendiente.
     numero_documento VARCHAR,
     descripcion VARCHAR,
     fecha_creacion timestamp,
     fecha_actualizacion timestamp,
     FOREIGN KEY (id_tipo_procedimiento) REFERENCES sae.item(id_item),
-    FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma)
+    FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma),
+    FOREIGN KEY (id_autor) REFERENCES public.users(id_user)
   );
 

@@ -294,7 +294,9 @@ class DenunciaControllerVJsonB extends Controller
 		    $denunciante_update->id_direccion = json_encode($direccion_actualizada);
 		   $denunciante_update->save();
 		   $id_denunciante = ($denunciante_db->first())->id_persona;
-	  }
+	  }else if($denunciante_db->count() && $direccion_db_residencia->count()){
+      $id_denunciante = $denunciante_db->first()->id_persona;
+    }
 
 	  // 2.2 Tipo Sindicado.
 	  if($datosSindicados != NULL){
@@ -484,8 +486,10 @@ class DenunciaControllerVJsonB extends Controller
                     ->orWhere('estado_arma',$item_extraviada);
               });
     $registro_arma_db_solvente = Arma::where('registro',$value['registro_arma'])
-                                      ->where('estado_arma',$item_solvente);
-
+                                      ->orWhere('estado_arma',$item_solvente);
+//    dump($registro_arma_db_solvente->exists());
+//    dump($registro_arma_db->doesntExist());
+//    return $registro_arma_db->exists();
 
 		if($registro_arma_db->doesntExist() && $registro_arma_db_solvente->doesntExist()){
 		  // Si no existe el arma se agrega.
@@ -638,16 +642,18 @@ class DenunciaControllerVJsonB extends Controller
 
      // Registro de la denuncia en historial.
 
-      foreach ($id_armas as $id_arma) {
-        $registro_historial = new Registro_Procedimiento_Arma();
-        $registro_historial->id_tipo_procedimiento = 416; //Automatizar.
-        $registro_historial->id_arma = $id_arma->id_arma;
-        $registro_historial->numero_documento = request('numero_diligencia');
-        $registro_historial->descripcion = 'Creacion de denuncia';
-        $registro_historial->save();
-      }
+
 
 	  }
+    foreach ($id_armas as $id_arma) {
+      $registro_historial = new Registro_Procedimiento_Arma();
+      $registro_historial->id_tipo_procedimiento = 416; //Automatizar.
+      $registro_historial->id_arma = $id_arma->id_arma;
+      $registro_historial->id_autor = auth()->user()->id_user;
+      $registro_historial->numero_documento = request('numero_diligencia');
+      $registro_historial->descripcion = 'Creacion de denuncia';
+      $registro_historial->save();
+    }
 
 	  DB::commit();
 

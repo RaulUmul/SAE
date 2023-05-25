@@ -21,7 +21,7 @@ $('#tipo_documento').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 $('#genero_persona').select2({
   width: '100%',
   placeholder: 'Género ',
@@ -31,7 +31,7 @@ $('#genero_persona').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 $('#departamento_residencia').select2({
   width: '100%',
@@ -42,7 +42,7 @@ $('#departamento_residencia').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 $('#municipio_residencia').select2({
   width: '100%',
   placeholder: 'Municipio',
@@ -52,7 +52,7 @@ $('#municipio_residencia').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 // Selects arma
 $('#tipo_arma').select2({
@@ -99,7 +99,7 @@ $('#pais_fabricacion').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 $('#propietario').select2({
   width: '100%',
@@ -110,7 +110,7 @@ $('#propietario').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 // Selects Hecho
 $('#tipo_hecho').select2({
@@ -122,7 +122,7 @@ $('#tipo_hecho').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 $('#departamento_hecho').select2({
   width: '100%',
   placeholder: 'Departamento',
@@ -132,7 +132,7 @@ $('#departamento_hecho').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 $('#municipio_hecho').select2({
   width: '100%',
   placeholder: 'Municipio',
@@ -142,7 +142,7 @@ $('#municipio_hecho').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 // Selects Sospechosos
 
@@ -155,7 +155,7 @@ $('#nacionalidad_sindicado').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 $('#genero_sindicado').select2({
   width: '100%',
@@ -166,7 +166,7 @@ $('#genero_sindicado').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 
 //Selects residencia sospechoso
@@ -180,7 +180,7 @@ $('#departamento_sindicado').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 $('#municipio_sindicado').select2({
   width: '100%',
   placeholder: 'Municipio',
@@ -190,7 +190,7 @@ $('#municipio_sindicado').select2({
       return "No existe la categoria.";
    }
   },
-}); 
+});
 
 
 // Agrega la opcion de ingresar el propietario diferente al de denucniante.
@@ -203,7 +203,7 @@ function selectChangePropietario (valor){
       $('#div_propietario select').removeAttr('id');
       $('#div_denunciante').removeAttr('hidden');
 
-        
+
       denunciante.innerHTML = `
         <i class="material-icons prefix">chevron_right</i>
         <input type="text" name="propietario" id="propietario" class="validate" value="">
@@ -238,7 +238,7 @@ function verificar_check(){
   if((val_nacionalidad == 'Guatemalteca') || (val_nacionalidad == 'Extranjero')){
 
   switch (val_radiobutton){
-      
+
     case "1":
       if(val_nacionalidad == "Guatemalteca"){
 
@@ -288,7 +288,7 @@ $('input:radio[name=poseeDocumento]').click(function () {
 function selectTipoDocumento (valor){
 
   // let documento = document.getElementById("div_documento_identificacion");
-  
+
   if(valor == 'dpi'){
       $('#div_documento_identificacion').html(`
       <i class="material-icons prefix">chevron_right</i>
@@ -304,7 +304,7 @@ function selectTipoDocumento (valor){
     <input type="text" id="Pasaporte" name="pasaporte" class="validate" value="" >
     <label for="Pasaporte">No. Pasaporte</label>
     `);
-  
+
   }else{
     $('#div_documento_identificacion').html(`
     <i class="material-icons prefix">chevron_right</i>
@@ -321,7 +321,7 @@ function validar_longitud(){
   let actual_cui = $('#cui').val();
 
   switch (actual_cui.length){
-      
+
     case 13:
       $('.btn-verificar').removeAttr('disabled')
       break;
@@ -329,7 +329,7 @@ function validar_longitud(){
     default:
       $('.btn-verificar').attr('disabled','disabled');
       break;
-  } 
+  }
 
 
 }
@@ -339,7 +339,7 @@ function validar_longitud_sindicado(){
   let actual_cui = $('#cui_sindicado').val();
 
   switch (actual_cui.length){
-      
+
     case 13:
       $('.btn-verificar-sindicado').removeAttr('disabled')
       break;
@@ -347,7 +347,7 @@ function validar_longitud_sindicado(){
     default:
       $('.btn-verificar-sindicado').attr('disabled','disabled');
       break;
-  } 
+  }
 
 
 }
@@ -453,7 +453,7 @@ function checkCampos(obj){
         return false;
       }
     }
-       
+
     if(camposRellenos == false){
       return false;
     }else{
@@ -461,7 +461,7 @@ function checkCampos(obj){
     };
 };
 function borrarInputArma(){
-  // $('#tipo_arma').val(""); // Posterior implementaremos un check que mantendra el select si el usuario  lo solicita. 
+  // $('#tipo_arma').val(""); // Posterior implementaremos un check que mantendra el select si el usuario  lo solicita.
   // $('#marca_arma').val("");
   $('#modelo_arma').val("");
   $('#tenencia_arma').val("");
@@ -499,34 +499,34 @@ $('#telefono_sindicado').val("");
 // Rellena los datos en el form de datos personales.
 function inputsPersonaLlenos(request){
   $('#primer_nombre').val(request.primer_nombre);
-  $('#primer_nombre').attr('disabled','disabled');
+  $('#primer_nombre').attr('readonly','readonly');
 
   $('#segundo_nombre').val(request.segundo_nombre);
-  $('#segundo_nombre').attr('disabled','disabled');
+  $('#segundo_nombre').attr('readonly','readonly');
 
   $('#tercer_nombre').val(request.tercer_nombre);
-  $('#tercer_nombre').attr('disabled','disabled');
+  $('#tercer_nombre').attr('readonly','readonly');
 
   $('#primer_apellido').val(request.primer_apellido);
-  $('#primer_apellido').attr('disabled','disabled');
+  $('#primer_apellido').attr('readonly','readonly');
 
   $('#segundo_apellido').val(request.segundo_apellido);
-  $('#segundo_apellido').attr('disabled','disabled');
+  $('#segundo_apellido').attr('readonly','readonly');
 
   $('#apellido_casada').val(request.apellido_casada);
-  $('#apellido_casada').attr('disabled','disabled');
+  $('#apellido_casada').attr('readonly','readonly');
 
   if(request.genero == 'M'){
     // Setear el valor a Masculino
     $('#genero_persona').val(2);
     $('#genero_persona').trigger('change');
-    $('#genero_persona').attr('disabled','disabled');
+    $('#genero_persona').attr('readonly','readonly');
 
   }else if(request.genero == 'F'){
     // Setear el valor a Femenino
     $('#genero_persona').val(3);
     $('#genero_persona').trigger('change');
-    $('#genero_persona').attr('disabled','disabled');
+    $('#genero_persona').attr('readonly','readonly');
 
   }else{
     // Setear valor nulo
@@ -535,7 +535,7 @@ function inputsPersonaLlenos(request){
   let d = new Date(request.fecha_nacimiento);
   d = d.toJSON().slice(0,10);
   $('#fecha_nacimiento').val(d);
-  $('#fecha_nacimiento').attr('disabled','disabled');
+  $('#fecha_nacimiento').attr('readonly','readonly');
 
   M.updateTextFields();
   $('#modal_renap').modal('close');
@@ -544,28 +544,28 @@ function inputsPersonaLlenos(request){
 
 function inputsPersonaLimpio(){
   $('#primer_nombre').val("");
-  $('#primer_nombre').removeAttr('disabled');
+  $('#primer_nombre').removeAttr('readonly');
 
   $('#segundo_nombre').val("");
-  $('#segundo_nombre').removeAttr('disabled');
+  $('#segundo_nombre').removeAttr('readonly');
 
   $('#tercer_nombre').val("");
-  $('#tercer_nombre').removeAttr('disabled');
+  $('#tercer_nombre').removeAttr('readonly');
 
   $('#primer_apellido').val("");
-  $('#primer_apellido').removeAttr('disabled');
+  $('#primer_apellido').removeAttr('readonly');
 
   $('#segundo_apellido').val("");
-  $('#segundo_apellido').removeAttr('disabled');
+  $('#segundo_apellido').removeAttr('readonly');
 
   $('#apellido_casada').val("");
-  $('#apellido_casada').removeAttr('disabled');
+  $('#apellido_casada').removeAttr('readonly');
 
   $('#fecha_nacimiento').val("");
-  $('#fecha_nacimiento').removeAttr('disabled');
+  $('#fecha_nacimiento').removeAttr('readonly');
 
   $('#genero_persona').val("");
-  $('#genero_persona').removeAttr('disabled');
+  $('#genero_persona').removeAttr('readonly');
 
   M.updateTextFields();
 
@@ -573,35 +573,35 @@ function inputsPersonaLimpio(){
 
 function inputsSindicadoLlenos(request){
   $('#primer_nombre_sindicado').val(request.primer_nombre);
-  $('#primer_nombre_sindicado').attr('disabled','disabled');
+  $('#primer_nombre_sindicado').attr('readonly','readonly');
 
   $('#segundo_nombre_sindicado').val(request.segundo_nombre);
-  $('#segundo_nombre_sindicado').attr('disabled','disabled');
+  $('#segundo_nombre_sindicado').attr('readonly','readonly');
 
   $('#tercer_nombre_sindicado').val(request.tercer_nombre);
-  $('#tercer_nombre_sindicado').attr('disabled','disabled');
+  $('#tercer_nombre_sindicado').attr('readonly','readonly');
 
   $('#primer_apellido_sindicado').val(request.primer_apellido);
-  $('#primer_apellido_sindicado').attr('disabled','disabled');
+  $('#primer_apellido_sindicado').attr('readonly','readonly');
 
   $('#segundo_apellido_sindicado').val(request.segundo_apellido);
-  $('#segundo_apellido_sindicado').attr('disabled','disabled');
+  $('#segundo_apellido_sindicado').attr('readonly','readonly');
 
   $('#apellido_casada_sindicado').val(request.apellido_casada);
-  $('#apellido_casada_sindicado').attr('disabled','disabled');
+  $('#apellido_casada_sindicado').attr('readonly','readonly');
 
   if(request.genero == 'M'){
     // Setear el valor a Masculino
     $('#genero_sindicado').val(2);
     $('#genero_sindicado').trigger('change');
-    $('#genero_sindicado').attr('disabled','disabled');
+    $('#genero_sindicado').attr('readonly','readonly');
   }else if(request.genero == 'F'){
-    // Setear el valor a 
+    // Setear el valor a
     $('#genero_sindicado').val(3);
     $('#genero_sindicado').trigger('change');
-    $('#genero_sindicado').attr('disabled','disabled');
+    $('#genero_sindicado').attr('readonly','readonly');
 
-    
+
   }else{
     // Setear valor nulo
   }
@@ -609,7 +609,7 @@ function inputsSindicadoLlenos(request){
   let d = new Date(request.fecha_nacimiento);
   d = d.toJSON().slice(0,10);
   $('#fecha_nacimiento_sindicado').val(d);
-  $('#fecha_nacimiento_sindicado').attr('disabled','disabled');
+  $('#fecha_nacimiento_sindicado').attr('readonly','readonly');
 
   M.updateTextFields();
   $('#modal_renap').modal('close');
@@ -618,30 +618,30 @@ function inputsSindicadoLlenos(request){
 
 function inputsSindicadoLimpio(){
   $('#primer_nombre_sindicado').val("");
-  $('#primer_nombre_sindicado').removeAttr('disabled');
+  $('#primer_nombre_sindicado').removeAttr('readonly');
 
   $('#segundo_nombre_sindicado').val("");
-  $('#segundo_nombre_sindicado').removeAttr('disabled');
+  $('#segundo_nombre_sindicado').removeAttr('readonly');
 
   $('#tercer_nombre_sindicado').val("");
-  $('#tercer_nombre_sindicado').removeAttr('disabled');
+  $('#tercer_nombre_sindicado').removeAttr('readonly');
 
   $('#primer_apellido_sindicado').val("");
-  $('#primer_apellido_sindicado').removeAttr('disabled');
+  $('#primer_apellido_sindicado').removeAttr('readonly');
 
   $('#segundo_apellido_sindicado').val("");
-  $('#segundo_apellido_sindicado').removeAttr('disabled');
+  $('#segundo_apellido_sindicado').removeAttr('readonly');
 
   $('#apellido_casada_sindicado').val("");
-  $('#apellido_casada_sindicado').removeAttr('disabled');
+  $('#apellido_casada_sindicado').removeAttr('readonly');
 
   $('#fecha_nacimiento_sindicado').val("");
-  $('#fecha_nacimiento_sindicado').removeAttr('disabled');
+  $('#fecha_nacimiento_sindicado').removeAttr('readonly');
 
   $('#genero_sindicado').val("");
-  $('#genero_sindicado').removeAttr('disabled');
+  $('#genero_sindicado').removeAttr('readonly');
 
-  
+
   M.updateTextFields();
 
 }
