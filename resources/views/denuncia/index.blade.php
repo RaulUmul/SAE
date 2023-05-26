@@ -85,12 +85,21 @@
             <input id="filter-registro" type="text" placeholder="No. de Registro">
           </div>
 
-        <div id="example-table">
-          <ul class="pagination">
-            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-          </ul>
-        </div>
+        <table id="table-armas" >
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Calibre</th>
+            <th>Licencia</th>
+            <th>Tenencia</th>
+            <th>Registro</th>
+          </tr>
+          </thead>
+        </table>
+
         </div>
       </div>
 
@@ -117,93 +126,35 @@
 
       $.ajax({
       //   Vamos a consultar la data de armas.
-
         url:"{{route('showArmas')}}",
         type: 'get',
         dataType: 'json',
         data:{},
         beforeSend: function (){},
-        success: function (resp){
-          // console.log(resp.tipo_arma);
+        success: function (resp) {
+          console.log(resp.armas);
+          // let { data } = resp.armas;
+          console.log({data:resp.armas});
+          $('#table-armas').DataTable({
+            data: resp.armas,
 
-          var tipoArmaMutator = function (value, data, type, params, component){
-            let descripcion;
-            resp.tipo_arma.map((tipo)=>{
-               if(value === tipo.id_item){ descripcion = tipo.descripcion};
-            });
-            return descripcion;
-          }
-          var marcaArmaMutator = function (value, data, type, params, component){
-            let descripcion;
-            resp.marca_arma.map((tipo)=>{
-               if(value === tipo.id_item){ descripcion = tipo.descripcion};
-            });
-            return descripcion;
-          }
-          var estadoArmaMutator = function (value, data, type, params, component){
-            let descripcion;
-            resp.estado_arma.map((tipo)=>{
-               if(value === tipo.id_item){ descripcion = tipo.descripcion};
-            });
-            return descripcion;
-          }
-          var calibreArmaMutator = function (value, data, type, params, component){
-            let descripcion;
-            resp.calibre_arma.map((tipo)=>{
-               if(value === tipo.id_item){ descripcion = tipo.descripcion};
-            });
-            return descripcion;
-          }
-          var iconSee = function(cell, formatterParams){
-
-            return `<a class='btn tooltipped' data-position='top' data-tooltip='Ver denuncia'><i class='material-icons'>remove_red_eye</i></a>`;
-          };
-          var iconRemove = function(cell, formatterParams){
-
-            return `<a class='btn tooltipped' data-position='top' data-tooltip='Ver denuncia'><i class='material-icons'>remove_red_eye</i></a>`;
-          };
-
-          var table = new Tabulator('#example-table',{
-            data:resp.armas,
-            layout:"fitColumns",
-            // autoColumns:true,
-            pagination:true,
-            paginationSize:5,
-            // headerVisible:false,
-            columns:[
-              {title:"ID", field:"id_arma",width:75},
-              {title:"TIPO", field:"id_tipo_arma",mutator:tipoArmaMutator},
-              {title:"MARCA", field:"id_marca_arma",mutator:marcaArmaMutator},
-              {title:"MODELO", field:"modelo_arma"},
-              {title:"REGISTRO", field:"registro",widthGrow:2},
-              {title:"CALIBRE", field:"id_calibre",mutator:calibreArmaMutator},
-              {title:"LICENCIA", field:"licencia"},
-              {title:"TENENCIA", field:"tenencia"},
-              {title:"ESTATUS", field:"estado_arma",mutator:estadoArmaMutator},
-              // {title:"ACCIONES",
-              // headerVisible:false,
-              //   columns:[
-              {title:"ACCIONES",formatter:iconSee,hozAlign:"center", cellClick:function(e, cell){showDenuncias(cell._cell.row.data.id_arma);},cellMouseOver:function (e,cell){$('.tooltipped').tooltip()}},
-                  // ]},
+            columns: [
+              {data: 'id_arma'},
+              {data: 'id_tipo_arma'},
+              {data: 'id_marca_arma'},
+              {data: 'modelo_arma'},
+              {data: 'id_calibre'},
+              {data: 'licencia'},
+              {data: 'tenencia'},
+              {data: 'registro'}
             ],
+            "order": [ 0, 'desc' ],
+            select: true,
+            dom: 'table-armas',
+            buttons: [
+              'copy', 'excel', 'pdf'
+            ]
           });
-          $('#filter-registro').on('keyup',function (){
-            updateFiltro();
-          });
-          $('#tipo_arma').on('change  ',function (){
-            updateFiltro();
-          });
-
-          function  updateFiltro(){
-            table.setFilter(
-              [{field:"id_tipo_arma", type:"like", value:$('#tipo_arma option:selected').text()}],
-              [{field:"registro", type:"like", value:$('#filter-registro').val()}],
-            );
-
-            // if($('#filter-registro').val() == "" ){
-            //   table.clearFilter();
-            // }
-          }
         },
         error: function (){
           console.log('No se pudo mi pana - showArmasReady')
@@ -213,6 +164,7 @@
 
     });
 
+    // Para mostrar la denuncia del Arma.
     function showDenuncias(id_arma){
 
       $.ajax({

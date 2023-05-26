@@ -16,8 +16,10 @@
   <link rel="stylesheet" href="{{asset('css/select2.css')}}">
   {{-- Style de SweetAlert2 --}}
   <link rel="stylesheet" href="{{asset('css/sweetalert2.min.css')}}">
+{{--  Style de Datatable--}}
+  <link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">
   {{-- Style de Tabulator  --}}
-  <link rel="stylesheet" href="{{asset('css/tabulator.min.css')}}">
+{{--  <link rel="stylesheet" href="{{asset('css/tabulator.min.css')}}">--}}
   {{-- Styles de la App --}}
   @vite(['resources/css/app.css','resources/js/app.js'])
   {{-- Nombre de Titulo --}}
@@ -99,7 +101,9 @@
 {{-- Script SweetAlert2 --}}
 <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
 {{-- Script Tabulator--}}
-<script src="{{ asset('js/tabulator.min.js') }}"></script>
+{{--<script src="{{ asset('js/tabulator.min.js') }}"></script>--}}
+{{--  Scripts DataTables--}}
+<script src="{{ asset('js/datatables.min.js') }}"></script>
 {{-- Scripts de cada Modulo --}}
 {{-- <script src="{{asset('js/app.js')}}"></script> --}}
 @stack('scripts')
