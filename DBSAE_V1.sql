@@ -1003,6 +1003,10 @@
    FOREIGN KEY (id_tipo_persona) REFERENCES sae.item(id_item)
   );
 
+  -- ===============================================
+  -- Tabla registro_procedimiento
+  -- ===============================================
+
   CREATE TABLE sae.registro_procedimiento_arma(
     id_procedimiento SERIAL PRIMARY KEY,
     id_tipo_procedimiento INT, --FK sae.item(item)
@@ -1017,3 +1021,17 @@
     FOREIGN KEY (id_autor) REFERENCES public.users(id_user)
   );
 
+  -- ===============================================
+  -- Tabla Archivo
+  -- ===============================================
+
+  CREATE TABLE sae.archivo(
+    id_archivo SERIAL PRIMARY KEY,
+    id_denuncia INT,
+    -- id_incautacion INT,
+    -- id_recuperacion INT,
+    nombre varchar,
+    nombre_hash varchar,
+    mime varchar,
+    FOREIGN KEY(id_denuncia) REFERENCES sae.denuncia(id_denuncia) 
+  );

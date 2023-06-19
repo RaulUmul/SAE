@@ -104,6 +104,8 @@
 
 @push('scripts')
   <script>
+    $(document).ready(function () {
       $('.materialboxed').materialbox();
+    });
   </script>
 @endpush

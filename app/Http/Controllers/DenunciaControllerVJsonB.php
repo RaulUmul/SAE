@@ -21,7 +21,13 @@ use Illuminate\Support\Facades\DB;
 
 class DenunciaControllerVJsonB extends Controller
 {
-
+	/**
+	 * Esta funcion solo sirve para mostrar la vista de index
+	 * y pasarle la informacion, esto es un summary.
+	 * 
+	 * @access public
+	 * @return view denuncia.index
+	 */
   public function index(){
     $tipo_arma = Item::where('id_categoria',3)->get();
     $estado_arma = Item::where('id_categoria',9)->get();

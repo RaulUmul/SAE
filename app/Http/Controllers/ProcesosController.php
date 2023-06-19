@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class ProcesosController extends Controller
@@ -337,7 +338,7 @@ class ProcesosController extends Controller
   }
 
   //Devuelve el historial del arma.
-  public function showHistorial(Request $request){
+   public function showHistorial(Request $request){
     $tipo_procedimiento = Item::where('id_categoria', 14)->get(); //Automatizar
     $tipo_recuperacion = Item::select('id_item')->where('descripcion','Registro de recuperacion')->first()->id_item;
     $usuarios = User::all();
@@ -349,22 +350,31 @@ class ProcesosController extends Controller
     $arma_recuperada = null;
     foreach ($historial as $value){
       if($value->id_tipo_procedimiento == $tipo_recuperacion ){
-        $arma_recuperada = Arma_Recuperada::where('id_arma',$id_arma)->first();
+        $arma_recuperada = Arma_Recuperada::where('id_arma',$id_arma)->get();
       }
     }
-    return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento','arma_recuperada','usuarios'));
+    return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento','arma_recuperada','usuarios','arma'));
   }
 
   // Imprime el viewport de Historial
-  public function impresionHistorial(){
-    // Retorna vista para llamada ajax, (utilidad principal);
-
-    return view('consulta.viewports.historial');
-
+  public function impresionHistorial(Request $request){
+    $pdf =  Pdf::loadView('consulta.pdfs.historialArma',['data'=>$request])->stream('historial_serie_.pdf');
+    return $pdf;
   }
 
-  public function impresionDenuncia(){
-
+  public function impresionDenuncia(Request $request){
+    $denuncia = json_decode($request->denuncia);
+    $departamento = json_decode($request->departamento);
+    $municipio = json_decode($request->municipio);
+    $genero = $request->genero;
+    $tipo_arma = $request->tipo_arma;
+    $marca_arma = json_decode($request->marca_arma);
+    $calibre_arma = json_decode($request->calibre_arma);
+    $estado_arma = $request->estado_arma;
+    $tipo_denuncia = $request->tipo_denuncia;
+    // $vista = view('consulta.pdfs.denunciaArma')->render();
+    $pdf =  Pdf::loadView('consulta.pdfs.denunciaArma',compact('denuncia','departamento','municipio','genero','tipo_arma','marca_arma','calibre_arma','estado_arma','tipo_denuncia'))->stream('denuncia_.pdf');
+    return $pdf;
   }
 
 }

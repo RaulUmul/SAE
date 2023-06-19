@@ -1,0 +1,25 @@
+body{
+  background-color: #ffffff;
+}
+header{
+  visibility: hidden;
+}
+
+#button_open-menu-sidenav{
+  visibility: hidden;
+}
+
+#imprimir_historial{
+  visibility: hidden;
+}
+
+.card-content{
+  padding: 0;
+  /* visibility: hidden; */
+  /* display: none; */
+}
+
+#preview-pdf-historial{
+  display: none;
+}
+

@@ -1,48 +1,79 @@
 {{--@extends('layouts.plantilla')--}}
 @extends('layouts.plantilla')
-@section('title','Consultas')
+@section('title','Administracion de archivo')
 
 
 @section('content')
   @component('components.container')
-    @section('titulo_card','SISTEMA DE ARMAS Y EXPLOSIVOS - SAE')
+    @section('titulo_card','ADMINISTRACION DE ARCHIVO')
     @section('contenido_card')
 
-    {{-- <form action="{{route('archivo.store')}}" enctype="multipart/form-data" method="post">
+    <div class="col s12">
+    </div>
+    @empty($archivo)
+      {{-- Si no hubiera archivo, se da esta opcion --}}
+      <form action="{{route('archivo.store')}}" enctype="multipart/form-data" method="post">
+        @csrf
+        @method("post")
+        <div class="row valign-wrapper">
+          <div class="col s10 file-field input-field">
+            <div class="btn">
+              <span>Archivo</span>
+              <input type="file" name="file" id="file" accept=".pdf">
+            </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" type="text" id="filePath">
+            </div>
+          </div>
+          <div class="col s2">
+            <a class="btn"  href="#!" onclick="deletePDF()"><span>Eliminar</span><i class="material-icons left">clear</i>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <button class="btn" name="action" type="submit">Enviar <i class="material-icons right">send</i></button>
+          </div>
+        </div>
+      </form>
+
+    @else
+    <form action="{{route('archivo.update')}}" enctype="multipart/form-data" method="post">
       @csrf
       @method("post")
       <div class="row valign-wrapper">
-        <div class="col s10 file-field input-field">
+        <div class="col s8 file-field input-field">
           <div class="btn">
             <span>Archivo</span>
             <input type="file" name="file" id="file" accept=".pdf">
           </div>
           <div class="file-path-wrapper">
-            <input class="file-path validate" type="text" id="filePath">
+            <input class="file-path validate" type="text" id="filePath"  value="{{$archivo->nombre}}">
           </div>
+        </div>
+        <div class="col s2">
+          <button class="btn" name="action" type="submit">Guardar<i class="material-icons right">save</i></button>
         </div>
         <div class="col s2">
           <a class="btn"  href="#!" onclick="deletePDF()"><span>Eliminar</span><i class="material-icons left">clear</i>
           </a>
         </div>
       </div>
-      <div class="row">
-        <div class="col s12">
-          <button class="btn" name="action" type="submit">Enviar <i class="material-icons right">send</i></button>
-        </div>
-      </div>
     </form>
-
     <div class="row">
       <div class="col s12">
-        <embed 
-        alt=""
-        width="100%"
-        height="600px"
-        id="archivoCargado"
+        <iframe 
+        src="data:application/pdf;base64,{{base64_encode(\Storage::get($archivo->nombre_hash))}}#toolbar=0" 
         type="application/pdf"
-        >
+        {{-- frameborder="0" --}}
+        width="100%"
+        height="500px"
+        id="archivoCargado"
+      ></iframe>
+  
+      </div>
     </div>
+    @endempty
 
     @endsection
   @endcomponent
@@ -88,4 +119,4 @@
       reader.readAsDataURL(file);
     }
   </script>
-@endpush --}}
+@endpush

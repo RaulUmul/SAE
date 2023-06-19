@@ -6,7 +6,6 @@
   @component('components.container')
     @section('titulo_card','RESULTADO DE LA BUSQUEDA')
     @section('contenido_card')
-      @csrf
       {{-- Aqui presentaremos los resultados satisfactorios de la busqueda. --}}
       {{-- Como? T.T --}}
       {{-- Por cada arma recuperada verdad... o no? --}}
@@ -20,14 +19,35 @@
 
       <div class="row">
         {{-- Foreach --}}
-
         @foreach ($i_denuncia as $denuncia)
 
           <div class="col s12">
             <ul class="collapsible">
               <li>
-                <div class="collapsible-header">
+                <div class="collapsible-header deleteCollapse">
+                  <div>
                   Denuncia No.<b> {{$denuncia['denunciante']->id_denuncia}}</b>
+                  </div>
+                  <div>
+                  <a class="btn" href="{{route('impresionDenuncia',[
+                    'denuncia'=>json_encode($denuncia),
+                    'departamento' => json_encode($departamento),
+                    'municipio' =>json_encode($municipio),
+                    'genero' =>json_decode($genero),
+                    'tipo_arma' =>json_decode($tipo_arma),
+                    'marca_arma' =>json_encode($marca_arma),
+                    'calibre_arma' =>json_encode($calibre_arma),
+                    'estado_arma' =>json_decode($estado_arma),
+                    'tipo_denuncia' => json_decode($tipo_denuncia)
+                    ])}}" target="_blank"><i class="material-icons left">local_printshop</i> Imprimir denuncia </a>
+                    
+                    <a href="{{route('archivo.index',['id_denuncia'=>$denuncia['denunciante']->id_denuncia])}}" class="btn">
+                      <i class="material-icons left">
+                        picture_as_pdf
+                      </i>
+                      <span>Visualizar documento</span>
+                    </a>
+                  </div>
                 </div>
                 <div class="collapsible-body">
 
@@ -220,7 +240,7 @@
                       <table class="centered highlight">
                         <thead>
                         <tr>
-                          <th>Nombre</th>
+                          <th>Nombres</th>
                           <th>Apellidos</th>
                           <th>CUI</th>
                           <th>Pasaporte</th>
@@ -238,8 +258,8 @@
                             <td>
                               {{-- Nombres --}}
                               {{isset($sindicado->persona->primer_nombre) ? $sindicado->persona->primer_nombre : null}}
-                              {{isset($sindicado->persona->tercer_nombre) ? $sindicado->persona->tercer_nombre : null}}
                               {{isset($sindicado->persona->segundo_nombre) ? $sindicado->persona->segundo_nombre : null}}
+                              {{isset($sindicado->persona->tercer_nombre) ? $sindicado->persona->tercer_nombre : null}}
                               {{(!isset($sindicado->persona->primer_nombre) && !isset($sindicado->persona->segundo_nombre)  && !isset($sindicado->persona->tercer_nombre))? 'N/I' : null}}
 
                             </td>
@@ -256,7 +276,7 @@
                             </td>
                             <td>
                               {{-- Pasaporte --}}
-                              {{isset($sindicado->persona->pasaporte) ? $sindicado->persona->cui : 'N/I'}}
+                              {{isset($sindicado->persona->pasaporte) ? $sindicado->persona->pasaporte : 'N/I'}}
                             </td>
                             <td>
                               {{-- Telefono --}}

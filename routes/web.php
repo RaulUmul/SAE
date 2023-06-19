@@ -6,6 +6,7 @@ use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\DenunciaControllerVJsonB;
 use App\Http\Controllers\ProcesosController;
 use App\Http\Controllers\WS_RenapController;
+use App\Http\Controllers\ArchivoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -47,9 +48,17 @@ Route::controller(ProcesosController::class)->group(function(){
   Route::post('/sae/proceso/update_arma','updateArma')->name('updateArma');
   Route::post('/sae/proceso/registro_recuperacion','registroRecuperacion')->name('registroRecuperacion');
   Route::post('/sae/proceso/historial_arma','showHistorial')->name('showHistorial');
+  Route::get('/sae/proceso/impresion_historial','impresionHistorial')->name('impresionHistorial');
+  Route::get('/sae/proceso/impresion_denuncia','impresionDenuncia')->name('impresionDenuncia');
 });
 // Consulta de CUI a WSRenap.
 Route::controller(WS_RenapController::class)->group(function(){
   Route::get('/sae/consulta_renap','renap')->name('consulta_renap');
 });
+
+// Manejo de archivos
+  Route::get('/sae/documento/',[ArchivoController::class,'index'])->name('archivo.index');
+  Route::post('/sae/documento/store',[ArchivoController::class,'store'])->name('archivo.store');
+  Route::post('/sae/documento/update',[ArchivoController::class,'update'])->name('archivo.update');
+  Route::post('/sae/documento/delete',[ArchivoController::class,'delete'])->name('archivo.delete');
 

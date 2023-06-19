@@ -1,3 +1,4 @@
+{{-- Creo que esta sin uso. --}}
 
 @if($solvente == false)
   <p class="center-align ">

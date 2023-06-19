@@ -1,6 +1,6 @@
+
 @extends('layouts.plantilla')
 @section('title','Historial')
-
 
 @section('content')
   @component('components.container')
@@ -8,7 +8,22 @@
     @section('contenido_card')
       @csrf
       <ul class="collection with-header" id="historial-frame" >
-        <li class="collection-header"><h4>Arma Registro No. {{$registro}}</h4></li>
+        <li class="collection-header row valign-wrapper">
+          <div class="col s12 m6">
+            <h4>Arma Registro No. {{$registro}}</h4>
+          </div>
+          <div class="col s12 m6" style="display:flex;justify-content: center;">
+            <a id="impresionHistorialBtn" class="btn" href="{{route('impresionHistorial',[
+              'arma'=>$arma,
+              'historial'=>json_decode($historial),
+              'tipo_procedimiento'=>json_decode($tipo_procedimiento),
+              'registro'=>$registro,
+              'usuarios'=>json_decode($usuarios)])}}"
+              target="preview_historial"
+            >
+            <i class="material-icons left">local_printshop</i> IMPRIMIR / DESCARGAR</a>
+          </div>
+        </li>
         @foreach($historial as $evento)
         <li class="collection-item">
           <div class="row">
@@ -28,7 +43,7 @@
 
               @foreach($usuarios as $usuario)
                 @if($usuario->id_user == $evento->id_autor)
-                  Autor: {{ucwords( $usuario->user )}}
+                  Responsable: {{ucwords( $usuario->user )}}
                 @endif
               @endforeach
             </div>
@@ -43,8 +58,11 @@
               @if( $tipo->id_item == ($evento->id_tipo_procedimiento) )
                  @if($tipo->descripcion == 'Registro de recuperacion')
                    <div class="col s12">
-                    <a onclick="modalDetalleRecuperacion({{$arma_recuperada}})">Ver detalle</a>
-                     {{$arma_recuperada}}
+                     @foreach ($arma_recuperada as $arma )
+                     @if($evento->numero_documento == $arma->numero_prevencion)
+                     <a href="#!" onclick="modalDetalleRecuperacion({{$arma}})">Ver detalle</a>
+                    @endif
+                    @endforeach
                    </div>
                 @endif
               @endif
@@ -52,27 +70,29 @@
           </div>
         </li>
         @endforeach
-
-        <iframe id='preview-pdf-historial'  frameborder="0" class="col s12" style="width: 100%; min-height: 500px;height: 100%;max-height: 800px;">
-
+        <iframe
+         class="col s12"
+         style="width: 100%; min-height: 500px;height: 100%;max-height: 800px;border:none;" 
+         name="preview_historial"
+         id="preview_historial"
+         hidden
+         >
         </iframe>
-        <a class="btn" onclick="pruebaImprimir()"><i class="material-icons left">local_printshop</i> IMPRIMIR</a>
-      </ul>
+
+      </ul> 
+
 
       <div id="modDetalleRecuperacion" class="modal">
 
         <div class="modal-content">
+          <h4>Detalle</h4>
+          <div class="contenido_denuncia">
 
-          <h4>Modal Header</h4>
-
-          <p>A bunch of text</p>
-
+          </div>
         </div>
 
         <div class="modal-footer">
-
           <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
-
         </div>
 
       </div>
@@ -81,6 +101,10 @@
   @endcomponent
 @endsection
 
+@push('styles')
+  <link rel="stylesheet" href="{{asset('css/mediaPrint/printHistorial.css')}}" media="print">
+@endpush
+
 @push('scripts')
 
   <script>
@@ -88,66 +112,19 @@
     $(document).ready(function(){
       $('.modal').modal();
     });
+
     function modalDetalleRecuperacion(recuperacion){
-
-      $('#modDetalleRecuperacion>modal-content').html('Hola');
-
-    $('#modDetalleRecuperacion').modal('open');
-
+      console.log(recuperacion);
+      // Falta realizar una consulta ajax para traernos la vista y pegarla en el modal.
+      $('.contenido_denuncia').html(JSON.stringify(recuperacion));
+      $('#modDetalleRecuperacion').modal('open');
     }
 
-    function pruebaImprimir(){
-
-      var pdf = new jsPDF('p','pt','letter');
-      pdf.text('Historial',20,20,{align:'center'});
-      source = $('#historial-frame')[0];
-
-
-      specialElementHandlers = {
-        '#bypassme': function (element, renderer) {
-          return true
-        }
-      };
-      margins = {
-        top: 20,
-        bottom: 10,
-        left: 10,
-        // width: 522
-      };
-
-      pdf.fromHTML(
-
-        source,
-        margins.left, // x coord
-        margins.top, { // y coord
-              'width': margins.width,
-              'elementHandlers': specialElementHandlers
-        },
-        function (dispose){
-
-        }
-
-      );
-
-      $('#preview-pdf-historial').attr('src',pdf.output('datauristring'));
-
-
-      // pdf.fromHTML(
-      //   source,
-      //   margins.left, // x coord
-      //   margins.top, { // y coord
-      //     'width': margins.width,
-      //     'elementHandlers': specialElementHandlers
-      //   },
-      //
-      //   function (dispose) {
-      //     pdf.save('Prueba.pdf');
-      //   }, margins
-      // );
-
-
-    }
+    $('#impresionHistorialBtn').on('click',function () {
+      $('#preview_historial').removeAttr('hidden');
+    })
 
   </script>
+
 
 @endpush
