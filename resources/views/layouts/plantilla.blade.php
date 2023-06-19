@@ -21,7 +21,10 @@
   {{-- Style de Tabulator  --}}
 {{--  <link rel="stylesheet" href="{{asset('css/tabulator.min.css')}}">--}}
   {{-- Styles de la App --}}
+  {{--  Script pdf --}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
   @vite(['resources/css/app.css','resources/js/app.js'])
+
   {{-- Nombre de Titulo --}}
   <title>@yield('title')</title>
 </head>
@@ -106,6 +109,8 @@
 <script src="{{ asset('js/datatables.min.js') }}"></script>
 {{-- Scripts de cada Modulo --}}
 {{-- <script src="{{asset('js/app.js')}}"></script> --}}
+
+
 @stack('scripts')
 
 <script>

@@ -7,7 +7,7 @@
     @section('titulo_card','Historial / Registro')
     @section('contenido_card')
       @csrf
-      <ul class="collection with-header">
+      <ul class="collection with-header" id="historial-frame" >
         <li class="collection-header"><h4>Arma Registro No. {{$registro}}</h4></li>
         @foreach($historial as $evento)
         <li class="collection-item">
@@ -52,6 +52,11 @@
           </div>
         </li>
         @endforeach
+
+        <iframe id='preview-pdf-historial'  frameborder="0" class="col s12" style="width: 100%; min-height: 500px;height: 100%;max-height: 800px;">
+
+        </iframe>
+        <a class="btn" onclick="pruebaImprimir()"><i class="material-icons left">local_printshop</i> IMPRIMIR</a>
       </ul>
 
       <div id="modDetalleRecuperacion" class="modal">
@@ -91,6 +96,57 @@
 
     }
 
+    function pruebaImprimir(){
+
+      var pdf = new jsPDF('p','pt','letter');
+      pdf.text('Historial',20,20,{align:'center'});
+      source = $('#historial-frame')[0];
+
+
+      specialElementHandlers = {
+        '#bypassme': function (element, renderer) {
+          return true
+        }
+      };
+      margins = {
+        top: 20,
+        bottom: 10,
+        left: 10,
+        // width: 522
+      };
+
+      pdf.fromHTML(
+
+        source,
+        margins.left, // x coord
+        margins.top, { // y coord
+              'width': margins.width,
+              'elementHandlers': specialElementHandlers
+        },
+        function (dispose){
+
+        }
+
+      );
+
+      $('#preview-pdf-historial').attr('src',pdf.output('datauristring'));
+
+
+      // pdf.fromHTML(
+      //   source,
+      //   margins.left, // x coord
+      //   margins.top, { // y coord
+      //     'width': margins.width,
+      //     'elementHandlers': specialElementHandlers
+      //   },
+      //
+      //   function (dispose) {
+      //     pdf.save('Prueba.pdf');
+      //   }, margins
+      // );
+
+
+    }
 
   </script>
 

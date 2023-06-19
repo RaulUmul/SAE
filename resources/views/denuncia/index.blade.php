@@ -72,9 +72,9 @@
             <i class="material-icons prefix">chevron_right</i>
             <select  id="estado_arma">
               <option value="{{null}}" selected>N/I</option>
-{{--              @foreach ($tipo_arma as $key => $value)--}}
-{{--                <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>--}}
-{{--              @endforeach--}}
+              @foreach ($estado_arma as $key => $value)
+                <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+              @endforeach
             </select>
           </div>
 
@@ -85,21 +85,22 @@
             <input id="filter-registro" type="text" placeholder="No. de Registro">
           </div>
 
-        <table id="table-armas" >
-          <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tipo</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Calibre</th>
-            <th>Licencia</th>
-            <th>Tenencia</th>
-            <th>Registro</th>
-          </tr>
-          </thead>
-        </table>
-
+            <table id="table-armas"  style="width: 100%">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Calibre</th>
+                <th>Licencia</th>
+                <th>Tenencia</th>
+                <th>Registro</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+              </thead>
+            </table>
         </div>
       </div>
 
@@ -135,26 +136,77 @@
           console.log(resp.armas);
           // let { data } = resp.armas;
           console.log({data:resp.armas});
-          $('#table-armas').DataTable({
+          var tablaArmas = $('#table-armas').addClass('nowrap').DataTable({
+            responsive: true,
+            "order": [ 0, 'desc' ],
             data: resp.armas,
-
             columns: [
               {data: 'id_arma'},
-              {data: 'id_tipo_arma'},
-              {data: 'id_marca_arma'},
+              {data: 'id_tipo_arma',render: function (data){
+                let descripcion;
+                resp.tipo_arma.map((tipo)=>{
+                  if(data === tipo.id_item){descripcion = tipo.descripcion};
+                });
+                return descripcion;
+              }},
+              {data: 'id_marca_arma', render: function (data){
+                  let descripcion;
+                  resp.marca_arma.map((tipo)=>{
+                    if(data === tipo.id_item){descripcion = tipo.descripcion};
+                  });
+                  return descripcion;
+                }},
               {data: 'modelo_arma'},
-              {data: 'id_calibre'},
+              {data: 'id_calibre', render: function (data){
+                let descripcion;
+                resp.calibre_arma.map((tipo)=>{
+                  if(data === tipo.id_item){descripcion = tipo.descripcion}
+                });
+                return descripcion;
+              }},
               {data: 'licencia'},
               {data: 'tenencia'},
-              {data: 'registro'}
+              {data: 'registro'},
+              {data: 'estado_arma',render: function (data){
+                  let descripcion;
+                  resp.estado_arma.map((tipo)=>{
+                    if(data === tipo.id_item){descripcion = tipo.descripcion}
+                  });
+                  return descripcion;
+                }},
+              null
             ],
-            "order": [ 0, 'desc' ],
             select: true,
-            dom: 'table-armas',
-            buttons: [
-              'copy', 'excel', 'pdf'
-            ]
+            dom: 'Brtip',
+            columnDefs:[
+              {target: 7 ,responsivePriority: 1},
+              {
+              responsivePriority: 2,
+              target: -1,
+              visible: true,
+              data: 'id_arma',
+              orderable: false,
+              render: function ( data, type, row, meta ) {
+               return  `<a class="btn" onclick="showDenuncias(${data})"> <i class="material-icons">visibility</i></a>`;
+              }
+            }],
+            // "bDestroy": true
           });
+
+          $('#filter-registro').on('keyup',function (){
+            tablaArmas.columns(7).search(this.value).draw(); // Columna 8 -> registro arma
+          });
+
+          $('#tipo_arma').on('change',function (){
+            let tipo_arma = $('#tipo_arma option:selected').text();
+            tablaArmas.columns(1).search(tipo_arma).draw();
+          });
+
+          $('#estado_arma').on('change',function (){
+            let estado_arma = $('#estado_arma option:selected').text();
+            tablaArmas.columns(8).search(estado_arma).draw(); //Columna 8 -> estado arma
+          });
+
         },
         error: function (){
           console.log('No se pudo mi pana - showArmasReady')
@@ -163,6 +215,7 @@
 
 
     });
+
 
     // Para mostrar la denuncia del Arma.
     function showDenuncias(id_arma){

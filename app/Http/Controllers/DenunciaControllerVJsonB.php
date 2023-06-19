@@ -24,7 +24,8 @@ class DenunciaControllerVJsonB extends Controller
 
   public function index(){
     $tipo_arma = Item::where('id_categoria',3)->get();
-	  return view('denuncia.index',compact('tipo_arma'));
+    $estado_arma = Item::where('id_categoria',9)->get();
+	  return view('denuncia.index',compact('tipo_arma','estado_arma'));
   }
 
   public function create(){
