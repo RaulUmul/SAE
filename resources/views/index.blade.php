@@ -42,14 +42,14 @@
         id="archivoCargado"
         type="application/pdf"
         >
-    </div>
+    </div> --}}
 
     @endsection
   @endcomponent
 @endsection
 
 
-@push('scripts')
+{{-- @push('scripts')
   <script>
     $('#file').on('change',function(event){
       let archivo = event.target.files[0];

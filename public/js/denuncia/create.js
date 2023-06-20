@@ -378,10 +378,12 @@ alternarClaseTab($('#arma_plus'),$('#arma_asociada'));
 });
 // Efecto para los tabs. Sindicados
 $('#sospechoso_asociado').click(function(){
+  $('#main-archivo').removeAttr('hidden');
   alternarClaseTab($('#sospechoso_plus'),$('#sospechoso_asociado'));
 });
 
 $('#sospechoso_plus').click(function(){
+  $('#main-archivo').attr('hidden','hidden');
 alternarClaseTab($('#sospechoso_asociado'),$('#sospechoso_plus'));
 });
 

@@ -12,6 +12,7 @@ use App\Models\Municipio;
 use App\Models\Persona;
 use App\Models\Persona_Denuncia;
 use App\Models\Registro_Procedimiento_Arma;
+use App\Models\Archivo;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -78,7 +79,7 @@ class DenunciaControllerVJsonB extends Controller
       return  response()->json($result,500);
     }
 
-//	   return $request;
+		// return $request;
 	  $data = $request->all();
 	  $patron = "/arma_plus_/";
 	  $patronSindicado = "/sindicado_plus/";
@@ -621,37 +622,53 @@ class DenunciaControllerVJsonB extends Controller
 
 	  // 6.2 Sindicado
 	  if($datosSindicados!=NULL){
-		// 1. Empezaremos capturando todos los id de los sindicados, y guardarlo en un array.
+			// 1. Empezaremos capturando todos los id de los sindicados, y guardarlo en un array.
 
-		// 2. Cuando esten capturados id_sindicados:[{id:1}{id:2}] <- ejemplo.
-		// 3. Lo recorremos y a cada uno le asignamos el id de la denuncia generada.
+			// 2. Cuando esten capturados id_sindicados:[{id:1}{id:2}] <- ejemplo.
+			// 3. Lo recorremos y a cada uno le asignamos el id de la denuncia generada.
 
-		// id: 1 ----- denuncias relacionas {1}
-		// id: 2 ----- denuncias relacionas {1}
-
-
-		// Ahora supongamos que para el sindicado 1 se le asigna en un distinto hecho una nueva denuncia.
-		// id_sindicados:[{id:1}{id:3}]
-
-		// id: 1 ----- denuncias relacionada {}
+			// id: 1 ----- denuncias relacionas {1}
+			// id: 2 ----- denuncias relacionas {1}
 
 
-		foreach($id_sindicados as $value){
-		  $persona_denuncia = new Persona_Denuncia();
-			$persona_denuncia->id_persona = $value;
-			$persona_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
-			$persona_denuncia->id_tipo_persona = $item_tipoPersonaSindicado;
-		  // El asunto es recuperar aunquesea el mismo para asignarle la denuncia que acaba de ser creada.
-			$persona_denuncia->id_denuncias_relacionadas = json_encode(($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia);
-		  $persona_denuncia->save();
+			// Ahora supongamos que para el sindicado 1 se le asigna en un distinto hecho una nueva denuncia.
+			// id_sindicados:[{id:1}{id:3}]
+
+			// id: 1 ----- denuncias relacionada {}
+
+
+			foreach($id_sindicados as $value){
+			  $persona_denuncia = new Persona_Denuncia();
+				$persona_denuncia->id_persona = $value;
+				$persona_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
+				$persona_denuncia->id_tipo_persona = $item_tipoPersonaSindicado;
+			  // El asunto es recuperar aunquesea el mismo para asignarle la denuncia que acaba de ser creada.
+				$persona_denuncia->id_denuncias_relacionadas = json_encode(($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia);
+			  $persona_denuncia->save();
+			}
+
+			// Registro del archivo cargado.
+
+     	// Registro de la denuncia en historial.
+	  }
+		
+		if ($request->hasFile('file')) {
+			if($request->file('file')->isValid()){
+
+				if($request->file('file')->getClientOriginalExtension() != 'pdf'){
+					return 'Solo es admitido formato PDF'; //Hay que agregarlo al response de errores
+				}
+				$nombre_hash = $request->file('file')->store('denuncias');
+				$archivo = new Archivo();
+				$archivo->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
+				$archivo->nombre = $request->file('file')->getClientOriginalName();
+				$archivo->nombre_hash = $nombre_hash;
+				$archivo->mime = $request->file('file')->getClientMimeType();
+				$archivo->save();
+			}
+			
 		}
 
-
-     // Registro de la denuncia en historial.
-
-
-
-	  }
     foreach ($id_armas as $id_arma) {
       $registro_historial = new Registro_Procedimiento_Arma();
       $registro_historial->id_tipo_procedimiento = 416; //Automatizar.

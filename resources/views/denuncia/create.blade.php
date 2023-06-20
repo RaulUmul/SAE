@@ -7,7 +7,7 @@
     @section('titulo_card','CREAR DENUNCIA')
     @section('contenido_card')
 
-      <form action="{{route("denuncia.store")}}" method="post">
+      <form action="{{route("denuncia.store")}}" method="post" enctype="multipart/form-data">
 
         @csrf
         @method("post")
@@ -21,7 +21,6 @@
               <li class="tab"><a id="linkArma" href="#div-main_arma" class="">2</a></li>
               <li class="tab"><a id="linkHecho" href="#div-main_hecho">3</a></li>
               <li class="tab"><a id="linkSospechosos" href="#div-main_sospechosos">4</a></li>
-
             </ul>
           </div>
 
@@ -382,7 +381,7 @@
                 <i class="material-icons prefix">chevron_right</i>
                 <input type="text" name="numero_diligencia" id="numero_diligencia" class="validate" value="{{old('numero_diligencia')}}" required="" aria-required="true">
                 <label for="numero_diligencia" class="active">Numero diligencia</label>
-{{--                <p class="helper-text" data-error="*Numero diligencia requerido" data-success="" style="position: absolute" >*Numero diligencia requerido</p>--}}
+                {{--  <p class="helper-text" data-error="*Numero diligencia requerido" data-success="" style="position: absolute" >*Numero diligencia requerido</p>--}}
               </div>
 
               <div class="input-field col s12 m6 l4 ">
@@ -393,7 +392,7 @@
                   <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
                   @endforeach
                 </select>
-{{--                <p class="helper-text" data-error="*Tipo del hecho requerido" data-success="" style="position: absolute; left: 50%" >*Tipo del hecho requerido</p>--}}
+                <p class="helper-text" data-error="*Tipo del hecho requerido" data-success="" style="position: absolute; left: 50%" >*Tipo del hecho requerido</p>
               </div>
 
               <div  class="input-field col s12 m6 l4">
@@ -711,6 +710,45 @@
                   <div class=" container  col s12" >
                     <div class="divider"></div>
                   </div>
+
+
+                  
+                </div>
+
+                <br><br><br>
+                {{-- Contenedor de carga de archivo --}}
+                <div class="container col s12" id="main-archivo" >
+                  <br><br><br>
+
+                  <div class=" col s12">
+                    <div class="divider"></div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="col s12 center-align">
+                    <span><b>Cargar denuncia digitalizada</b></span>
+                  </div>
+                  <div class="row valign-wrapper">
+                    <div class="col s10 file-field input-field">
+                      <div class="btn">
+                        <span>Archivo</span>
+                        <input type="file" name="file" id="file" accept=".pdf">
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" id="filePath">
+                      </div>
+                    </div>
+                    <div class="col s2">
+                      <a class="btn"  href="#!" onclick="deletePDF()"><span>Eliminar</span><i class="material-icons left">clear</i>
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+                
+                <br><br>
+                <div class="container col s12">
+                  <div class="divider"></div>
                 </div>
 
                 <div class="row">
@@ -1292,6 +1330,32 @@
 
 
     }
+
+    // $('#file').on('change',function(event){
+    //   let archivo = event.target.files[0];
+    //   if(event.target.files.length != 0){
+    //     return;
+    //     // readPDF(archivo);
+    //   }else{
+    //     deletePDF();
+    //   }
+    // });
+
+    function deletePDF(){
+      $('#file').val('');
+      // $('#archivoCargado').attr('src','');
+      $('#filePath').val('');
+    }
+
+    // function readPDF(file){
+    //   let iframe = document.getElementById('archivoCargado');
+    //   const reader = new FileReader();
+
+    //   // reader.addEventListener('load', (event) => {
+    //   //   iframe.src = event.target.result;
+    //   // });
+    //   reader.readAsDataURL(file);
+    // }
 
 
     $('#Enviar').click(function(e){

@@ -30,6 +30,7 @@
             </a>
           </div>
         </div>
+        <input type="hidden" value="{{$id_denuncia}}" name="id_denuncia">  
         <div class="row">
           <div class="col s12">
             <button class="btn" name="action" type="submit">Enviar <i class="material-icons right">send</i></button>
@@ -51,6 +52,7 @@
             <input class="file-path validate" type="text" id="filePath"  value="{{$archivo->nombre}}">
           </div>
         </div>
+        <input type="hidden" value="{{$id_denuncia}}" name="id_denuncia">  
         <div class="col s2">
           <button class="btn" name="action" type="submit">Guardar<i class="material-icons right">save</i></button>
         </div>
@@ -62,14 +64,18 @@
     </form>
     <div class="row">
       <div class="col s12">
-        <iframe 
-        src="data:application/pdf;base64,{{base64_encode(\Storage::get($archivo->nombre_hash))}}#toolbar=0" 
-        type="application/pdf"
+
+        <a href="{{route('archivo.show',['name'=>$archivo->nombre,'nombre_hash'=>$archivo->nombre_hash])}}" class="btn" target="_blank">Ver documento</a>
+
+        {{-- <iframe  --}}
+        {{-- src="data:application/pdf;base64,{{base64_encode(\Storage::get($archivo->nombre_hash))}}#toolbar=0"  --}}
+        {{-- type="application/pdf" --}}
         {{-- frameborder="0" --}}
-        width="100%"
-        height="500px"
-        id="archivoCargado"
-      ></iframe>
+        {{-- width="100%" --}}
+        {{-- height="500px" --}}
+        {{-- id="archivoCargado" --}}
+        {{-- name="archivoCargado" --}}
+        {{-- ></iframe> --}}
   
       </div>
     </div>
@@ -104,18 +110,6 @@
       reader.addEventListener('load', (event) => {
         iframe.src = event.target.result;
       });
-
-      // reader.addEventListener('progress', (event) => {
-      //   if (event.loaded && event.total) {
-      //     const percent = (event.loaded / event.total) * 100 ;
-      //     // setInterval(() => {
-      //     //   console.log('Loaded:  ', event.loaded);
-      //     //   console.log('Total:  ', event.total);
-      //     //   console.log(`Progress: ${percent}`);
-      //     // }, 2000);
-      //   }
-      // });
-
       reader.readAsDataURL(file);
     }
   </script>

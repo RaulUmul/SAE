@@ -58,6 +58,7 @@ Route::controller(WS_RenapController::class)->group(function(){
 
 // Manejo de archivos
   Route::get('/sae/documento/',[ArchivoController::class,'index'])->name('archivo.index');
+  Route::get('/sae/documento/show/{name}',[ArchivoController::class,'show'])->name('archivo.show');
   Route::post('/sae/documento/store',[ArchivoController::class,'store'])->name('archivo.store');
   Route::post('/sae/documento/update',[ArchivoController::class,'update'])->name('archivo.update');
   Route::post('/sae/documento/delete',[ArchivoController::class,'delete'])->name('archivo.delete');
