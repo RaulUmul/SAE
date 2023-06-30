@@ -199,11 +199,17 @@
 
           $('#tipo_arma').on('change',function (){
             let tipo_arma = $('#tipo_arma option:selected').text();
+            if(tipo_arma == "N/I"){
+              tipo_arma = "";
+            }
             tablaArmas.columns(1).search(tipo_arma).draw();
           });
 
           $('#estado_arma').on('change',function (){
             let estado_arma = $('#estado_arma option:selected').text();
+            if(estado_arma == "N/I"){
+              estado_arma = "";
+            }
             tablaArmas.columns(8).search(estado_arma).draw(); //Columna 8 -> estado arma
           });
 

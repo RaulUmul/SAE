@@ -35,7 +35,7 @@
 
     <div class="row">
       <div class="col s12">
-        <embed 
+        <embed
         alt=""
         width="100%"
         height="600px"
@@ -44,9 +44,53 @@
         >
     </div> --}}
 
+      <div class="row">
+        <a href="#!" class="btn" onclick="cargarLinks()">Cargar Links</a>
+        <a href="#!" class="btn" onclick="cargarData()">Cargar Data</a>
+
+        <div class="col s12">
+          Lista de anclas
+          <ul id="href-items">
+
+          </ul>
+        </div>
+      </div>
+
+
     @endsection
   @endcomponent
 @endsection
+
+{{--          Script para mi amigo Sirin--}}
+
+      @push('scripts')
+
+      <script>
+
+        function cargarLinks(){
+
+          let arrHref = [1,2,3,4,5];
+          console.log(arrHref);
+          let contenido = arrHref.map(el=>{
+            // Le asigno un elemento del arreglo como data-id.
+            return `<li><a href"" class="btn" data-id="${el}" id="link_${el}"> ${el} </a></li>`;
+          })
+          $('#href-items').html(contenido);
+
+        }
+
+        // Podemos obtener la data(id) de cada elemento.
+        function cargarData(){
+
+          let contenedores = document.getElementById('link_1');
+          console.log(contenedores.dataset.id);
+          console.log(contenedores)
+
+
+        }
+
+      </script>
+      @endpush
 
 
 {{-- @push('scripts')
