@@ -167,7 +167,7 @@
               {data: 'licencia'},
               {data: 'tenencia'},
               {data: 'registro'},
-              {data: 'estado_arma',render: function (data){
+              {data: 'id_estatus_arma',render: function (data){
                   let descripcion;
                   resp.estado_arma.map((tipo)=>{
                     if(data === tipo.id_item){descripcion = tipo.descripcion}

@@ -74,14 +74,21 @@
 
       @isset($cantidad_municion)
       <div class="input-field ">
-        <input type="hidden" name="arma_plus_{{$index}}[cantidad_municion]" id="cantidad_tolvas_plus_{{$index}}" value="{{$cantidad_municion}}">
+        <input type="hidden" name="arma_plus_{{$index}}[cantidad_municion]" id="cantidad_municion_plus_{{$index}}" value="{{$cantidad_municion}}">
         <label>Cantidad de municion: {{$cantidad_municion}}</label>
       </div> <br>
       @endisset
 
+      @isset($tipo_propietario)
+      <div class="input-field ">
+        <input type="hidden" name="arma_plus_{{$index}}[tipo_propietario]" id="tipo_propietario_plus_{{$index}}" value="{{$value_tipo_propietario}}">
+        <label>Tipo propietario: {{$tipo_propietario}}</label>
+      </div> <br>
+      @endisset
+      
       @isset($propietario)
       <div class="input-field ">
-        <input type="hidden" name="arma_plus_{{$index}}[propietario]" id="cantidad_tolvas_plus_{{$index}}" value="{{$propietario}}">
+        <input type="hidden" name="arma_plus_{{$index}}[propietario]" id="propietario_plus_{{$index}}" value="{{$propietario}}">
         <label>Propietario: {{$propietario}}</label>
       </div> <br>
       @endisset

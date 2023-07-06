@@ -11,6 +11,7 @@ use App\Models\Item;
 use App\Models\Municipio;
 use App\Models\Persona;
 use App\Models\Persona_Denuncia;
+use App\Models\Propietario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,8 @@ class ConsultaController extends Controller
     $calibre_arma = Item::where('id_categoria', 7)->get();
     $estado_arma = Item::where('id_categoria', 9)->get();
     $tipo_denuncia = Item::where('id_categoria',5)->get();
+    $demarcacion = Item::where('id_categoria',12)->get();
+    $tipo_documento = Item::where('id_categoria',17)->get();
 
     // 1. Preguntar de que viene la consulta. Persona o Arma.
     // Request CUI
@@ -80,7 +83,10 @@ class ConsultaController extends Controller
           $denuncia = Denuncia::where('id_denuncia', $value)->first();
           $armas = [];
           foreach( (json_decode($denuncia->id_armas)) as $arma){
-            $armas[] = Arma::where('id_arma',$arma->id_arma)->first();
+//            $armas[] = Arma::where('id_arma',$arma->id_arma)->first();
+            $armas[] = Arma::with('propietario')->where('id_arma',$arma->id_arma)->first();
+//            $propietario = Propietario::with('armas')->where('id_propietario',)
+
           }
 
           $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
@@ -90,7 +96,7 @@ class ConsultaController extends Controller
           $denunciante = $personas_denuncia->where('id_tipo_persona', 404)->first();
           $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
-          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['no_denuncia'=>$denuncia,'denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion,'armas'=>$armas]);
 
         }
 
@@ -103,7 +109,10 @@ class ConsultaController extends Controller
             'marca_arma',
             'calibre_arma',
             'estado_arma',
-            'tipo_denuncia')
+            'tipo_denuncia',
+            'tipo_documento',
+            'demarcacion'
+            )
 
         );
       } else if ($personas->doesntExist()) {
@@ -146,13 +155,13 @@ class ConsultaController extends Controller
     } else if (request('numero_registro') || request('numero_licencia') || request('numero_tenencia')) {
 
       if (request('numero_registro')) {
-        $arma = Arma::where('registro', strtoupper(request()->only('numero_registro')['numero_registro']));
+        $arma = Arma::with('propietario')->where('registro', strtoupper(request()->only('numero_registro')['numero_registro']));
       }
       if (request('numero_licencia')) {
-        $arma = Arma::where('licencia', request()->only('numero_licencia'));
+        $arma = Arma::with('propietario')->where('licencia', request()->only('numero_licencia'));
       }
       if (request('numero_tenencia')) {
-        $arma = Arma::where('tenencia', request()->only('numero_tenencia'));
+        $arma = Arma::with('propietario')->where('tenencia', request()->only('numero_tenencia'));
       }
 
 
@@ -190,7 +199,7 @@ class ConsultaController extends Controller
           $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
           $count = 0;
-          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['no_denuncia'=>$denuncia,'denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $arma->get()]);
 
         }
 
@@ -211,6 +220,8 @@ class ConsultaController extends Controller
             'calibre_arma',
             'estado_arma',
             'tipo_denuncia',
+            'demarcacion',
+            'tipo_documento'
           )
         );
       } else if ($arma->doesntExist()) {
@@ -254,7 +265,7 @@ class ConsultaController extends Controller
           $denuncia = Denuncia::where('id_denuncia', $value)->first();
           $armas = [];
           foreach ((json_decode($denuncia->id_armas)) as $arma) {
-            $armas[] = Arma::where('id_arma', $arma->id_arma)->first();
+            $armas[] = Arma::with('propietario')->where('id_arma', $arma->id_arma)->first();
           }
 
           $hecho_direccion = Hecho::where('id_hecho', $denuncia->id_hecho)
@@ -264,7 +275,7 @@ class ConsultaController extends Controller
           $denunciante = $personas_denuncia->where('id_tipo_persona', 404)->first();
           $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
-          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $armas]);
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_' . $key, ['no_denuncia'=>$denuncia,'denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => $armas]);
         }
 
 
@@ -277,13 +288,16 @@ class ConsultaController extends Controller
             'marca_arma',
             'calibre_arma',
             'estado_arma',
-            'tipo_denuncia')
+            'demarcacion',
+            'tipo_denuncia',
+            'tipo_documento'
+            )
 
         );
 
 
     }else if(request('id_arma')){
-        $arma = Arma::where('id_arma',request('id_arma'));
+        $arma = Arma::with('propietario')->where('id_arma',request('id_arma'));
 //        dd($arma->first());
       if ($arma->exists()) {
         // Si arma existe ejecuta lo sig.
@@ -319,7 +333,7 @@ class ConsultaController extends Controller
           $sindicados = $personas_denuncia->where('id_tipo_persona', 403);
 
           $count = 0;
-          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => [$arma->first()]]);
+          $i_denuncia = Arr::add($i_denuncia, 'denuncia_'.$key, ['no_denuncia'=>$denuncia,'denunciante' => $denunciante, 'sindicados' => $sindicados, 'hecho' => $hecho_direccion, 'armas' => [$arma->first()]]);
 
         }
 
@@ -340,6 +354,8 @@ class ConsultaController extends Controller
             'calibre_arma',
             'estado_arma',
             'tipo_denuncia',
+            'demarcacion',
+            'tipo_documento'
           )
         );
       } else if ($arma->doesntExist()) {

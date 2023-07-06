@@ -101,6 +101,17 @@ $('#pais_fabricacion').select2({
   },
 });
 
+$('#tipo_propietario').select2({
+  width: '100%',
+  placeholder: 'Tipo propietario',
+  allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
+});
+
 $('#propietario').select2({
   width: '100%',
   placeholder: 'Propietario',
@@ -111,6 +122,8 @@ $('#propietario').select2({
    }
   },
 });
+
+
 
 // Selects Hecho
 $('#tipo_hecho').select2({
@@ -136,6 +149,16 @@ $('#departamento_hecho').select2({
 $('#municipio_hecho').select2({
   width: '100%',
   placeholder: 'Municipio',
+  allowClear: true,
+  language: {
+    noResults: function() {
+      return "No existe la categoria.";
+   }
+  },
+});
+$('#demarcacion_hecho').select2({
+  width: '100%',
+  placeholder: 'Demarcacion',
   allowClear: true,
   language: {
     noResults: function() {
@@ -197,6 +220,7 @@ $('#municipio_sindicado').select2({
 function selectChangePropietario (valor){
 
   let denunciante = document.getElementById("div_denunciante");
+  let propietario = document.getElementById("div_tipo_propietario");
 
     if(valor == 'Otro'){
       $('#div_propietario select').removeAttr('name');
@@ -207,18 +231,27 @@ function selectChangePropietario (valor){
       denunciante.innerHTML = `
         <i class="material-icons prefix">chevron_right</i>
         <input type="text" name="propietario" id="propietario" class="validate" value="">
-        <label for="propietario" class="active">Indique</label>
+        <label for="propietario" class="active">Nombre</label>
         `;
+      $('#div_tipo_propietario').removeAttr('hidden');
+      propietario.style.display = '';
+      // Aqui nos quedamos ...
+      // propietario.
+
     }else if(valor=='Denunciante'){
       $('#div_propietario select').attr('name','propietario');
       $('#div_propietario select').attr('id','propietario');
 
         denunciante.innerHTML="";
         $('#div_denunciante').removeAttr('hidden');
+        propietario.style.display = 'none';
+
 
     }else{
       $('#div_denunciante').attr('hidden','hidden');
+      $('#div_tipo_propietario').attr('hidden','hidden');
     }
+
 
 
 }
@@ -292,7 +325,7 @@ function selectTipoDocumento (valor){
   if(valor == 'dpi'){
       $('#div_documento_identificacion').html(`
       <i class="material-icons prefix">chevron_right</i>
-      <input type="number" id="cui" name="cui" class="" value="" oninput="validar_longitud(), inputsPersonaLimpio()" data-length="13">
+      <input type="number" id="cui" name="cui" class="" value="" oninput="validar_longitud(), inputsPersonaLimpio()" onkeyup="onKeyDPI()" data-length="13">
       <label for="cui">No. DPI / CUI</label>
       <span class="helper-text" data-error="DPI debe ser de 13 digitos" data-success="">DPI debe ser de 13 digitos</span>
       <a class="btn btn-verificar" onclick="verificarCUI()" disabled><i class="material-icons">search</i></a>
@@ -473,6 +506,7 @@ function borrarInputArma(){
   $('#pais_fabricacion').val("");
   $('#cantidad_tolvas').val("");
   $('#cantidad_municion').val("");
+  $('#tipo_propietario').val("");
   $('#propietario').val("");
 }
 
@@ -497,7 +531,63 @@ $('#vestimenta').val("");
 $('#organizacion_criminal').val("");
 $('#telefono_sindicado').val("");
 }
+// Rellena los datos en el form de datos personales. Pero con la informacion de la base de datos.
+function inputsPersonaLlenosDB(request){
+  $('#primer_nombre').val(request.primer_nombre);
+  $('#primer_nombre').attr('readonly','readonly');
 
+  $('#segundo_nombre').val(request.segundo_nombre);
+  $('#segundo_nombre').attr('readonly','readonly');
+
+  $('#tercer_nombre').val(request.tercer_nombre);
+  $('#tercer_nombre').attr('readonly','readonly');
+
+  $('#primer_apellido').val(request.primer_apellido);
+  $('#primer_apellido').attr('readonly','readonly');
+
+  $('#segundo_apellido').val(request.segundo_apellido);
+  $('#segundo_apellido').attr('readonly','readonly');
+
+  $('#apellido_casada').val(request.apellido_casada);
+  $('#apellido_casada').attr('readonly','readonly');
+
+  $('#telefono').val(request.telefono_celular);
+
+  if(request.id_genero == '2'){
+    // Setear el valor a Masculino
+    $('#genero_persona').val(2);
+    $('#genero_persona').trigger('change');
+    $('#genero_persona').attr('readonly','readonly');
+
+  }else if(request.id_genero == '3'){
+    // Setear el valor a Femenino
+    $('#genero_persona').val(3);
+    $('#genero_persona').trigger('change');
+    $('#genero_persona').attr('readonly','readonly');
+
+  }else{
+    // Setear valor nulo
+  }
+  // Direccion
+  $('#departamento_residencia').val(request.direccion.id_departamento);
+  $('#departamento_residencia').trigger('change');
+  $('#municipio_residencia').val(request.direccion.id_municipio);
+  $('#municipio_residencia').trigger('change');
+  $('#zona_residencia').val(request.direccion.zona);
+  $('#calle_residencia').val(request.direccion.calle);
+  $('#avenida_residencia').val(request.direccion.avenida);
+  $('#numero_casa').val(request.direccion.numero_casa);
+  $('#direccion_residencia').val(request.direccion.direccion_exacta);
+  $('#referencia_residencia').val(request.direccion.referencia);
+
+
+  let d = new Date(request.fecha_nacimiento);
+  d = d.toJSON().slice(0,10);
+  $('#fecha_nacimiento').val(d);
+  $('#fecha_nacimiento').attr('readonly','readonly');
+
+  M.updateTextFields();
+}
 // Rellena los datos en el form de datos personales.
 function inputsPersonaLlenos(request){
   $('#primer_nombre').val(request.primer_nombre);
@@ -568,6 +658,16 @@ function inputsPersonaLimpio(){
 
   $('#genero_persona').val("");
   $('#genero_persona').removeAttr('readonly');
+
+  $('#departamento_residencia').val("");
+  $('#municipio_residencia').val("");
+  $('#zona_residencia').val("");
+  $('#calle_residencia').val("");
+  $('#avenida_residencia').val("");
+  $('#numero_casa').val("");
+  $('#direccion_residencia').val("");
+  $('#referencia_residencia').val("");
+
 
   M.updateTextFields();
 

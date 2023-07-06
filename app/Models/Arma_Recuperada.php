@@ -16,4 +16,8 @@ class Arma_Recuperada extends Model
 
   public $guarded = [];
 
+  public function hechos(){
+    return $this->hasMany('App\Models\Hecho','id_hecho');
+  }
+
 }

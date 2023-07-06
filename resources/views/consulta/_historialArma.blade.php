@@ -52,14 +52,14 @@
             </div>
             <div class="col s12">
               Fecha registro: {{date('d/m/Y',strtotime($evento->fecha_creacion))}}
-              Hora: {{date('H:i:s'), strtotime($evento->fecha_creacion)  }}
+              Hora: {{date('H:i:s', strtotime($evento->fecha_creacion))  }}
             </div>
             @foreach ( $tipo_procedimiento as  $tipo )
               @if( $tipo->id_item == ($evento->id_tipo_procedimiento) )
                  @if($tipo->descripcion == 'Registro de recuperacion')
                    <div class="col s12">
                      @foreach ($arma_recuperada as $arma )
-                     @if($evento->numero_documento == $arma->numero_prevencion)
+                     @if($evento->numero_documento == $arma->numero_documento )
                      <a href="#!" onclick="modalDetalleRecuperacion({{$arma}})">Ver detalle</a>
                     @endif
                     @endforeach
@@ -72,14 +72,14 @@
         @endforeach
         <iframe
          class="col s12"
-         style="width: 100%; min-height: 500px;height: 100%;max-height: 800px;border:none;" 
+         style="width: 100%; min-height: 500px;height: 100%;max-height: 800px;border:none;"
          name="preview_historial"
          id="preview_historial"
          hidden
          >
         </iframe>
 
-      </ul> 
+      </ul>
 
 
       <div id="modDetalleRecuperacion" class="modal">
@@ -92,7 +92,7 @@
         </div>
 
         <div class="modal-footer">
-          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+          <a href="#!" class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
         </div>
 
       </div>
@@ -114,10 +114,26 @@
     });
 
     function modalDetalleRecuperacion(recuperacion){
-      console.log(recuperacion);
+      //Modifica el contenido del modal DetallRecuperacion
+      $.ajax({
+        type: "get", //OJOAQUI
+        url: "{{route('detalleRecuperacion')}}",
+        data: {recuperacion},
+        dataType: "text",
+        success: function (response) {
+          console.log(response);
+        $('.contenido_denuncia').html(response);
+        $('#modDetalleRecuperacion').modal('open');
+
+        },
+        error: function(response){
+
+        }
+      });
+      // console.log(recuperacion);
       // Falta realizar una consulta ajax para traernos la vista y pegarla en el modal.
-      $('.contenido_denuncia').html(JSON.stringify(recuperacion));
-      $('#modDetalleRecuperacion').modal('open');
+      // $('.contenido_denuncia').html(JSON.stringify(recuperacion));
+      // $('#modDetalleRecuperacion').modal('open');
     }
 
     $('#impresionHistorialBtn').on('click',function () {

@@ -23,4 +23,8 @@ class Hecho extends Model
     public function direccion(){
         return $this->belongsTo('App\Models\Direccion','id_direccion');
     }
+
+    public function arma_recuperada(){
+        return $this->belongsTo('App\Models\Arma_Recuperada','id_ ');
+    }
 }

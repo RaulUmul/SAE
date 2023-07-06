@@ -20,7 +20,6 @@
       <div class="row">
         {{-- Foreach --}}
         @foreach ($i_denuncia as $denuncia)
-
           <div class="col s12">
             <ul class="collapsible">
               <li>
@@ -40,7 +39,7 @@
                     'estado_arma' =>json_decode($estado_arma),
                     'tipo_denuncia' => json_decode($tipo_denuncia)
                     ])}}" target="_blank"><i class="material-icons left">local_printshop</i> Imprimir denuncia </a>
-                    
+
                     <a href="{{route('archivo.index',['id_denuncia'=>$denuncia['denunciante']->id_denuncia])}}" class="btn">
                       <i class="material-icons left">
                         picture_as_pdf
@@ -176,7 +175,7 @@
                         <tr>
                           <td>
                             {{-- No.Diligencia --}}
-                            {{isset($denuncia['hecho']->numero_diligencia) ? $denuncia['hecho']->numero_diligencia : 'N/I'}}
+                            {{isset($denuncia['no_denuncia']->numero_documento) ? $denuncia['no_denuncia']->numero_documento : 'N/I'}}
                           </td>
                           <td>
                             {{-- Direccion --}}
@@ -419,13 +418,13 @@
                             </td>
                             <td>
                               {{-- Hay que indicar quien es el propietario --}}
-                              {{isset($arma->propietario) ? $arma->propietario : 'N/I'}}
+                              {{isset($arma->propietario) ? $arma->propietario->nombre_propietario : 'N/I'}}
                             </td>
                             <td>
                               {{-- Estatus --}}
-                              @isset($arma->estado_arma)
+                              @isset($arma->id_estatus_arma)
                                 @foreach ( $estado_arma as  $value )
-                                  @if( $value->id_item == ($arma->estado_arma) )
+                                  @if( $value->id_item == ($arma->id_estatus_arma) )
                                     {{$value->descripcion}}
                                   @endif
                                 @endforeach
@@ -434,9 +433,9 @@
                               @endisset
                             </td>
                             <td>
-                              @isset($arma->estado_arma)
+                              @isset($arma->id_estatus_arma)
                                 @foreach ( $estado_arma as  $value )
-                                @if( $value->id_item == ($arma->estado_arma) )
+                                @if( $value->id_item == ($arma->id_estatus_arma) )
                                   @if($value->descripcion == 'Recuperada')
                                     <a class="btn tooltipped disabled" data-position="top" data-tooltip="Ampliar"
                                        onclick="editArma({{$arma}})">
@@ -490,13 +489,23 @@
               <input type="hidden" id="id_arma" name="id_arma" value="">
               <div class="row row" style="box-shadow: 0px 10px 5px 1px rgba(0, 0, 0, 0.1)">
 
-                  <div class="input-field col s12 m6 l4">
-                    <i class="material-icons prefix">chevron_right</i>
-                    <input class="" id="numero_prevencion" name="numero_prevencion" type="text">
-                    <label for="numero_prevencion">Numero prevencion</label>
-                  </div>
+                <div class="input-field col s12 m4 l4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <select name="tipo_documento" id="tipo_documento">
+                    <option value="{{null}}" selected>Tipo documento</option>
+                    @foreach ($tipo_documento as $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                    @endforeach
+                  </select>
+                </div>
 
-                <div class="input-field col s12 m6 " style="text-align: center">
+                <div class="input-field col s12 m4">
+                  <i class="material-icons prefix">chevron_right</i>
+                  <input class="" id="numero_documento" name="numero_documento" type="text">
+                  <label for="numero_documento">Numero documento</label>
+                </div>
+
+                <div class="input-field col s12 m4 " style="text-align: center">
                   <span>¿Hay personas detenidas?</span>
                   <div style="display:flex; justify-content: center">
                     <label>
@@ -520,7 +529,7 @@
                 <div  class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
                   <input type="date" id="fecha_hecho" name="fecha_hecho" class="validate" value="">
-                  <label for="fecha_hecho" >Fecha de la recuperacion</label>
+                  <label for="fecha_hecho">Fecha de la recuperacion</label>
                 </div>
                 <div  class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
@@ -528,21 +537,10 @@
                   <label for="hora_hecho" >Hora aproximada</label>
                 </div>
 
-{{--                <div class="input-field col s12 m6 l4">--}}
-{{--                  <i class="material-icons prefix">chevron_right</i>--}}
-{{--                  <select name="unidad_especial" id="unidad_especial">--}}
-{{--                    @foreach ($departamento as $key => $value)--}}
-{{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
-{{--                    @endforeach--}}
-{{--                  </select>--}}
-{{--                </div>--}}
-                <div class="input-field col s12 m6 l4 ">
+                <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
-                  <select name="unidad_recupera" id="unidad_recupera">
-{{--                    @foreach ($departamento as $key => $value)--}}
-{{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
-{{--                    @endforeach--}}
-                  </select>
+                  <input class="" id="dependencia_policial" name="dependencia_policial" type="text">
+                  <label for="dependencia_policial">Dependencia policial</label>
                 </div>
               </div>
 
@@ -566,9 +564,10 @@
                 <div class="input-field col s12 m6 l4">
                   <i class="material-icons prefix">chevron_right</i>
                   <select name="demarcacion_hecho" id="demarcacion_hecho">
-                    {{--                    @foreach ($departamento as $key => $value)--}}
-                    {{--                      <option value="{{$value->id_departamento}}" >{{$value->departamento}}</option>--}}
-                    {{--                    @endforeach--}}
+                    <option value="{{null}}" selected>Demarcacion</option>
+                    @foreach ($demarcacion as $key => $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                    @endforeach
                   </select>
                 </div>
                 <div class="input-field col s12 ">
@@ -906,6 +905,13 @@
         }
       });
     }
+
+    $('#tipo_documento').select2({
+      width: '100%',
+      placeholder: 'Tipo documento',
+      allowClear: true,
+      dropdownParent: $("#modEstadoArma"),
+    });
 
   </script>
 @endpush

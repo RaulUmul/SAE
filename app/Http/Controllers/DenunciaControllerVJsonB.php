@@ -13,21 +13,22 @@ use App\Models\Persona;
 use App\Models\Persona_Denuncia;
 use App\Models\Registro_Procedimiento_Arma;
 use App\Models\Archivo;
+use App\Models\Propietario;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Facades\DB;
+use function Sodium\add;
 
 class DenunciaControllerVJsonB extends Controller
 {
 	/**
 	 * Esta funcion solo sirve para mostrar la vista de index
 	 * y pasarle la informacion, esto es un summary.
-	 * 
+	 *
 	 * @access public
-	 * @return view denuncia.index
 	 */
   public function index(){
     $tipo_arma = Item::where('id_categoria',3)->get();
@@ -44,6 +45,8 @@ class DenunciaControllerVJsonB extends Controller
 	$marca_arma = Item::where('id_categoria',4)->get();
 	$calibre_arma = Item::where('id_categoria',7)->get();
 	$pais_fabricacion = Item::where('id_categoria',8)->get();
+	$tipo_propietario = Item::where('id_categoria',11)->get();
+	$demarcacion = Item::where('id_categoria',12)->get();
 	return view('denuncia.create',compact(
 	  'departamento',
 	  'municipio',
@@ -52,12 +55,15 @@ class DenunciaControllerVJsonB extends Controller
 	  'marca_arma',
 	  'calibre_arma',
 	  'genero',
-	  'pais_fabricacion'
+	  'pais_fabricacion',
+		'demarcacion',
+		'tipo_propietario'
 	));
   }
 
   public function store(Request $request){
 
+//		 return $request;
     $rules = [
       'poseeDocumento' => 'required',
       'cui_denunciante' => 'min:13|max:13',
@@ -88,6 +94,11 @@ class DenunciaControllerVJsonB extends Controller
 	  $id_armas=[];
 	  $id_denunciante = NULL;
 	  $id_sindicados = [];
+    $item_robada = '';
+    $item_extraviada = '';
+    $item_hurtada = '';
+    $item_solvente = '';
+    $item_recuperada = '';
     $tipo_procedimiento = Item::where('id_categoria', 14)->get();
 
 
@@ -127,8 +138,7 @@ class DenunciaControllerVJsonB extends Controller
 
 	  default:
 		return  'Algo salio mal';
-	  break;
-	};
+	}
 
 
 
@@ -167,6 +177,9 @@ class DenunciaControllerVJsonB extends Controller
 		case('Solvente'):
 		  $item_solvente = $value->id_item;
 		break;
+    case('Recuperada'):
+      $item_recuperada = $value->id_item;
+
 	  }
 	};
 
@@ -489,18 +502,66 @@ class DenunciaControllerVJsonB extends Controller
 		// Evaluamos que el arma no se encuentre registrada, y si lo esta, que tenga un estado diferente de solvente.
 		$registro_arma_db = Arma::where('registro',$value['registro_arma'])
 							->where(function ($q) use ($item_robada,$item_hurtada,$item_extraviada){
-                  $q->orwhere('estado_arma',$item_robada)
-                    ->orWhere('estado_arma',$item_hurtada)
-                    ->orWhere('estado_arma',$item_extraviada);
+                  $q->orwhere('id_estatus_arma',$item_robada)
+                    ->orWhere('id_estatus_arma',$item_hurtada)
+                    ->orWhere('id_estatus_arma',$item_extraviada);
               });
-    $registro_arma_db_solvente = Arma::where('registro',$value['registro_arma'])
-                                      ->orWhere('estado_arma',$item_solvente);
+     $registro_arma_db_solvente = Arma::where('registro',$value['registro_arma'])
+              ->where(function ($q) use ($item_solvente,$item_recuperada){
+                $q->orWhere('id_estatus_arma', $item_solvente)
+                  ->orWhere('id_estatus_arma',$item_recuperada);
+              });
+
+      $id_propietario = '';
+
+
+
+// Aqui esta el problema --PROBLEMAAAA
+//		$registro_arma_db_solvente = Arma::where('registro',$value['registro_arma'])
+//    			                          ->orWhere('id_estatus_arma',$item_solvente);
+
+
+
+//		 $registro_arma_db_solvente = Arma::where(function ($q) use ($value,$item_solvente){
+//                  $q->where('registro',$value['registro_arma'])
+//                    ->where('id_estatus_arma',$item_solvente);
+//               });
+
 //    dump($registro_arma_db_solvente->exists());
 //    dump($registro_arma_db->doesntExist());
 //    return $registro_arma_db->exists();
 
+		if(isset($value['propietario'])){
+			$propietario_db = Propietario::where('nombre_propietario',$value['propietario']);
+		}
+
 		if($registro_arma_db->doesntExist() && $registro_arma_db_solvente->doesntExist()){
 		  // Si no existe el arma se agrega.
+
+			// Verificamos si el propietario es el denunciante o una empresa de seguridad privada u otra entidad.
+			if(isset($value['propietario'])){
+        if($propietario_db->doesntExist()){
+				  if($value['propietario'] == 'DENUNCIANTE'){
+				  	$propietario = new Propietario();
+				  	$propietario->nombre_propietario = request('primer_nombre')." ".request('segundo_nombre')." ".request('tercer_nombre')." ".request("primer_apellido")." ".request("segundo_apellido")." ".request("apellido_casada");//El nombre del denunciante recien guardado.
+				  	$propietario->id_tipo_propietario = 369; //Automatizar
+				  	$propietario->save();
+				  	$id_propietario = $propietario->latest('id_propietario')->first('id_propietario')->id_propietario;
+				  }else if($value['propietario'] != 'Denunciante' ){
+				  	$propietario = new Propietario();
+				  	$propietario->nombre_propietario = $value['propietario'];
+				  	$propietario->id_tipo_propietario = $value['tipo_propietario'];
+				  	$propietario->save();
+				  	$id_propietario = $propietario->latest('id_propietario')->first('id_propietario')->id_propietario;
+				  }
+        }else if($propietario_db->exists()){
+          $id_propietario = $propietario_db->first()->id_propietario; //Verificar comportamiento
+        }
+			}
+			// isset($value['tipo_propietario'])
+			// isset($value['propietario']) && $arma->propietario = $value['propietario'];
+
+
 		  $arma = new Arma();
 
 			if($value['tipo_arma'] == ""){
@@ -518,21 +579,21 @@ class DenunciaControllerVJsonB extends Controller
 			isset($value['pais_fabricacion']) && $arma->id_pais_fabricante = $value['pais_fabricacion'];
 			isset($value['cantidad_tolvas']) && $arma->cantidad_tolvas = $value['cantidad_tolvas'];
 			isset($value['cantidad_municion']) && $arma->cantidad_municion = $value['cantidad_municion'];
-			isset($value['propietario']) && $arma->propietario = $value['propietario'];
+			isset($value['propietario']) && $arma->id_propietario = $id_propietario;
 			// $arma->id_tipo_propietario = $value['']; //No he registrado esto aun
 			// El estado se determina a un inicio por el tipo de hecho.
 			switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
 
 			  case('Robo'):
-				$arma->estado_arma = $item_robada;
+				$arma->id_estatus_arma = $item_robada;
 			  break;
 
 			  case('Hurto'):
-				$arma->estado_arma = $item_hurtada;
+				$arma->id_estatus_arma = $item_hurtada;
 			  break;
 
 			  case('Extravio'):
-				$arma->estado_arma = $item_extraviada;
+				$arma->id_estatus_arma = $item_extraviada;
 			  break;
 
 			}
@@ -548,40 +609,42 @@ class DenunciaControllerVJsonB extends Controller
       switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
 
         case('Robo'):
-          $arma_update->estado_arma = $item_robada;
+          $arma_update->id_estatus_arma = $item_robada;
           break;
 
         case('Hurto'):
-          $arma_update->estado_arma = $item_hurtada;
+          $arma_update->id_estatus_arma = $item_hurtada;
           break;
 
         case('Extravio'):
-          $arma_update->estado_arma = $item_extraviada;
+          $arma_update->id_estatus_arma = $item_extraviada;
           break;
 
       }
 
       $arma_update->save();
-
-      $id_armas = Arr::prepend($id_armas,($arma_update->latest('id_arma')->first('id_arma')));
-
+      //Esto funciona por el momento. //Ya vimos que no funciona.
+//      $id_armas[] = Arr::prepend($id_armas,$arma_update->id_arma,'id_arma');
+//      Probemos con este xd
+      $id_armas = Arr::prepend($id_armas,['id_arma'=>$arma_update->id_arma]);
+//      $id_armas = Arr::prepend($id_armas,($arma_update->latest('id_arma')->first('id_arma')));
     }
 
 
 	  }
 
-	  // return $id_armas;
+//    return $id_armas;
+
 
 	  // 4. Ingreso de Hecho
 
 	  $hecho = new Hecho();
 		$hecho->id_tipo_hecho = request('tipo_hecho');
-		$hecho->numero_diligencia = request('numero_diligencia');
+		// $hecho->numero_diligencia = request('numero_diligencia'); //Se movio para denuncia
 		$hecho->fecha_hecho = request('fecha_hecho');
 		$hecho->hora_hecho = request('hora_hecho');
 		$hecho->narracion = request('narracion_hecho');
-		// $hecho->id_demarcacion = request('demarcacion_hecho'); //No esta registrado aun.
-		$hecho->id_direccion = request('narracion_hecho');
+		$hecho->id_demarcacion = request('demarcacion_hecho'); //No esta registrado aun.
 		if(!$direccion_db_hecho->count()){
 		  $hecho->id_direccion = ($direccion_db_hecho->latest('id_direccion')->first())->id_direccion;
 		}else{
@@ -592,8 +655,9 @@ class DenunciaControllerVJsonB extends Controller
 	  // 5. Ingreso de Denuncia.
 	  $denuncia = new Denuncia();
 
+		$denuncia->numero_documento = request('numero_diligencia');
+		$denuncia->id_tipo_documento = '419';  //Automatizar -> Diligencia dato quemado
 		$denuncia->id_armas = json_encode($id_armas);
-
 		// El tipo_denuncia se determina a un inicio por el tipo de hecho.
 		switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
 		  case('Robo'):
@@ -610,6 +674,7 @@ class DenunciaControllerVJsonB extends Controller
 		// return $hecho->latest('id_hecho')->first('id_hecho');
 		$denuncia->id_hecho = ($hecho->latest('id_hecho')->first('id_hecho'))->id_hecho;
 	  $denuncia->save();
+//    return $denuncia;
 
 	  // 6. Ingreso de Persona_Denuncia.
 	  // 6.1 Denunciante.
@@ -619,7 +684,6 @@ class DenunciaControllerVJsonB extends Controller
 		$persona_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
 		$persona_denuncia->id_tipo_persona = $item_tipoPersonaDenunciante;
 	  $persona_denuncia->save();
-
 	  // 6.2 Sindicado
 	  if($datosSindicados!=NULL){
 			// 1. Empezaremos capturando todos los id de los sindicados, y guardarlo en un array.
@@ -643,7 +707,7 @@ class DenunciaControllerVJsonB extends Controller
 				$persona_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
 				$persona_denuncia->id_tipo_persona = $item_tipoPersonaSindicado;
 			  // El asunto es recuperar aunquesea el mismo para asignarle la denuncia que acaba de ser creada.
-				$persona_denuncia->id_denuncias_relacionadas = json_encode(($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia);
+				// $persona_denuncia->id_denuncias_relacionadas = json_encode(($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia);
 			  $persona_denuncia->save();
 			}
 
@@ -651,7 +715,7 @@ class DenunciaControllerVJsonB extends Controller
 
      	// Registro de la denuncia en historial.
 	  }
-		
+
 		if ($request->hasFile('file')) {
 			if($request->file('file')->isValid()){
 
@@ -666,17 +730,20 @@ class DenunciaControllerVJsonB extends Controller
 				$archivo->mime = $request->file('file')->getClientMimeType();
 				$archivo->save();
 			}
-			
+
 		}
 
     foreach ($id_armas as $id_arma) {
+      $newID = json_encode($id_arma);
       $registro_historial = new Registro_Procedimiento_Arma();
       $registro_historial->id_tipo_procedimiento = 416; //Automatizar.
-      $registro_historial->id_arma = $id_arma->id_arma;
+      $registro_historial->id_arma = json_decode($newID)->id_arma;
       $registro_historial->id_autor = auth()->user()->id_user;
       $registro_historial->numero_documento = request('numero_diligencia');
+			$registro_historial->id_tipo_documento = '419'; //Automatizar Dato quemado
       $registro_historial->descripcion = 'Creacion de denuncia';
       $registro_historial->save();
+//      return $registro_historial;
     }
 
 	  DB::commit();
@@ -686,8 +753,8 @@ class DenunciaControllerVJsonB extends Controller
 	  return redirect('/sae/denuncia')
 	  ->with('success', 'Guardado exitosamente');
 	} catch (\Throwable $th) {
-	  throw $th;
 	  DB::rollBack();
+	  throw $th;
 	}
 
 
@@ -715,6 +782,8 @@ class DenunciaControllerVJsonB extends Controller
 		'value_pais_fabricacion'=>$value['value_pais_fabricacion'],
 		'cantidad_tolvas'=>$value['cantidad_tolvas'],
 		'cantidad_municion'=>$value['cantidad_municion'],
+		'tipo_propietario'=>$value['tipo_propietario'],
+		'value_tipo_propietario'=>$value['value_tipo_propietario'],
 		'propietario'=>$value['propietario'],
 		]
 	  );

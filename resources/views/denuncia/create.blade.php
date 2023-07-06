@@ -226,7 +226,7 @@
                 <ul class="tabs main_arma">
                   <li id="arma_asociada" class="tab col s3 active-tab z-depth-3"><a id="linkAsociada" href="#container_collapsible" class="blue-text text-darken-2 ">Armas asociadas</a></li>
                   <li id="arma_plus" class="tab col s3 deactive-tab"><a id="linkAgregar" href="#divtab_arma_plus" class="blue-text text-darken-2" ><i class="tiny material-icons">add_circle_outline</i>Agregar Arma</a></li>
-                  <li class="tab col s0 m6 deactive-tab" style="min-width: 100w"></li>
+                  <li class="tab col s0 m6 deactive-tab"></li>
                 </ul>
 
 
@@ -310,12 +310,24 @@
                     <select id="propietario" onchange="selectChangePropietario(value)">
                       <option value=""  selected>Seleccione propietarios</option>
                       <option value="Denunciante">Denunciante</option>
-                      <option value="Otro"  >Otro</option>
+                      <option value="Otro">Otro</option>
                     </select>
                   </div>
 
+                  {{-- Div contenedor del Tipo Propietario  --}}
+                  <div class="col s12">
+                  <div id="div_tipo_propietario" class="input-field col s12 m4"  style="display: none">
+                    <i class="material-icons prefix">chevron_right</i>
+                    <select id="tipo_propietario">
+                      <option value="{{null}}" selected></option>
+                      @foreach ($tipo_propietario as $key => $value)
+                      <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                      @endforeach
+                    </select>
+                  </div>
                   {{-- Div contenedor del Input Propietario --}}
-                  <div id="div_denunciante" class="input-field col s12">
+                  <div id="div_denunciante" class="input-field col s12 m8">
+                  </div>
                   </div>
 
                   {{-- Boton Guardar Arma --}}
@@ -379,14 +391,14 @@
             {{-- Inputs --}}
               <div class="input-field col s12 m6 l4" >
                 <i class="material-icons prefix">chevron_right</i>
-                <input type="text" name="numero_diligencia" id="numero_diligencia" class="validate" value="{{old('numero_diligencia')}}" required="" aria-required="true">
+                <input type="text" name="numero_diligencia" id="numero_diligencia" class="validate" value="{{old('numero_diligencia')}}">
                 <label for="numero_diligencia" class="active">Numero diligencia</label>
                 {{--  <p class="helper-text" data-error="*Numero diligencia requerido" data-success="" style="position: absolute" >*Numero diligencia requerido</p>--}}
               </div>
 
               <div class="input-field col s12 m6 l4 ">
                 <i class="material-icons prefix">chevron_right</i>
-                <select name="tipo_hecho" id="tipo_hecho" required="" aria-required="true">
+                <select name="tipo_hecho" id="tipo_hecho">
                   <option value="{{null}}" selected>Tipo de hecho</option>
                   @foreach ($tipo_denuncia as $key => $value)
                   <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
@@ -446,7 +458,17 @@
                 <input type="text" id="numero_casa_hecho" name="numero_casa_hecho" class="validate" value="{{old('numero_casa_hecho')}}">
                 <label for="numero_casa_hecho" >Numero de casa</label>
               </div>
+              <div class="input-field col s12 m6 l4">
+                <i class="material-icons prefix">chevron_right</i>
+                <select name="demarcacion_hecho" id="demarcacion_hecho">
+                  <option value="{{null}}" selected>Demarcacion</option>
+                  @foreach ($demarcacion as $key => $value)
+                  <option value="{{$value->id_item}}" >{{$value->descripcion}}</option>
+                  @endforeach
+                </select>
+              </div>
             </div>
+
 
             <div class="row">
               <div  class="input-field col s12 m6">
@@ -501,7 +523,7 @@
                 <ul class="tabs main_arma">
                   <li id="sospechoso_asociado" class="tab col s3 active-tab z-depth-3"><a id="linkSospechosoAsociado" href="#container_collapsible_sospechoso" class="blue-text text-darken-2 ">Sindicados/Sospechosos</a></li>
                   <li id="sospechoso_plus" class="tab col s3 deactive-tab"><a id="linkAgregarSospechoso" href="#divtab_sospechoso_plus" class="blue-text text-darken-2" ><span><i class="tiny material-icons">add_circle_outline</i>Agregar persona</span></a></li>
-                  <li class="tab col s0 m6  deactive-tab" style="min-width: 100w"></li>
+                  <li class="tab col s0 m6  deactive-tab"></li>
                 </ul>
 
                 <div id="divtab_sospechoso_plus" class="col s12"  style=" background-color: #93939314">
@@ -712,7 +734,7 @@
                   </div>
 
 
-                  
+
                 </div>
 
                 <br><br><br>
@@ -745,7 +767,7 @@
                   </div>
 
                 </div>
-                
+
                 <br><br>
                 <div class="container col s12">
                   <div class="divider"></div>
@@ -952,6 +974,26 @@
       }
     };
 
+    // 1.1 Verificamos segun DPI si la persona ya esta en la DB para no consultar Renap otravez.
+    function onKeyDPI(){
+      let cui = $('#cui').val();
+      if(cui.length==13){
+        $.ajax({
+          url:"{{route('show_persona')}}",
+          type:'get',
+          data:{cui},
+          dataType:'json',
+          success:function(response){
+            console.log(response)
+            inputsPersonaLlenosDB(response)
+          },
+          error:function(response){
+            // console.log(response);
+          }
+        })
+      }
+    }
+
 
     // 2. Formulario Datos del Arma
 
@@ -1038,10 +1080,12 @@
       value_pais_fabricacion = $('#pais_fabricacion').val(),
       cantidad_tolvas = $('#cantidad_tolvas').val(),
       cantidad_municion = $('#cantidad_municion').val(),
+      tipo_propietario = $('#tipo_propietario option:selected').text(),
+      value_tipo_propietario = $('#tipo_propietario').val(),
       propietario = $('#propietario').val();
 
       let formularioSerial = $('form').serialize();
-      console.log('formularioSerial: ', formularioSerial);
+      // console.log('formularioSerial: ', formularioSerial);
 
 
       $.ajax({
@@ -1100,6 +1144,8 @@
               value_pais_fabricacion,
               cantidad_tolvas,
               cantidad_municion,
+              tipo_propietario,
+              value_tipo_propietario,
               propietario,
             }
 
@@ -1151,7 +1197,7 @@
 
           }else if((rspnse.registro_arma.length > 0)){
             // Alertamos que el arma ya se encuentra con denuncia en la DB.
-            M.toast({html: 'No se puede asociar, el arma ya cuenta con denuncia asociada.'})
+            M.toast({html: 'No se puede asociar, el arma ya cuenta con denuncia activa.'})
 
           }
 

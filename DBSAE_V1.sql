@@ -1,4 +1,4 @@
--- Active: 1687187123110@@127.0.0.1@5432@didae
+-- Active: 1687187123110@@127.0.0.1@5432@didae@sae
 DROP TABLE IF EXISTS sae.propietario;
 DROP TABLE IF EXISTS sae.estatus_arma_denuncia;
 DROP TABLE IF EXISTS sae.registro_procedimiento_arma;
@@ -480,7 +480,10 @@ VALUES
   (415,'Registro de incautacion',14),
   (416,'Registro de denuncia',14),
   (417,'Registro de recuperacion',14),
-  (418,'Registro de ampliacion',14)
+  (418,'Registro de ampliacion',14),
+  (419,'Diligencia',17), --Corregir
+  (420,'Oficio',17), --Corregir
+  (421,'Prevencion',17) --Corregir
 ;
 
 -- ===============================================
@@ -921,7 +924,7 @@ CREATE TABLE sae.arma(
                        id_marca_arma INT, --FK (sae.item)
                        modelo_arma VARCHAR,
                        id_pais_fabricante INT, --FK (sae.item)
-                       registro VARCHAR,
+                       registro VARCHAR UNIQUE,
                        licencia VARCHAR,
                        tenencia VARCHAR,
                        id_calibre INT, --FK (sae.item)

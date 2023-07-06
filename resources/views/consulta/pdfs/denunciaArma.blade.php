@@ -17,7 +17,7 @@
     }
     h1{
       font-size: 1.5rem;
-      margin-bottom: 0px; 
+      margin-bottom: 0px;
     }
     main{
 			position: relative;
@@ -39,7 +39,7 @@
   <header>
     <div class="row" >
         <div class="col s6">
-          <span>Denuncia</span> 
+          <span>Denuncia</span>
         </div>
         <div class="col s5 right-align"  >
           <span>SAE</span>
@@ -99,7 +99,7 @@
             <th class="right-align">Telefono</th>
             <td class="center-align">
               {{isset($denuncia->denunciante->persona->telefono_celular) ? $denuncia->denunciante->persona->telefono_celular :  "-" }}
-            </td>  
+            </td>
           </tr>
           <tr>
             <th class="right-align">Genero</th>
@@ -119,15 +119,29 @@
             </td>
             {{-- No esta funcionando la residencia aun --}}
             <th class="right-align">Residencia</th>
-              @isset($denuncia->denunciante->persona->direccion->id_departamento) 
+            <td class="center-align">
+
+            @empty(!$denuncia->denunciante->persona->direccion)
+
+              @foreach ($denuncia->denunciante->persona->direccion as $direccion)
                 @foreach ($departamento as $value)
-                  @if($value['id_item'] == ($denuncia->denunciante->persona->direccion->id_departamento))
-                    <td>{{$value['descripcion']}}</td>
+                  @if($value->id_departamento == ($direccion->id_departamento))
+                    {{$value->departamento}},
                   @endif
                 @endforeach
-              @else
-                <td class="center-align"> - </td>
-              @endisset 
+                <br>
+                @foreach ($municipio as $value)
+                  @if($value->id_municipio == ($direccion->id_departamento))
+                    {{$value->municipio}}
+                  @endif
+                @endforeach
+
+                @break
+              @endforeach
+
+            @endempty
+            </td>
+
           </tr>
         </table>
       </div>
@@ -146,7 +160,8 @@
         <table class="striped" id="tabla-hecho">
           <tr>
             <th class="right-align">No. Diligencia</th>
-            <td>{{$denuncia->hecho->numero_diligencia}}</td>
+            {{-- @dump($denuncia) --}}
+            <td>{{$denuncia->no_denuncia->numero_documento}}</td>
             <th class="right-align">Direccion del hecho</th>
             <td class="center-align">
               {{-- Direccion --}}
@@ -195,8 +210,10 @@
               {{-- Hora --}}
               {{isset($denuncia->hecho->hora_hecho) ? date("H:i",strtotime($denuncia->hecho->hora_hecho)) : '-'}}
             </td>
+          </tr>
+          <tr>
             <th class="right-align">Narracion</th>
-            <td class="center-align">
+            <td class="center-align" colspan="5">
               {{-- Narracion --}}
               {{isset($denuncia->hecho->narracion) ? $denuncia->hecho->narracion : '-'}}
             </td>
@@ -403,7 +420,7 @@
             <div class="col s12 right-align" style="font-size:0.4cm">
               Estado actual:
               @foreach ($estado_arma as  $estado)
-                  @if($estado['id_item'] == ($arma->estado_arma))
+                  @if($estado['id_item'] == ($arma->id_estatus_arma))
                     <b>{{$estado['descripcion']}}<b>
                   @endif
               @endforeach

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConsultaController;
+use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\DenunciaController;
 use App\Http\Controllers\DenunciaControllerVJsonB;
 use App\Http\Controllers\ProcesosController;
@@ -28,6 +29,9 @@ Route::resource('/sae/denuncia', DenunciaControllerVJsonB::class)->parameters(['
 Route::get('denuncia_form_arma', [DenunciaControllerVJsonB::class, 'form_arma'])->name('form_arma');
 Route::get('denuncia_form_sindicado',[DenunciaControllerVJsonB::class, 'form_sindicado'])->name('form_sindicado');
 
+//Controlador Persona
+Route::get('show_persona',[PersonaController::class,'show_persona'])->name('show_persona');
+
 // Modulo Consulta
 // Route::resource('/sae/consulta',ConsultaController::class)->parameters(['consulta'=>'item']);
 Route::get('/sae/consulta',[ConsultaController::class,'index'])->name('consulta.index')->middleware('auth');
@@ -50,6 +54,7 @@ Route::controller(ProcesosController::class)->group(function(){
   Route::post('/sae/proceso/historial_arma','showHistorial')->name('showHistorial');
   Route::get('/sae/proceso/impresion_historial','impresionHistorial')->name('impresionHistorial');
   Route::get('/sae/proceso/impresion_denuncia','impresionDenuncia')->name('impresionDenuncia');
+  Route::get('/sae/proceso/detalle_recuperacion','detalleRecuperacion')->name('detalleRecuperacion');
 });
 // Consulta de CUI a WSRenap.
 Route::controller(WS_RenapController::class)->group(function(){

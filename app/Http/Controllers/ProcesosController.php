@@ -11,10 +11,14 @@ use App\Models\Item;
 use App\Models\Persona;
 use App\Models\Registro_Procedimiento_Arma;
 use App\Models\User;
+use App\Models\Departamento;
+use App\Models\Municipio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Arr;
+
 
 
 class ProcesosController extends Controller
@@ -39,9 +43,9 @@ class ProcesosController extends Controller
 
     $registro_arma = Arma::select('registro')->where('registro',$request->registroArma)
                                              ->where(function($q) use ($item_robada,$item_hurtada,$item_extraviada) {
-                                               $q->orwhere('estado_arma',$item_robada)
-                                                 ->orWhere('estado_arma',$item_hurtada)
-                                                 ->orWhere('estado_arma',$item_extraviada);
+                                               $q->orwhere('id_estatus_arma',$item_robada)
+                                                 ->orWhere('id_estatus_arma',$item_hurtada)
+                                                 ->orWhere('id_estatus_arma',$item_extraviada);
                                              })
     ->get();
 
@@ -123,7 +127,7 @@ class ProcesosController extends Controller
     $item_estado = Item::select('id_item')->where('descripcion',$estado)->where('id_categoria',9)->first();
     try {
       $arma_update = Arma::find($id_arma);
-      $arma_update->estado_arma = $item_estado->id_item;
+      $arma_update->id_estatus_arma = $item_estado->id_item;
       $arma_update->save();
       return true;
     }catch (\Throwable $th){
@@ -220,10 +224,10 @@ class ProcesosController extends Controller
     parse_str($queryString,$data);
     $detenidos = [];
     $id_detenidos=[];
-    //return $data;
+    // return $data;
 
     $rules = [
-      '$data["numero_prevencion"]' => 'required',
+      '$data["numero_documento"]' => 'required',
       '$data["fecha_hecho"]' => 'required',
       '$data["descripcion_hecho"]' => 'required',
       '$data["departamento_hecho_recuperacion"]' => 'required',
@@ -231,7 +235,7 @@ class ProcesosController extends Controller
     ];
 
     $mensajes = [
-      '$data["numero_prevencion"].required' => 'Ingrese No. Prevencion',
+      '$data["numero_documento"].required' => 'Ingrese No. Documento',
       '$data["fecha_hecho"].required' => 'Ingrese Fecha',
       '$data["descripcion_hecho"].required' => 'Ingrese descripcion',
       '$data["departamento_hecho_recuperacion"].required' => 'Ingrese departamento del hecho',
@@ -239,7 +243,7 @@ class ProcesosController extends Controller
     ];
 
     $validator = Validator::make([
-      '$data["numero_prevencion"]'=>$data['numero_prevencion'],
+      '$data["numero_documento"]'=>$data['numero_documento'],
       '$data["fecha_hecho"]'=>$data['fecha_hecho'],
       '$data["descripcion_hecho"]'=>$data['descripcion_hecho'],
       '$data["departamento_hecho_recuperacion"]'=>$data['departamento_hecho_recuperacion'],
@@ -268,7 +272,7 @@ class ProcesosController extends Controller
         }
         if(!empty($detenido['cui_detenido'] )){
           $detenido_db = Persona::where('cui',$detenido['cui_detenido']);
-        }
+
         if ($detenido_db->exists()){
           $id_detenidos[] = $detenido_db->first()->id_persona;
         }else{
@@ -280,6 +284,7 @@ class ProcesosController extends Controller
             isset($arrNombres[1]) ? $newDetenido->segundo_nombre = $arrNombres[1] : $newDetenido->segundo_nombre = null;
             isset($arrNombres[2]) ? $newDetenido->tercer_nombre = $arrNombres[2] : $newDetenido->tercer_nombre = null;
           }
+
           if(!empty($detenido['apellidos_detenido'])){
             $arrApellidos = explode(" ",$detenido['apellidos_detenido'],2);
             $newDetenido->primer_apellido = $arrApellidos[0];
@@ -288,19 +293,22 @@ class ProcesosController extends Controller
           $newDetenido->save();
           $id_detenidos[] = $newDetenido->latest('id_persona')->first('id_persona')->id_persona;
         }
+        }
       }
     }
     //      return $id_detenidos;
 
     try {
       DB::beginTransaction();
+      // Direccion
       $direccion_hecho = new Direccion();
       $direccion_hecho->id_departamento = $data['departamento_hecho_recuperacion'];
-      isset($data['municipio_hecho_direccion']) && $direccion_hecho->id_municipio = $data['municipio_hecho_direccion'];
+      isset($data['municipio_hecho_recuperacion']) && $direccion_hecho->id_municipio = $data['municipio_hecho_recuperacion'];
       $direccion_hecho->direccion_exacta = $data['direccion_hecho'];
       $direccion_hecho->save();
+      // Hecho
       $hecho = new Hecho();
-      $hecho->numero_diligencia = $data['numero_prevencion'];
+      // $hecho->numero_diligencia = $data['numero_documento']; //Se movio para arma_recuperada
       $hecho->id_tipo_hecho = '412'; //Automatizar.
       $hecho->fecha_hecho = $data['fecha_hecho'];
       isset($data['hora_hecho']) && $hecho->hora_hecho = $data['hora_hecho'];
@@ -308,23 +316,26 @@ class ProcesosController extends Controller
       isset($data['demarcacion_hecho']) && $hecho->id_demarcacion = $data['demarcacion_hecho'];
       $hecho->id_direccion = $direccion_hecho->latest('id_direccion')->first('id_direccion')->id_direccion;
       $hecho->save();
+      // Arma recuperada
       $arma_recuperada = new Arma_Recuperada();
       $arma_recuperada->id_arma = $data['id_arma'];
-      $arma_recuperada->numero_prevencion = $data['numero_prevencion'];
+      $arma_recuperada->id_tipo_documento = $data['tipo_documento'];
+      $arma_recuperada->numero_documento = $data['numero_documento'];
       $arma_recuperada->id_hecho = $hecho->latest('id_hecho')->first('id_hecho')->id_hecho;
-      $arma_recuperada->id_persona = json_encode($id_detenidos);
+      $arma_recuperada->id_personas = json_encode($id_detenidos);
       $arma_recuperada->id_tipo_persona = 405;
-      $arma_recuperada->descripcion = $data['descripcion_hecho'];
+      isset($data['dependencia_policial']) && $arma_recuperada->dependencia_policial = $data['dependencia_policial'];
       $arma_recuperada->save();
       $actualizacion = self::editStatusArma($data['id_arma'],'Recuperada');
       DB::commit();
       if($actualizacion){
         $registro_historial = new Registro_Procedimiento_Arma();
         $registro_historial->id_tipo_procedimiento = 417; // Automatizar
-        $registro_historial->id_autor = auth()->user()->id_user; // Automatizar
+        $registro_historial->id_autor = auth()->user()->id_user;
         $registro_historial->id_arma = $data['id_arma'];
-        $registro_historial->numero_documento = $data['numero_prevencion'];
-        $registro_historial->descripcion = $data['descripcion_hecho'];
+        $registro_historial->numero_documento = $data['numero_documento'];
+        $registro_historial->descripcion = $data['descripcion_hecho']; //Automatizar -> Cual de los dos va, este o el de la sig. Linea.
+        // $registro_historial->descripcion = 'Registro de recuperacion'; //Automatizar
         $registro_historial->save();
         return response()->json(['success'=>'Recuperada correctamente']);
       }
@@ -363,6 +374,7 @@ class ProcesosController extends Controller
   }
 
   public function impresionDenuncia(Request $request){
+
     $denuncia = json_decode($request->denuncia);
     $departamento = json_decode($request->departamento);
     $municipio = json_decode($request->municipio);
@@ -377,4 +389,35 @@ class ProcesosController extends Controller
     return $pdf;
   }
 
+  public function detalleRecuperacion(Request $request){
+    $detenidos = [];
+    $departamento = Departamento::all();
+    $municipio = Municipio::all();
+    $demarcacion = Item::where('id_categoria',12)->get();
+    $tipo_documento = Item::where('id_categoria',17)->get();
+
+
+    // Consulta para traer la informacion de la recuperacion.
+
+    // return $request->recuperacion['id_hecho'];
+    // return response()->json($request);
+    $hecho = Hecho::where('id_hecho',$request->recuperacion['id_hecho'])
+    ->with('direccion')
+    ->first();
+    foreach (json_decode($request->recuperacion['id_personas']) as $persona){
+      $detenidos = Arr::prepend($detenidos,Persona::where('id_persona',$persona)->first());
+    }
+    $detalle = $request->all();
+    return view('consulta.detalleRecuperacion',compact(
+      'hecho',
+      'detalle',
+      'detenidos',
+      'departamento',
+      'municipio',
+      'demarcacion',
+      'tipo_documento'
+    ));
+  }
+
 }
+

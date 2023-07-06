@@ -19,4 +19,8 @@ class Arma extends Model
     public function denuncias(){
         return $this->hasMany('App\Models\Denuncia','id_arma');
     }
+
+    public function propietario(){
+      return $this->belongsTo('App\Models\Propietario','id_propietario','id_propietario');
+    }
 }
