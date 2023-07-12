@@ -28,6 +28,8 @@ Route::resource('/sae/denuncia', DenunciaControllerVJsonB::class)->parameters(['
 // Route::get('denuncia_form_sindicado',[DenunciaController::class, 'form_sindicado'])->name('form_sindicado');
 Route::get('denuncia_form_arma', [DenunciaControllerVJsonB::class, 'form_arma'])->name('form_arma');
 Route::get('denuncia_form_sindicado',[DenunciaControllerVJsonB::class, 'form_sindicado'])->name('form_sindicado');
+Route::get('denuncia_ajustes/{id}',[DenunciaControllerVJsonB::class, 'ajustesDenuncia'])->name('ajustesDenuncia');
+Route::post('delete_denuncia',[DenunciaControllerVJsonB::class, 'delete'])->name('denuncia.delete');
 
 //Controlador Persona
 Route::get('show_persona',[PersonaController::class,'show_persona'])->name('show_persona');

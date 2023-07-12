@@ -14,6 +14,7 @@ use App\Models\Persona_Denuncia;
 use App\Models\Registro_Procedimiento_Arma;
 use App\Models\Archivo;
 use App\Models\Propietario;
+use App\Models\Estatus_Arma_Denuncia;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -212,7 +213,21 @@ class DenunciaControllerVJsonB extends Controller
 	  }
 	}
 
-
+	// Recuperamos los estatus de la denuncia.
+	$estados_denuncia = Item::where('id_categoria',16)->get();
+	foreach($estados_denuncia as $value){
+	  switch($value->descripcion){
+			case('En cola'):
+				$item_en_cola = $value->id_item;
+			break;
+			case('En proceso'):
+				$item_en_proceso = $value->id_item;
+			break;
+			case('Procesada'):
+				$item_procesada = $value->id_item;
+			break;
+		}
+	}
 
 
 	//Consultamos si existe direccion de algun tipo, comparando con datos del formulario.
@@ -711,10 +726,9 @@ class DenunciaControllerVJsonB extends Controller
 			  $persona_denuncia->save();
 			}
 
-			// Registro del archivo cargado.
-
-     	// Registro de la denuncia en historial.
+			
 	  }
+		//7. Registro del archivo cargado.
 
 		if ($request->hasFile('file')) {
 			if($request->file('file')->isValid()){
@@ -732,19 +746,42 @@ class DenunciaControllerVJsonB extends Controller
 			}
 
 		}
-
+		//8. Registro de la denuncia en historial.
     foreach ($id_armas as $id_arma) {
       $newID = json_encode($id_arma);
       $registro_historial = new Registro_Procedimiento_Arma();
       $registro_historial->id_tipo_procedimiento = 416; //Automatizar.
       $registro_historial->id_arma = json_decode($newID)->id_arma;
+			$registro_historial->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
       $registro_historial->id_autor = auth()->user()->id_user;
       $registro_historial->numero_documento = request('numero_diligencia');
 			$registro_historial->id_tipo_documento = '419'; //Automatizar Dato quemado
       $registro_historial->descripcion = 'Creacion de denuncia';
+			switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
+
+			  case('Robo'):
+				$registro_historial->id_estatus_arma_registrado = $item_robada;
+			  break;
+
+			  case('Hurto'):
+				$registro_historial->id_estatus_arma_registrado = $item_hurtada;
+			  break;
+
+			  case('Extravio'):
+				$registro_historial->id_estatus_arma_registrado = $item_extraviada;
+			  break;
+
+			}
       $registro_historial->save();
-//      return $registro_historial;
+			//return $registro_historial;
     }
+
+			// 9. Inicializacion del estado_denuncia_arma;
+			$registro_estado_denuncia = new Estatus_Arma_Denuncia();
+			$registro_estado_denuncia->id_estatus_denuncia = $item_en_cola;
+			$registro_estado_denuncia->id_armas = json_encode($id_armas);
+			$registro_estado_denuncia->id_denuncia = ($denuncia->latest('id_denuncia')->first('id_denuncia'))->id_denuncia;
+			$registro_estado_denuncia->save();
 
 	  DB::commit();
 
@@ -760,6 +797,135 @@ class DenunciaControllerVJsonB extends Controller
 
 
   }
+
+	public function ajustesDenuncia($id){
+		$denuncia = Denuncia::find($id);
+		return view('denuncia.ajuste_denuncia',compact('id','denuncia'));
+	}
+
+	public function delete(Request $request){
+		$item_estado_arma = Item::where('id_categoria',9)->get();
+		$tipo_procedimiento = Item::where('id_categoria',14)->get();
+		$tipo_estado_denuncia = Item::where('id_categoria',16)->get();
+		// return $tipo_procedimiento;
+		$item_robada = '';
+		$item_extraviada = '';
+		$item_hurtada = '';
+		$item_solvente = '';
+		$item_recuperada = '';
+		$item_creacion_denuncia = '';
+		$item_recuperacion = '';
+
+		foreach($tipo_procedimiento as $item ){
+			switch ($item->descripcion) {
+				case ('Registro de denuncia'):
+					$item_creacion_denuncia = $item->id_item;
+					break;
+
+				case ('Registro de recuperacion'):
+					$item_recuperacion = $item->id_item;
+					break;
+			}
+		}
+
+		foreach($tipo_estado_denuncia as $item ){
+			switch ($item->descripcion) {
+				case ('En cola'):
+					$item_en_cola = $item->id_item;
+					break;
+
+				case ('En proceso'):
+					$item_en_proceso = $item->id_item;
+					break;
+
+				case ('Procesada'):
+					$item_procesada = $item->id_item;
+					break;
+			}
+		}
+
+		foreach($item_estado_arma as $value){
+			switch($value->descripcion){
+			case('Robada'):
+				$item_robada = $value->id_item;
+			break;
+			case('Extraviada'):
+				$item_extraviada = $value->id_item;
+			break;
+			case('Hurtada'):
+				$item_hurtada = $value->id_item;
+			break;
+			case('Solvente'):
+				$item_solvente = $value->id_item;
+			break;
+			case('Recuperada'):
+				$item_recuperada = $value->id_item;
+	
+			}
+		};
+
+		// if('noestaprocesada'){
+			
+			// }
+
+			try {
+				DB::beginTransaction();
+				$denuncia = Denuncia::with('estatus_denuncia')->find($request->id_denuncia);
+				// return $denuncia;
+				if($denuncia->estatus_denuncia[0]->id_estatus_denuncia == $item_en_cola){
+				
+					// Al eliminar una denuncia tenemos varios casos.
+					foreach(json_decode($denuncia->id_armas) as $arma){
+						// return $arma;
+						// Traemos todos los regist_procedimiento que coincidan con tipo de procedimiento = Creacion denuncia, y Registro recuperacion.
+						$registro_procedimiento = Registro_Procedimiento_Arma::where('id_arma',$arma->id_arma)
+																																	->where(function($q) use ($item_creacion_denuncia,$item_recuperacion){
+																																		$q->orWhere('id_tipo_procedimiento',$item_creacion_denuncia)
+																																		->orWhere('id_tipo_procedimiento',$item_recuperacion);
+																																	});
+																																	// ->get();
+							
+						// return $registro_procedimiento->latest('id_estatus_arma_registrado')->first()->id_estatus_arma_registrado;
+						$arma_db = Arma::find($arma->id_arma);
+						$estado_arma_db = $arma_db->id_estatus_arma;
+						if(((count($registro_procedimiento->get()) - 1)==0) && ($estado_arma_db != $item_recuperada)){ //Agregar condicion && estado_arma != 'recuperada'<-codigo. 
+							//1. CASO
+							// Era la unica denuncia, entonces el arma se queda en la DB pero con estado de solvente (para que pueda ser agregada nuevamente). (Preguntar si se eliminar completamente de la DB);
+							// El registro se elimina automaticamente con el CASCADE de id_denuncia;
+							// Dejamos el estado de las armas en solvente
+							// return count($registro_procedimiento->get());
+							$arma_db->id_estatus_arma = $item_solvente; 
+							$arma_db->save();
+							// return $arma_db;
+							// Dejamos constancia de la eliminacion?
+						}elseif(($estado_arma_db != $item_recuperada)){
+							//2. CASO
+							// El arma vuelve al estado anterior de la denuncia mas reciente.
+							// Restauramos el estado del arma segun el registro anterior al eliminado.
+							// En este caso como no se puede crear otra arma hasta que este recuperada o solvente, solo podremos encontrar el arma en estado Recuperada.
+							$arma_db->id_estatus_arma = $registro_procedimiento->latest('id_estatus_arma_registrado')->first('id_estatus_arma_registrado')->id_estatus_arma_registrado;
+							$arma_db->save();
+						}
+						// EL hecho no se elimina, verificar.
+						// return $registro_procedimiento;
+					}
+					// Antes de eliminar una denuncia debemos preguntar si esta se encuentra en proceso o procesada.
+					// En caso de ya encontrarse procesada, ya no debera permitir la eliminacion de la denuncia.
+
+						$denuncia->delete();
+						DB::commit();
+				}else{
+					return redirect()->route('denuncia.index')->with('error','No se puede eliminar la denuncia ya que se encuentra procesada o en proceso');
+				}
+			} catch (\Throwable $th) {
+				DB::rollBack();
+				throw $th;
+			}
+		
+
+		// return back()->with('success','Archivo cargado y guardado correctamente');
+		return redirect()->route('denuncia.index')->with('success','Denuncia eliminada con exito');
+	}
 
 
   public function form_arma(Request $request){

@@ -30,6 +30,27 @@
         @endpush
       @endif
       {{--Mensaje de errores, no guardado.--}}
+      @if (session('error'))
+        <div id="modal_error" class="modal">
+          <div class="modal-content center">
+            <h4>{{ session('error') }}</h4>
+          </div>
+          <div class="modal-footer">
+            <div class="col s12" style="display: flex; justify-content: space-around;">
+                <a  class="waves-light btn modal-close">
+                  Aceptar
+                  <i class="large material-icons right">clear</i>
+                </a>
+            </div>
+          </div>
+        </div>
+        @push('scripts')
+          <script>
+            $('.modal').modal();
+            $('#modal_error').modal('open');
+          </script>
+        @endpush
+      @endif
 
 
       <div class="row">
@@ -138,6 +159,7 @@
           console.log({data:resp.armas});
           var tablaArmas = $('#table-armas').addClass('nowrap').DataTable({
             responsive: true,
+            "pageLength": 5,
             "order": [ 0, 'desc' ],
             data: resp.armas,
             columns: [

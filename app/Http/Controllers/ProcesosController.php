@@ -13,6 +13,7 @@ use App\Models\Registro_Procedimiento_Arma;
 use App\Models\User;
 use App\Models\Departamento;
 use App\Models\Municipio;
+use App\Models\Estatus_Arma_Denuncia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -250,6 +251,24 @@ class ProcesosController extends Controller
       '$data["direccion_hecho"]'=>$data['direccion_hecho'],
     ],$rules,$mensajes);
 
+    $item_recuperada = Item::select('id_item')->where('descripcion','Recuperada')->where('id_categoria',9)->first();
+    $item_solvente = Item::select('id_item')->where('descripcion','Solvente')->where('id_categoria',9)->first();
+
+    $estados_denuncia = Item::where('id_categoria',16)->get();
+    foreach($estados_denuncia as $value){
+      switch ($value->descripcion) {
+        case 'En cola':
+          $item_en_cola = $value->id_item;
+          break;
+        case 'En proceso':
+          $item_en_proceso = $value->id_item;
+          break;
+        case 'Procesada':
+          $item_procesada = $value->id_item;
+          break;
+      }
+    }
+
     if($validator->fails()){
       $result = $validator->errors();
       return  response()->json($result,500);
@@ -327,7 +346,36 @@ class ProcesosController extends Controller
       isset($data['dependencia_policial']) && $arma_recuperada->dependencia_policial = $data['dependencia_policial'];
       $arma_recuperada->save();
       $actualizacion = self::editStatusArma($data['id_arma'],'Recuperada');
-      DB::commit();
+
+      //Cambio de estado en Estatus_Denuncia_Arma.
+      $id_estatus_denuncia = Estatus_Arma_Denuncia::select('id_registro')->where('id_denuncia',$data['id_denuncia'])->first()->id_registro;
+      $estatus_denuncia = Estatus_Arma_Denuncia::find($id_estatus_denuncia);
+      
+        // Se verifica el estado de la denuncia por cada estado de las armas.
+      $armas_solventes_recuperadas = 0;
+      foreach (json_decode($estatus_denuncia->id_armas) as $arma) {
+        $total_armas = count(json_decode($estatus_denuncia->id_armas));
+        $estado_arma_fe = Arma::find($arma->id_arma);
+        if($estado_arma_fe->id_estatus_arma == $item_recuperada->id_item || $estado_arma_fe->id_estatus_arma == $item_solvente->id_item){
+          $armas_solventes_recuperadas+=1;
+        }
+      }
+        // Realizamos la resta de $armas solventes - $total de armas.
+      $total_armas_activas = $total_armas - $armas_solventes_recuperadas;
+      
+      switch ($total_armas_activas) {
+        case 0:
+          $estatus_denuncia->id_estatus_denuncia = $item_procesada;
+          $estatus_denuncia->save();
+          break;
+
+        default:
+          // Por defecto se asigna el estado como "En proceso".
+          $estatus_denuncia->id_estatus_denuncia = $item_en_proceso;
+          $estatus_denuncia->save();
+          break;
+      }
+
       if($actualizacion){
         $registro_historial = new Registro_Procedimiento_Arma();
         $registro_historial->id_tipo_procedimiento = 417; // Automatizar
@@ -336,9 +384,11 @@ class ProcesosController extends Controller
         $registro_historial->numero_documento = $data['numero_documento'];
         $registro_historial->descripcion = $data['descripcion_hecho']; //Automatizar -> Cual de los dos va, este o el de la sig. Linea.
         // $registro_historial->descripcion = 'Registro de recuperacion'; //Automatizar
+        $registro_historial->id_estatus_arma_registrado = $item_recuperada->id_item;
         $registro_historial->save();
-        return response()->json(['success'=>'Recuperada correctamente']);
       }
+      DB::commit();
+      return response()->json(['success'=>'Recuperada correctamente']);
 
       }catch (\Throwable $th){
 

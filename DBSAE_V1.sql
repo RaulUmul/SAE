@@ -29,23 +29,23 @@ CREATE TABLE sae.categoria(
 
 INSERT INTO sae.categoria(id_categoria,descripcion)
 VALUES
-  (1,'Nacionalidad'),
-  (2,'Genero'),
-  (3,'Tipo arma'),
-  (4,'Marca arma'),
-  (5,'Tipo denuncia'),
-  (6,'Tipo incautacion'),
-  (7,'Calibre'),
-  (8,'Pais de fabricacion'),
-  (9,'Estado arma'),
-  (10,'Estado denuncia'),
-  (11,'Tipo propietario'),
-  (12,'Tipo procedimiento'),
-  (13,'Tipo documento'),
-  (14,'Tipo direccion'),
-  (15,'Demarcacion'),
-  (16,'Tipo persona'),
-  (17,'Tipo hecho')
+  (1,'Nacionalidad'), --listo
+  (2,'Genero'), --listo
+  (3,'Tipo arma'), --listo
+  (4,'Marca arma'), --listo
+  (5,'Tipo denuncia'), --listo
+  (6,'Tipo incautacion'), --listo
+  (7,'Calibre'), --listo
+  (8,'Pais de fabricacion'), --listo
+  (9,'Estado arma'), --listo
+  (10,'Tipo direccion'), --listo
+  (11,'Tipo propietario'), --listo
+  (12,'Demarcacion'), --listo
+  (13,'Tipo persona'), --listo
+  (14,'Tipo procedimiento'), --listo
+  (15,'Tipo hecho'),
+  (16,'Estado denuncia'), --Listo
+  (17,'Tipo documento') --listo
 ;
 
 
@@ -483,7 +483,10 @@ VALUES
   (418,'Registro de ampliacion',14),
   (419,'Diligencia',17), --Corregir
   (420,'Oficio',17), --Corregir
-  (421,'Prevencion',17) --Corregir
+  (421,'Prevencion',17), --Corregir
+  (422,'En cola',16),
+  (423,'En proceso',16),
+  (424,'Procesada',16)
 ;
 
 -- ===============================================
@@ -983,7 +986,7 @@ CREATE TABLE sae.denuncia(
                            id_hecho INT, --FK (sae.hecho)
                            FOREIGN KEY (id_tipo_documento) REFERENCES sae.item(id_item),
                            FOREIGN KEY (id_tipo_denuncia) REFERENCES sae.item(id_item),
-                           FOREIGN KEY (id_hecho) REFERENCES sae.hecho(id_hecho)
+                           FOREIGN KEY (id_hecho) REFERENCES sae.hecho(id_hecho) ON DELETE CASCADE --Aquinosesifunciona
 );
 
 -- ===============================================
@@ -996,7 +999,7 @@ CREATE TABLE sae.persona_denuncia(
                                    id_denuncia INT, --FK (sae.denuncia)
                                    id_tipo_persona INT, --FK (sae.item)
                                    FOREIGN KEY (id_persona) REFERENCES sae.persona(id_persona),
-                                   FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia),
+                                   FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia) ON DELETE CASCADE,
                                    FOREIGN KEY (id_tipo_persona) REFERENCES sae.item(id_item)
 );
 
@@ -1026,16 +1029,20 @@ CREATE TABLE sae.registro_procedimiento_arma(
                                               id_procedimiento SERIAL PRIMARY KEY,
                                               id_tipo_procedimiento INT, --FK (sae.item)
                                               id_arma INT, --FK (sae.arma)
+                                              id_denuncia INT,
                                               id_autor INT, --FK public.users.
                                               numero_documento VARCHAR,
                                               id_tipo_documento INT, --FK (sae.item)
                                               descripcion VARCHAR,
+                                              id_estatus_arma_registrado INT, --FK (sae.item)
                                               fecha_creacion timestamp,
                                               fecha_actualizacion timestamp,
-                                              FOREIGN KEY (id_tipo_procedimiento) REFERENCES sae.item(id_item),
+                                              FOREIGN KEY (id_tipo_procedimiento) REFERENCES sae.item(id_item), 
                                               FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma),
+                                              FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia) ON DELETE CASCADE, --Veremos como funciona
                                               FOREIGN KEY (id_autor) REFERENCES public.users(id_user),
-                                              FOREIGN KEY (id_tipo_documento) REFERENCES sae.item(id_item)
+                                              FOREIGN KEY (id_tipo_documento) REFERENCES sae.item(id_item),
+                                              FOREIGN KEY (id_estatus_arma_registrado) REFERENCES sae.item(id_item)
 );
 
 -- ===============================================
@@ -1044,11 +1051,11 @@ CREATE TABLE sae.registro_procedimiento_arma(
 CREATE TABLE sae.estatus_arma_denuncia(
                                         id_registro SERIAL PRIMARY KEY,
                                         id_estatus_denuncia INT, --FK (sae.item)
-                                        id_arma INT, --FK (sae.arma)
+                                        id_armas JSONB, --FK (sae.arma)
                                         id_denuncia INT, --FK (sae.denuncia)
                                         FOREIGN KEY (id_estatus_denuncia) REFERENCES sae.item(id_item),
-                                        FOREIGN KEY (id_arma) REFERENCES sae.arma(id_arma),
-                                        FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia)
+                                        -- FOREIGN KEY (id_armas) REFERENCES sae.arma(id_arma),
+                                        FOREIGN KEY (id_denuncia) REFERENCES sae.denuncia(id_denuncia) ON DELETE CASCADE
 );
 
 -- ===============================================
@@ -1063,5 +1070,5 @@ CREATE TABLE sae.archivo(
                           nombre varchar,
                           nombre_hash varchar,
                           mime varchar,
-                          FOREIGN KEY(id_denuncia) REFERENCES sae.denuncia(id_denuncia)
+                          FOREIGN KEY(id_denuncia) REFERENCES sae.denuncia(id_denuncia) ON DELETE CASCADE
 );

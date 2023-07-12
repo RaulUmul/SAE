@@ -27,6 +27,15 @@
                   <div>
                   Denuncia No.<b> {{$denuncia['denunciante']->id_denuncia}}</b>
                   </div>
+                  <div style="text-align: center">
+                  Estado de la denuncia
+                  <br>
+                  @foreach ($tipo_estatus_denuncia as $tipo_estatus)
+                    @if ($tipo_estatus->id_item == $denuncia['no_denuncia']->estatus_denuncia[0]->id_estatus_denuncia)
+                        {{$tipo_estatus->descripcion}}
+                    @endif
+                  @endforeach
+                  </div>
                   <div>
                   <a class="btn" href="{{route('impresionDenuncia',[
                     'denuncia'=>json_encode($denuncia),
@@ -441,8 +450,8 @@
                                        onclick="editArma({{$arma}})">
                                       <i class="material-icons">zoom_out_map</i>
                                     </a>
-                                    <a class="btn tooltipped disabled" data-position="top" data-tooltip="Cambiar Estado"
-                                       onclick="editStatus({{$arma}})">
+                                    <a class="btn tooltipped disabled" data-position="top" data-tooltip="Registrar Recuperacion"
+                                       onclick="editStatus({{$arma}},{{$denuncia['no_denuncia']->id_denuncia}})">
                                       <i class="material-icons">create</i>
                                     </a>
                                   @else
@@ -450,8 +459,8 @@
                                        onclick="editArma({{$arma}})">
                                       <i class="material-icons">zoom_out_map</i>
                                     </a>
-                                    <a class="btn tooltipped " data-position="top" data-tooltip="Cambiar Estado"
-                                       onclick="editStatus({{$arma}})">
+                                    <a class="btn tooltipped " data-position="top" data-tooltip="Registrar Recuperacion"
+                                       onclick="editStatus({{$arma}},{{$denuncia['no_denuncia']->id_denuncia}})">
                                       <i class="material-icons">create</i>
                                     </a>
 
@@ -468,7 +477,9 @@
                         </tbody>
                       </table>
                     </div>
-
+                    <div class="col s12 center-align">
+                      <span class="red-text"><a href="{{route('ajustesDenuncia',$denuncia['denunciante']->id_denuncia)}}"><i class="material-icons">settings</i> Ajustes de la denuncia</a></span>
+                    </div>
                   </div>
                 </div>
               </li>
@@ -487,6 +498,7 @@
               {{--  Existe detenido  --}}
               {{--  Generamos la funcion verdad? --}}
               <input type="hidden" id="id_arma" name="id_arma" value="">
+              <input type="hidden" id="id_denuncia" name="id_denuncia" value="">
               <div class="row row" style="box-shadow: 0px 10px 5px 1px rgba(0, 0, 0, 0.1)">
 
                 <div class="input-field col s12 m4 l4">
@@ -819,8 +831,9 @@
 
 
     // Editar Arma a Recuperada -Modals
-    function editStatus(arma) {
+    function editStatus(arma,id_denuncia) {
       $('#id_arma').attr('value',arma.id_arma);
+      $('#id_denuncia').attr('value',id_denuncia);
       $('#modEstadoArma').modal('open');
     }
     // Registro de la recuperacion

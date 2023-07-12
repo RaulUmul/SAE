@@ -32,6 +32,15 @@
         text-align: right;
         /* line-height: 35px; */
     }
+    tr,th,td{
+      padding-bottom: 0.1cm;
+      padding-top: 0.05cm;
+      padding-left: 0;
+      margin: 0;
+    }
+    th{
+
+    }
 
   </style>
 </head>
@@ -54,7 +63,7 @@
       <h1><b>Denuncia #{{$denuncia->denunciante->id_denuncia}}</b></h1>
     </div>
     <div class="row">
-      <div class="col s12" style="">
+      <div class="col s12">
           <div>
             <img src="{{public_path('img/persona.svg')}}" style="margin-bottom:-0.1cm">
             <span style="margin-bottom:0.1cm;">Datos del denunciante</span>
@@ -69,9 +78,9 @@
         <table class="striped" id="tabla-denunciante">
           <tr>
             <th class="right-align">Primer nombre</th>
-            <td>{{$denuncia->denunciante->persona->primer_nombre}}</td>
+            <td class="center-align">{{$denuncia->denunciante->persona->primer_nombre}}</td>
             <th class="right-align">Segundo nombre</th>
-            <td>{{$denuncia->denunciante->persona->segundo_nombre}}</td>
+            <td class="center-align">{{$denuncia->denunciante->persona->segundo_nombre}}</td>
             <th class="right-align">Tercer nombre</th>
             <td class="center-align">
             {{isset($denuncia->denunciante->persona->tercer_nombre) ? $denuncia->denunciante->persona->tercer_nombre :  "-" }}
@@ -79,9 +88,9 @@
           </tr>
           <tr>
             <th class="right-align">Primer apellido</th>
-            <td>{{$denuncia->denunciante->persona->primer_apellido}}</td>
+            <td class="center-align">{{$denuncia->denunciante->persona->primer_apellido}}</td>
             <th class="right-align">Segundo apellido</th>
-            <td>{{$denuncia->denunciante->persona->segundo_apellido}}</td>
+            <td class="center-align">{{$denuncia->denunciante->persona->segundo_apellido}}</td>
             <th class="right-align">Apellido casada</th>
             <td class="center-align">
               {{isset($denuncia->denunciante->persona->apellido_casada) ? $denuncia->denunciante->persona->apellido_casada :  "-" }}
@@ -106,7 +115,7 @@
             @isset($denuncia->denunciante->persona->id_genero)
               @foreach ( $genero as  $value )
                 @if( $value['id_item'] == ($denuncia->denunciante->persona->id_genero) )
-                  <td>{{$value['descripcion']}}</td>
+                  <td class="center-align">{{$value['descripcion']}}</td>
                   {{-- <td>{{$denuncia->denunciante->persona->id_genero}}</td> --}}
                 @endif
               @endforeach
@@ -161,7 +170,7 @@
           <tr>
             <th class="right-align">No. Diligencia</th>
             {{-- @dump($denuncia) --}}
-            <td>{{$denuncia->no_denuncia->numero_documento}}</td>
+            <td class="center-align">{{$denuncia->no_denuncia->numero_documento}}</td>
             <th class="right-align">Direccion del hecho</th>
             <td class="center-align">
               {{-- Direccion --}}
@@ -212,8 +221,13 @@
             </td>
           </tr>
           <tr>
-            <th class="right-align">Narracion</th>
-            <td class="center-align" colspan="5">
+            <td colspan="6">
+                <div class="divider"></div>
+            </td>
+          </tr>
+          <th class="center-align" colspan="5">Narracion</th>
+          <tr>
+            <td style="text-align: justify" colspan="6">
               {{-- Narracion --}}
               {{isset($denuncia->hecho->narracion) ? $denuncia->hecho->narracion : '-'}}
             </td>
@@ -389,7 +403,7 @@
               </td>
               <th class="right-align">Tenencia</th>
               <td class="center-align">
-                {{isset($arma->tenencia) ? $arma->tenencia : 'N/I'}}
+                {{isset($arma->tenencia) ? $arma->tenencia : '-'}}
               </td>
             </tr>
             <tr>

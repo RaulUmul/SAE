@@ -33,4 +33,8 @@ class Denuncia extends Model
         return $this->hasMany('App\Models\Persona_Denuncia','id_denuncia');
     }
 
+    public function estatus_denuncia(){
+        return $this->hasMany('App\Models\Estatus_Arma_Denuncia','id_denuncia','id_denuncia');
+    }
+
 }

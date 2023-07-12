@@ -33,10 +33,13 @@ class ArchivoController extends Controller
                 $archivo->mime = $request->file('file')->getClientMimeType();
                 $archivo->save();
 
-                return 'Archivo cargado y guardado correctamente';
+                // return 'Archivo cargado y guardado correctamente';
+                // return response()->json('success','Archivo cargado y guardado correctamente');
+                return back()->with('success','Archivo cargado y guardado correctamente');
             }
         }else{
-            return 'No hay archivo o no se cargo correctamente';
+            // return 'No hay archivo o no se cargo correctamente';
+            return back()->with('error','No hay archivo o no se cargo correctamente');
         }
     }
 
@@ -66,14 +69,17 @@ class ArchivoController extends Controller
                 $archivo->mime = $request->file('file')->getClientMimeType();
                 $archivo->save();
 
-                return 'Se cambio exitosamente';
+                // return 'Se cambio exitosamente';
+                return back()->with('success','Se cambio correctamente');
+
             }
         }else if(!$request->hasFile('file')){
             $id_archivo = Archivo::select('id_archivo')->where('id_denuncia',$request->id_denuncia)->first();
             $archivo = Archivo::find($id_archivo->id_archivo);
             $archivo->delete(); //Lo que deberiamos hacer es usar la funcion delete en lugar de esto, pero dejemolo por ahi.
 
-            return 'Se elimino correctamente';
+            return back()->with('success','Archivo eliminado');
+
         }
         
     }

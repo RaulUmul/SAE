@@ -8,6 +8,51 @@
     @section('titulo_card','ADMINISTRACION DE ARCHIVO')
     @section('contenido_card')
 
+    @if (session('success'))
+        <div id="modal_success" class="modal">
+          <div class="modal-content center">
+            <h4>{{ session('success') }}</h4>
+          </div>
+          <div class="modal-footer">
+            <div class="col s12" style="display: flex; justify-content: space-around;">
+                <a  class="waves-light btn modal-close">
+                  Aceptar
+                  <i class="large material-icons right">check</i>
+                </a>
+            </div>
+          </div>
+        </div>
+        @push('scripts')
+          <script>
+            $('.modal').modal();
+            $('#modal_success').modal('open');
+          </script>
+        @endpush
+      @endif
+
+
+      @if (session('error'))
+        <div id="modal_success" class="modal">
+          <div class="modal-content center">
+            <h4>{{ session('error') }}</h4>
+          </div>
+          <div class="modal-footer">
+            <div class="col s12" style="display: flex; justify-content: space-around;">
+                <a  class="waves-light btn modal-close">
+                  Aceptar
+                  <i class="large material-icons right">check</i>
+                </a>
+            </div>
+          </div>
+        </div>
+        @push('scripts')
+          <script>
+            $('.modal').modal();
+            $('#modal_success').modal('open');
+          </script>
+        @endpush
+      @endif
+
     <div class="col s12">
     </div>
     @empty($archivo)
@@ -112,5 +157,7 @@
       });
       reader.readAsDataURL(file);
     }
+
+
   </script>
 @endpush

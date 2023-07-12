@@ -43,6 +43,7 @@ class ConsultaController extends Controller
     $tipo_denuncia = Item::where('id_categoria',5)->get();
     $demarcacion = Item::where('id_categoria',12)->get();
     $tipo_documento = Item::where('id_categoria',17)->get();
+    $tipo_estatus_denuncia = Item::where('id_categoria',16)->get();
 
     // 1. Preguntar de que viene la consulta. Persona o Arma.
     // Request CUI
@@ -80,7 +81,7 @@ class ConsultaController extends Controller
 
           }
 
-          $denuncia = Denuncia::where('id_denuncia', $value)->first();
+          $denuncia = Denuncia::with('estatus_denuncia')->where('id_denuncia', $value)->first();
           $armas = [];
           foreach( (json_decode($denuncia->id_armas)) as $arma){
 //            $armas[] = Arma::where('id_arma',$arma->id_arma)->first();
@@ -111,6 +112,7 @@ class ConsultaController extends Controller
             'estado_arma',
             'tipo_denuncia',
             'tipo_documento',
+            'tipo_estatus_denuncia',
             'demarcacion'
             )
 
@@ -167,7 +169,7 @@ class ConsultaController extends Controller
 
       if ($arma->exists()) {
         // Si arma existe ejecuta lo sig.
-        $denuncias = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->first('id_arma')->id_arma]])->get();
+        $denuncias = Denuncia::with('estatus_denuncia')->whereJsonContains('id_armas', [['id_arma' => $arma->first('id_arma')->id_arma]])->get();
         $i_denuncia = [];
 
         foreach ($denuncias as $key => $denuncia) {
@@ -221,6 +223,7 @@ class ConsultaController extends Controller
             'estado_arma',
             'tipo_denuncia',
             'demarcacion',
+            'tipo_estatus_denuncia',
             'tipo_documento'
           )
         );
@@ -262,7 +265,7 @@ class ConsultaController extends Controller
 
           }
 
-          $denuncia = Denuncia::where('id_denuncia', $value)->first();
+          $denuncia = Denuncia::with('estatus_denuncia')->where('id_denuncia', $value)->first();
           $armas = [];
           foreach ((json_decode($denuncia->id_armas)) as $arma) {
             $armas[] = Arma::with('propietario')->where('id_arma', $arma->id_arma)->first();
@@ -290,6 +293,7 @@ class ConsultaController extends Controller
             'estado_arma',
             'demarcacion',
             'tipo_denuncia',
+            'tipo_estatus_denuncia',
             'tipo_documento'
             )
 
@@ -301,7 +305,7 @@ class ConsultaController extends Controller
 //        dd($arma->first());
       if ($arma->exists()) {
         // Si arma existe ejecuta lo sig.
-        $denuncias = Denuncia::whereJsonContains('id_armas', [['id_arma' => $arma->first()->id_arma]])->get();
+        $denuncias = Denuncia::with('estatus_denuncia')->whereJsonContains('id_armas', [['id_arma' => $arma->first()->id_arma]])->get();
         $i_denuncia = [];
 
         foreach ($denuncias as $key => $denuncia) {
@@ -355,6 +359,7 @@ class ConsultaController extends Controller
             'estado_arma',
             'tipo_denuncia',
             'demarcacion',
+            'tipo_estatus_denuncia',
             'tipo_documento'
           )
         );
