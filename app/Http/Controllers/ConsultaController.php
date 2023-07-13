@@ -367,6 +367,8 @@ class ConsultaController extends Controller
         return redirect(route('consulta.create'))
           ->with('error', 'No se ha encontrado el registro.');
       }
+    }else{
+      return redirect()->back()->withErrors(['message'=>'Ingrese el campo solicitado.']);
     }
   }
 

@@ -9,6 +9,15 @@
 
         @section('contenido_card')
 
+            @if($errors->any())
+            @push('scripts')
+            <script>
+                $(document).ready(function () {
+                    M.toast({html: 'Ingrese el campo solicitado'});
+                });
+            </script>
+            @endpush
+            @endif
 
             {{--Mensaje para registro guardado exitosamente--}}
             @if (session('error'))

@@ -447,7 +447,7 @@
                                 @if( $value->id_item == ($arma->id_estatus_arma) )
                                   @if($value->descripcion == 'Recuperada')
                                     <a class="btn tooltipped disabled" data-position="top" data-tooltip="Ampliar"
-                                       onclick="editArma({{$arma}})">
+                                       onclick="editArma({{$arma}},{{$denuncia['denunciante']}})">
                                       <i class="material-icons">zoom_out_map</i>
                                     </a>
                                     <a class="btn tooltipped disabled" data-position="top" data-tooltip="Registrar Recuperacion"
@@ -456,7 +456,7 @@
                                     </a>
                                   @else
                                     <a class="btn tooltipped" data-position="top" data-tooltip="Ampliar"
-                                       onclick="editArma({{$arma}})">
+                                       onclick="editArma({{$arma}},{{$denuncia['denunciante']}})">
                                       <i class="material-icons">zoom_out_map</i>
                                     </a>
                                     <a class="btn tooltipped " data-position="top" data-tooltip="Registrar Recuperacion"
@@ -686,7 +686,7 @@
 
 
     // Funcion para Ampliar Registros de las armas. (Cambiar a post)
-    function editArma(arma) {
+    function editArma(arma,denunciante) {
       // console.log(arma);
 
       //   Con una consulta ajax nos traemos todos los datos del arma para que sean modificados.
@@ -695,7 +695,8 @@
         type: "get",
         data: {
           {{--_token: '{{ csrf_token() }}'--}}
-            arma
+            arma,
+            denunciante
         },
         dataType: 'text',
         beforeSend: function () {
@@ -743,6 +744,21 @@
               return markup;
             }
           });
+
+          $('#propietario').select2({
+            width: '100%',
+            placeholder: 'Propietario',
+            allowClear: true,
+            dropdownParent: $("#modAmpliacion"),
+            // tags: true,
+          });
+          $('#tipo_propietario').select2({
+            width: '100%',
+            placeholder: 'Tipo propietario',
+            allowClear: true,
+            dropdownParent: $("#modAmpliacion"),
+          });
+          onCurrentSelectPropietario();
           $('#modAmpliacion').modal('open');
 
         },

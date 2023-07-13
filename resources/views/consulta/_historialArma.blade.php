@@ -36,6 +36,14 @@
             </div>
             @isset($evento->numero_documento)
             <div class="col s12">
+              Tipo documento: 
+              @foreach ($tipo_documento as $tipo)
+                @if( $tipo->id_item == ($evento->id_tipo_documento) )
+                {{$tipo->descripcion}}
+                @endif
+              @endforeach
+            </div>
+            <div class="col s12">
               Documento No. {{$evento->numero_documento}}
             </div>
             @endisset

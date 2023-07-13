@@ -64,6 +64,12 @@ $(document).ready(function (){
       }
     },
   })
+
+  // function onCurrentSelectPropietario(){
+  //   $('#propietario').val(); 
+  //   console.log($('#propietario').val());
+  // }
+
 });
 
 
@@ -213,4 +219,50 @@ function nacionalidadDoc(val,valDetenido){
     etiqueta.attr('for',`cui_detenido_${valDetenido}`);
     etiqueta.html('DPI');
   }
+}
+
+function onCurrentSelectPropietario(){
+  $('#propietario').val(); 
+  if($('#propietario').val() == 'Otro'){
+    console.log($('#propietario').val());
+    // Si esta por defecto en otro entonces habilitamos los divs correspondientes para que la informacion pueda colocarse debidamente.
+    $('#div_propietario select').removeAttr('name');
+    $('#div_propietario select').removeAttr('id');
+    $('#div_tipo_propietario').removeAttr('hidden');
+    $('#div_denunciante').removeAttr('hidden');
+  }
+ }
+
+
+function selectChangePropietario (valor){
+let denunciante = document.getElementById("div_denunciante");
+let propietario = document.getElementById("div_tipo_propietario");
+
+if(valor == 'Otro'){
+  $('#div_propietario select').removeAttr('name');
+  $('#div_propietario select').removeAttr('id');
+  $('#div_denunciante').removeAttr('hidden');
+
+
+denunciante.innerHTML = `
+  <i class="material-icons prefix">chevron_right</i>
+  <input type="text" name="propietario" id="propietario" class="validate" value="">
+  <label for="propietario" class="active">Nombre</label>
+  `;
+$('#div_tipo_propietario').removeAttr('hidden');
+propietario.style.display = '';
+
+}else if(valor=='Denunciante'){
+  $('#div_propietario select').attr('name','propietario');
+  $('#div_propietario select').attr('id','propietario');
+
+    denunciante.innerHTML="";
+    $('#div_denunciante').removeAttr('hidden');
+    propietario.style.display = 'none';
+
+
+}else{
+  $('#div_denunciante').attr('hidden','hidden');
+  $('#div_tipo_propietario').attr('hidden','hidden');
+}
 }

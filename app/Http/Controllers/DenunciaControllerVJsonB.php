@@ -64,7 +64,7 @@ class DenunciaControllerVJsonB extends Controller
 
   public function store(Request $request){
 
-//		 return $request;
+		//  return $request;
     $rules = [
       'poseeDocumento' => 'required',
       'cui_denunciante' => 'min:13|max:13',
@@ -327,10 +327,15 @@ class DenunciaControllerVJsonB extends Controller
        array_push($direccion_actualizada,json_decode($direccion_denunciante->latest('id_direccion')->first('id_direccion')));
 		  // 3. Sobreescribimos el id_direccion que se encontro en la DB.
 		   $denunciante_update = Persona::find(($denunciante_db->first())->id_persona);
+			  $denunciante_update->telefono_celular = request('telefono');
 		    $denunciante_update->id_direccion = json_encode($direccion_actualizada);
 		   $denunciante_update->save();
 		   $id_denunciante = ($denunciante_db->first())->id_persona;
 	  }else if($denunciante_db->count() && $direccion_db_residencia->count()){
+			// Solo actualizamos el telefono en caso de que se haya cambiado
+			$denunciante_update = Persona::find(($denunciante_db->first())->id_persona);
+				$denunciante_update->telefono_celular = request('telefono');
+			$denunciante_update->save();
       $id_denunciante = $denunciante_db->first()->id_persona;
     }
 
@@ -528,6 +533,7 @@ class DenunciaControllerVJsonB extends Controller
               });
 
       $id_propietario = '';
+			$nombre_completo_denunciante = '';
 
 
 
@@ -558,7 +564,14 @@ class DenunciaControllerVJsonB extends Controller
         if($propietario_db->doesntExist()){
 				  if($value['propietario'] == 'DENUNCIANTE'){
 				  	$propietario = new Propietario();
-				  	$propietario->nombre_propietario = request('primer_nombre')." ".request('segundo_nombre')." ".request('tercer_nombre')." ".request("primer_apellido")." ".request("segundo_apellido")." ".request("apellido_casada");//El nombre del denunciante recien guardado.
+				  	(request('primer_nombre') != null) && $nombre_completo_denunciante .= request('primer_nombre')." ";
+						(request('segundo_nombre') != null) && $nombre_completo_denunciante .= request('segundo_nombre')." ";
+						(request('tercer_nombre') != null) && $nombre_completo_denunciante .= request('tercer_nombre')." ";
+						(request("primer_apellido") != null) && $nombre_completo_denunciante .= request("primer_apellido")." ";
+						(request("segundo_apellido") != null) && $nombre_completo_denunciante .= request("segundo_apellido");
+						(request("apellido_casada") != null) && $nombre_completo_denunciante .= " ".request("apellido_casada");
+						//El nombre del denunciante recien guardado.
+						$propietario->nombre_propietario = $nombre_completo_denunciante;
 				  	$propietario->id_tipo_propietario = 369; //Automatizar
 				  	$propietario->save();
 				  	$id_propietario = $propietario->latest('id_propietario')->first('id_propietario')->id_propietario;
@@ -620,9 +633,10 @@ class DenunciaControllerVJsonB extends Controller
       //Si existe pero con estado de solvente, unicamente actualizamos.
 //      return $registro_arma_db_solvente->first()->id_arma;
       $arma_update = Arma::find($registro_arma_db_solvente->first()->id_arma);
+			isset($value['cantidad_tolvas']) && $arma_update->cantidad_tolvas = $value['cantidad_tolvas'];
+			isset($value['cantidad_municion']) && $arma_update->cantidad_municion = $value['cantidad_municion'];
 
       switch((Item::select('descripcion')->where('id_item',$request->tipo_hecho)->where('id_categoria',5)->first())->descripcion){
-
         case('Robo'):
           $arma_update->id_estatus_arma = $item_robada;
           break;
@@ -634,7 +648,6 @@ class DenunciaControllerVJsonB extends Controller
         case('Extravio'):
           $arma_update->id_estatus_arma = $item_extraviada;
           break;
-
       }
 
       $arma_update->save();
@@ -915,7 +928,7 @@ class DenunciaControllerVJsonB extends Controller
 						$denuncia->delete();
 						DB::commit();
 				}else{
-					return redirect()->route('denuncia.index')->with('error','No se puede eliminar la denuncia ya que se encuentra procesada o en proceso');
+					return redirect()->route('denuncia.index')->with('error','No se puede eliminar la denuncia ya que se encuentra en proceso o ya procesada.');
 				}
 			} catch (\Throwable $th) {
 				DB::rollBack();

@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Models\Departamento;
 use App\Models\Municipio;
 use App\Models\Estatus_Arma_Denuncia;
+use App\Models\Propietario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -145,17 +146,41 @@ class ProcesosController extends Controller
     $marca_arma = Item::where('id_categoria',4)->get();
     $calibre_arma = Item::where('id_categoria',7)->get();
     $tipo_arma = Item::where('id_categoria',3)->get();
+    $tipo_propietario = Item::where('id_categoria',11)->get();
     //Recibimos todos los datos del arma, para devolver una vista Form. Con los datos del arma.
     //Vista del modal con los datos a editar del arma
     $arma = $request->arma;
-    return view('consulta._form_edit_arma',compact('arma','calibre_arma','marca_arma','tipo_arma'));
+    $nombre_completo_denunciante = implode(" ",array_filter([
+      $request->denunciante['persona']['primer_nombre'],
+      $request->denunciante['persona']['segundo_nombre'],
+      $request->denunciante['persona']['tercer_nombre'],
+      $request->denunciante['persona']['primer_apellido'],
+      $request->denunciante['persona']['segundo_apellido'],
+      $request->denunciante['persona']['apellido_casada']
+    ]));
+
+    if(!empty($request->arma['propietario']['id_propietario'])){
+      $id_propietario = $request->arma['propietario']['id_propietario'];
+      $propietario = Propietario::where('id_propietario',$id_propietario)->first();
+    }else{ 
+      $propietario = NULL;
+    }
+    return view('consulta._form_edit_arma',compact(
+      'arma',
+      'calibre_arma',
+      'marca_arma',
+      'tipo_arma',
+      'tipo_propietario',
+      'propietario',
+      'nombre_completo_denunciante'
+    ));
   }
 
   //  Actualiza la informacioni del arma solicitada.
   public  function  updateArma(Request $request){
     $queryString = $request['data'];
     parse_str($queryString,$data);
-    //return $data;
+    // return $data;
 
     //Generamos las reglas necesarias.
 
@@ -179,6 +204,7 @@ class ProcesosController extends Controller
       return  response()->json($result,500);
     }
 
+
     // Actualizacion del arma, guardarla en un try catch;
 
     try {
@@ -192,6 +218,48 @@ class ProcesosController extends Controller
       empty($data['calibre_arma']) ? $arma_actualizada->id_calibre = null : $arma_actualizada->id_calibre = $data['calibre_arma'];
       empty($data['cantidad_tolvas']) ? $arma_actualizada->cantidad_tolvas = null : $arma_actualizada->cantidad_tolvas = $data['cantidad_tolvas'];
       empty($data['cantidad_municion']) ? $arma_actualizada->cantidad_municion = null : $arma_actualizada->cantidad_municion = $data['cantidad_municion'];
+
+      // Cuando volvemos a guardar/actualizar la informacion del arma, tenemos 3 casos.
+      // 1. El arma viene con propietario = Denunciante
+      // 2. El arma viene con propietario = Otro
+      // 3. No viene el propietario
+      
+      if(isset($data['propietario']) && $data['propietario'] != ""){
+          if($data['propietario']=='Denunciante'){
+            $propietario_db = Propietario::where('nombre_propietario',$data['nombre_completo_denunciante']);
+          }else{
+            $propietario_db = Propietario::where('nombre_propietario',$data['propietario']);
+          }
+
+        if($propietario_db->doesntExist()){
+				  if($data['propietario'] == 'Denunciante'){
+				  	$propietario = new Propietario();
+						$propietario->nombre_propietario = $data['nombre_completo_denunciante'];
+				  	$propietario->id_tipo_propietario = 369; //Automatizar
+				  	$propietario->save();
+				  	$id_propietario = $propietario->latest('id_propietario')->first('id_propietario')->id_propietario;
+				  }else if($data['propietario'] != 'Denunciante' ){
+				  	$propietario = new Propietario();
+				  	$propietario->nombre_propietario = $data['propietario'];
+				  	$propietario->id_tipo_propietario = $data['tipo_propietario'];
+				  	$propietario->save();
+				  	$id_propietario = $propietario->latest('id_propietario')->first('id_propietario')->id_propietario;
+				  }
+        }else if($propietario_db->exists()){
+          $id_propietario = $propietario_db->first()->id_propietario; //Verificar comportamiento
+          $propietario = Propietario::find($id_propietario);
+          $propietario->id_tipo_propietario = $data['tipo_propietario'];
+          $propietario->save();
+        }
+			}else{
+        // Si no tenia propietario, lo quitara por venir vacio.
+        if(!isset($data['propietario'])){
+          $id_propietario = NULL;
+        }else if($data['propietario'] == ""){
+          $id_propietario = NULL;
+        }
+      }
+      $arma_actualizada->id_propietario = $id_propietario;
       $arma_actualizada->save();
       // Registro de la ampliacion, en efecto.
       $registro_historial = new Registro_Procedimiento_Arma();
@@ -228,6 +296,7 @@ class ProcesosController extends Controller
     // return $data;
 
     $rules = [
+      '$data["tipo_documento"]' => 'required',
       '$data["numero_documento"]' => 'required',
       '$data["fecha_hecho"]' => 'required',
       '$data["descripcion_hecho"]' => 'required',
@@ -236,6 +305,7 @@ class ProcesosController extends Controller
     ];
 
     $mensajes = [
+      '$data["tipo_documento"].required' => 'Ingrese tipo de documento',
       '$data["numero_documento"].required' => 'Ingrese No. Documento',
       '$data["fecha_hecho"].required' => 'Ingrese Fecha',
       '$data["descripcion_hecho"].required' => 'Ingrese descripcion',
@@ -244,6 +314,7 @@ class ProcesosController extends Controller
     ];
 
     $validator = Validator::make([
+      '$data["tipo_documento"]'=>$data['tipo_documento'],
       '$data["numero_documento"]'=>$data['numero_documento'],
       '$data["fecha_hecho"]'=>$data['fecha_hecho'],
       '$data["descripcion_hecho"]'=>$data['descripcion_hecho'],
@@ -381,6 +452,7 @@ class ProcesosController extends Controller
         $registro_historial->id_tipo_procedimiento = 417; // Automatizar
         $registro_historial->id_autor = auth()->user()->id_user;
         $registro_historial->id_arma = $data['id_arma'];
+        $registro_historial->id_tipo_documento = $data['tipo_documento'];
         $registro_historial->numero_documento = $data['numero_documento'];
         $registro_historial->descripcion = $data['descripcion_hecho']; //Automatizar -> Cual de los dos va, este o el de la sig. Linea.
         // $registro_historial->descripcion = 'Registro de recuperacion'; //Automatizar
@@ -402,6 +474,7 @@ class ProcesosController extends Controller
    public function showHistorial(Request $request){
     $tipo_procedimiento = Item::where('id_categoria', 14)->get(); //Automatizar
     $tipo_recuperacion = Item::select('id_item')->where('descripcion','Registro de recuperacion')->first()->id_item;
+    $tipo_documento = Item::where('id_categoria',17)->get();
     $usuarios = User::all();
     $arma = $request['arma'];
     $id_arma = $arma['id_arma'];
@@ -414,7 +487,7 @@ class ProcesosController extends Controller
         $arma_recuperada = Arma_Recuperada::where('id_arma',$id_arma)->get();
       }
     }
-    return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento','arma_recuperada','usuarios','arma'));
+    return view('consulta._historialArma',compact('historial','registro','tipo_procedimiento','arma_recuperada','usuarios','arma','tipo_documento'));
   }
 
   // Imprime el viewport de Historial
