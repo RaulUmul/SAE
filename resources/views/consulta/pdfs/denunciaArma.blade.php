@@ -357,6 +357,7 @@
       </div>
     </div>
     @foreach ($denuncia->armas as $arma)
+    {{-- @dump($arma) --}}
     <div class="row tabla-armas">
       <div class="col s12">
         <table class="striped">
@@ -427,6 +428,12 @@
               <th class="right-align">Cant. Municion</th>
               <td class="center-align">
                 {{isset($arma->cantidad_municion) ? $arma->cantidad_municion : 'N/I'}}
+              </td>
+            </tr>
+            <tr>
+              <th class="right-align">Propietario</th>
+              <td class="center-align">
+                {{isset($arma->propietario) ? $arma->propietario->nombre_propietario : '-'}}
               </td>
             </tr>
           </table>

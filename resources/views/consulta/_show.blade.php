@@ -447,7 +447,7 @@
                                 @if( $value->id_item == ($arma->id_estatus_arma) )
                                   @if($value->descripcion == 'Recuperada')
                                     <a class="btn tooltipped disabled" data-position="top" data-tooltip="Ampliar"
-                                       onclick="editArma({{$arma}},{{$denuncia['denunciante']}})">
+                                       onclick="editArma({{$arma}},{{$denuncia['denunciante']}},{{$denuncia['no_denuncia']->id_denuncia}})">
                                       <i class="material-icons">zoom_out_map</i>
                                     </a>
                                     <a class="btn tooltipped disabled" data-position="top" data-tooltip="Registrar Recuperacion"
@@ -456,7 +456,7 @@
                                     </a>
                                   @else
                                     <a class="btn tooltipped" data-position="top" data-tooltip="Ampliar"
-                                       onclick="editArma({{$arma}},{{$denuncia['denunciante']}})">
+                                       onclick="editArma({{$arma}},{{$denuncia['denunciante']}},{{$denuncia['no_denuncia']->id_denuncia}})">
                                       <i class="material-icons">zoom_out_map</i>
                                     </a>
                                     <a class="btn tooltipped " data-position="top" data-tooltip="Registrar Recuperacion"
@@ -686,7 +686,7 @@
 
 
     // Funcion para Ampliar Registros de las armas. (Cambiar a post)
-    function editArma(arma,denunciante) {
+    function editArma(arma,denunciante,id_denuncia) {
       // console.log(arma);
 
       //   Con una consulta ajax nos traemos todos los datos del arma para que sean modificados.
@@ -696,7 +696,8 @@
         data: {
           {{--_token: '{{ csrf_token() }}'--}}
             arma,
-            denunciante
+            denunciante,
+            id_denuncia
         },
         dataType: 'text',
         beforeSend: function () {

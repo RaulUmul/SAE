@@ -257,7 +257,15 @@
         },
         dataType:'text',
         success:function (resp){
+          // Funcionara la redireccion?
+          $(window).on('popstate', function() {
+            window.location.href = "{{ route('consulta.create') }}";
+          });
+          var stateObj = { page: "miRuta" };
+          history.pushState(stateObj, "miRuta", "{{ route('consulta.create') }}");
+
           $('body').html(resp);
+
         },
         error:function (xhr,status){
           console.log(xhr)
@@ -265,6 +273,7 @@
         }
       })
     }
+
 
   </script>
 @endpush

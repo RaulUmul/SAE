@@ -2,6 +2,7 @@
   @include('partials.divider',['title'=> 'Datos del arma'])
   <input type="hidden" name="nombre_completo_denunciante" value="{{$nombre_completo_denunciante}}" >
   <input type="hidden" name="id_arma" value="{{$arma['id_arma']}}">
+  <input type="hidden" name="id_denuncia" value="{{$id_denuncia}}">
   <div class="input-field col s12 m6 l4">
     <i class="material-icons prefix">chevron_right</i>
     <select  id="tipo_arma" name="tipo_arma">

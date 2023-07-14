@@ -150,6 +150,7 @@ class ProcesosController extends Controller
     //Recibimos todos los datos del arma, para devolver una vista Form. Con los datos del arma.
     //Vista del modal con los datos a editar del arma
     $arma = $request->arma;
+    $id_denuncia = $request->id_denuncia;
     $nombre_completo_denunciante = implode(" ",array_filter([
       $request->denunciante['persona']['primer_nombre'],
       $request->denunciante['persona']['segundo_nombre'],
@@ -172,7 +173,8 @@ class ProcesosController extends Controller
       'tipo_arma',
       'tipo_propietario',
       'propietario',
-      'nombre_completo_denunciante'
+      'nombre_completo_denunciante',
+      'id_denuncia'
     ));
   }
 
@@ -266,6 +268,7 @@ class ProcesosController extends Controller
       $registro_historial->id_tipo_procedimiento = 418; // Automatizar.
       $registro_historial->id_autor = auth()->user()->id_user; // Automatizar.
       $registro_historial->id_arma = $data['id_arma'];
+      $registro_historial->id_denuncia = $data['id_denuncia'];
       $registro_historial->descripcion = $data['descripcion_ampliacion'];
       $registro_historial->save();
       return response()->json(['success'=>'Recuperada correctamente']);
