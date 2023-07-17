@@ -272,8 +272,13 @@ footer{
   outline: none;
 }
 #form_login{
-position: absolute;
-top: 22vh;
+position: fixed;
+/* top: 22vh; */
+bottom: 0;
+top: 0;
+left: 0;
+right: 0;
+
 }
 
 
@@ -315,7 +320,19 @@ table th:last-child {
   margin: 10px;
 }
 
+/* ********************** INICIO APLICACION ******************* */
+#cabecera-logos{
+  display: flex;
+  justify-content: center;
+}
 
+.container-manuales>a>img:hover{
+filter:none;
+transform: scale(1.01);
+}
+.container-manuales>a>img{
+filter: grayscale();
+}
 
 /* ***********Media Querys************** */
 /* Se aplica cuando la resolucion es menor a 992px */
@@ -371,9 +388,11 @@ table th:last-child {
   }
 
   #form_login{
-    position: absolute;
-    left:35vw;
-    right: 35vw;
+    position: fixed;
+    left:0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 }
 
@@ -382,5 +401,9 @@ table th:last-child {
     position: absolute;
     left:40vw;
     right: 40vw;
+    top: 0;
+    bottom: 0;
   }
 }
+
+

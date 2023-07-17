@@ -25,10 +25,13 @@
             <a href="{{route('denuncia.index')}}"> <i class="material-icons">create</i> Denuncias</a>
         </li>
         <li>
-            <a href="#"> <i class="material-icons">fingerprint</i> Incautacion</a>
+            <a href="#"> <i class="material-icons">add_circle_outline</i> Incautacion</a>
         </li>
         <li>
-            <a href="#"> <i class="material-icons">work</i>  Reporte</a>
+            <a href="#"> <i class="material-icons">fingerprint</i>Analisis</a>
+        </li>
+        <li>
+            <a href="#"> <i class="material-icons">summarize</i>Reportes</a>
         </li>
         <li id="user-account">
           <a href="#" class="dropdown-trigger hoverable" data-target='dropdown-user' style=" background-color: transparent !important;">

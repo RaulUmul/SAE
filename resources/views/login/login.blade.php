@@ -5,7 +5,7 @@
     <form method="POST" action="{{route('acceso')}}" id="login-form" autocomplete="off">
       @csrf
 
-      <div class="row " id="form_login">
+      <div class="row valign-wrapper" id="form_login" >
         <div class="col s12">
 
             <div class="card" style="border-radius: 8px">
@@ -14,7 +14,7 @@
 
                   <form class="col s12">
                     <div class="row">
-                      <div align="center">
+                      <div class="center-align">
                         <img src="{{ asset('img/logodidae.png') }}" height="110px">
                       </div>
                       <h5 class="center">

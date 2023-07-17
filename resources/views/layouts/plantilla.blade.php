@@ -27,6 +27,9 @@
   @stack('styles')
   @vite(['resources/css/app.css','resources/js/app.js'])
 
+  {{-- En prueba, cdn de Lottie --}}
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js"></script>
+
   {{-- Nombre de Titulo --}}
   <title>@yield('title')</title>
 </head>
@@ -35,23 +38,24 @@
   <div id="particles-js"></div>
   <style>
     .all-the-ground{
-      position: absolute;
+      position: fixed;
       z-index: 1000;
-      height: 100%;
-      width: 100%;
-       /*border: 1px solid yellow;*/
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(0, 0, 0, 0.2);
-      /* display: none; */
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
     }
 
 
-    .preloader-wrapper{
+    /* .preloader-wrapper{
       justify-content: center;
       align-items: center;
-    }
+    } */
 
     @media print{
       body * {
@@ -124,7 +128,7 @@
 <script>
   $(document).ready(function () {
 
-     $('.all-the-ground').hide();
+     $('.all-the-ground').fadeOut('swing');
 
   });
 </script>

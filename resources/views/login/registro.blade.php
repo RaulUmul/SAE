@@ -7,7 +7,7 @@
     @csrf
 {{--    @method('POST')--}}
 
-    <div class="row " id="form_login">
+    <div class="row valign-wrapper" id="form_login">
       <div class="col s12">
 
         <div class="card" style="border-radius: 8px">
