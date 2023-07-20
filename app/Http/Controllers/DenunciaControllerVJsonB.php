@@ -73,7 +73,7 @@ class DenunciaControllerVJsonB extends Controller
     ];
 
     $mensajes = [
-      'poseeDocumento.required' => 'Indique si posee documento o no.',
+      'poseeDocumento.required' => 'Indique si el denunciante posee documento o no.',
       'cui_denunciante.max' => 'DPI debe ser de 13 digitos',
       'cui_denunciante.min' => 'DPI debe ser de 13 digitos',
       'numero_diligencia.required' => 'El numero de diligencia es requerido ',

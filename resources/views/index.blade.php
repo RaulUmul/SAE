@@ -55,7 +55,7 @@
               <p class="justify">
                 <div style="font:Segoe UI" color="#09092E">
                   Este sistema lleva acabo distintas actividades que unifican la información que tiene a cargo DIDAE, con el fin de incorporar trabajo investigativo y operativo en un solo sistema, haciendo accesible la información que se necesite en cualquier horario.
-                  <br><br>
+                  </br></br>
                   Su principal objetivo son las consultas de armas de fuego de las cuales se tendrá la información necesaria por medio del almacenamiento de las denuncias de robo, hurto y extravío de las armas de fuego, incautaciones y explosivos.
                 </div>
               </p>

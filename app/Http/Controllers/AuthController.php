@@ -16,10 +16,14 @@ class AuthController extends Controller
          // return $request;
          // return User::all();
 
+         $mensajes = [
+          'user.required' => 'El campo usuario es obligatorio.',
+          'password.required' => 'El campo contraseña es obligatorio.',
+         ];
          $credenciales = $request->validate([
              'user'=>'required',
              'password'=>'required'
-         ]);
+         ],$mensajes);
 
 
 //        return redirect('/sae');
@@ -31,7 +35,7 @@ class AuthController extends Controller
           return redirect()->intended('/sae');
          }else{
 //          Retornar que no coincide las credenciales no?
-           return 'No coinciden lo que ingresaste we! :v';
+           return redirect()->back()->withErrors(['msg'=>'El usuario o la contraseña no coinciden.']);
          }
 //             return redirect()->intended();
 //        \Session::flush();

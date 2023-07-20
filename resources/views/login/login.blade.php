@@ -12,7 +12,7 @@
               <div class="card-action" style="border-radius: 20px">
                 <div class="row">
 
-                  <form class="col s12">
+                  <div class="col s12">
                     <div class="row">
                       <div class="center-align">
                         <img src="{{ asset('img/logodidae.png') }}" height="110px">
@@ -23,12 +23,20 @@
                       <h6 class="center">
                         <font face="Segoe UI" color="#2B0808">Ingrese sus credenciales</font>
                       </h6>
-                      @error('user')
-                      {{$message}}
-                      @enderror
-                      @error('password')
-                      {{$message}}
-                      @enderror
+                      <div class="col s12 center-align">
+                        <span class="red-text">
+                          @error('msg')
+                          {{$message}}
+                          @enderror
+                          @error('user')
+                          {{$message}}
+                          @enderror
+                          <br>
+                          @error('password')
+                          {{$message}}
+                          @enderror
+                        <span>
+                      </div>
                     </div>
 
                     <div class="row col s12">
@@ -47,7 +55,7 @@
                         <button class="btn btn-medium waves-effect" type="submit">Ingresar</button>
                       </div>
                     </div>
-                  </form>
+                  </div>
                   <div class="col s12 center">
                     <span>Si aun no tienes cuenta  </span>
                     <a href="{{route('registro')}}" class="blue-text" >Registrate</a>

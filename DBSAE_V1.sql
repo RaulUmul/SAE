@@ -1,4 +1,4 @@
--- Active: 1687187123110@@127.0.0.1@5432@didae@sae
+-- Active: 1689701985754@@127.0.0.1@5432@didae@sae
 DROP TABLE IF EXISTS sae.propietario;
 DROP TABLE IF EXISTS sae.estatus_arma_denuncia;
 DROP TABLE IF EXISTS sae.registro_procedimiento_arma;
