@@ -607,7 +607,7 @@
         </div>
         <div class="modal-footer">
           <a class="btn" id="enviar_form" onclick="registrarRecuperacion()"><i class="material-icons left">check</i>Guardar</a>
-          <a href="#!" class="modal-close waves-effect waves-green btn-flat"><i class="material-icons left">cancel</i>Cancelar</a>
+          <a class="modal-close waves-effect waves-green btn-flat"><i class="material-icons left">cancel</i>Cancelar</a>
         </div>
       </div>
 
